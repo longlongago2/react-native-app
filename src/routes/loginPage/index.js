@@ -91,7 +91,7 @@ class LoginPage extends PureComponent {
         const { loading, userList, username, password, showUserList } = this.props;
         return (
             <View style={styles.container}>
-                <StatusBar translucent={false} backgroundColor={theme.statusBarColor} />
+                <StatusBar translucent backgroundColor={theme.statusBarColor} />
                 <Loading loading={loading} />
                 <View style={styles.layout}>
                     <View style={styles.logoItem}>

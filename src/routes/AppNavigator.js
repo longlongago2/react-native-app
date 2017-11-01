@@ -1,14 +1,16 @@
 import React from 'react';
+import { StatusBar } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Feather';
 import IonicIcon from 'react-native-vector-icons/Ionicons';
 import theme from '../theme';
 import HeaderTitle from '../components/HeaderTitle';
 import Home from './homePage';
+import HomeHeader from './homePage/Header';
 import AddressList from './addressListPage';
 import ChatList from './chatListPage';
 import WorkOrder from './workOrderPage';
-import WorkorderHeaderRight from './homePage/HeaderRight';
+import WorkorderHeaderRight from './workOrderPage/HeaderRight';
 import User from './userPage';
 import Login from './loginPage';
 import CreateWO from './createWOPage';
@@ -43,6 +45,12 @@ import WebViewHeaderRight from './webViewPage/HeaderRight';
 import WebViewHeaderLeft from './webViewPage/HeaderLeft';
 import Instruction from './instructionPage';
 
+const headerStyle = {
+    backgroundColor: theme.header.backgroundColor,
+    paddingTop: StatusBar.currentHeight,
+    height: 60 + StatusBar.currentHeight,
+};
+
 const InstantMessaging = TabNavigator({
     ChatList: {
         screen: ChatList,
@@ -68,6 +76,7 @@ const InstantMessaging = TabNavigator({
     swipeEnabled: true,
     animationEnabled: true,
     lazy: true,
+    backBehavior: 'none',
     tabBarOptions: {
         showLabel: true,
         showIcon: false,
@@ -85,10 +94,11 @@ const InstantMessaging = TabNavigator({
             bottom: 2,
         },
         labelStyle: {
-            fontSize: 15,
+            fontSize: 17,
+            fontWeight: 'bold',
         },
         style: {
-            backgroundColor: theme.tabBar.backgroundColor,
+            ...headerStyle,
         },
     },
 });
@@ -99,7 +109,7 @@ export const BottomNavigator = TabNavigator({
         path: 'home',
         navigationOptions() {
             return {
-                header: null,
+                header: <HomeHeader />,
                 tabBarLabel: '首页',
                 tabBarIcon({ tintColor }) {
                     return (
@@ -187,7 +197,7 @@ export const BottomNavigator = TabNavigator({
     swipeEnabled: false,          // 是否允许在标签之间进行滑动
     animationEnabled: false,      // 是否允许显示动画
     lazy: true,                   // 懒加载，不提前制作
-    backBehavior: 'initialRoute', // tab栏是否支持返回到首页
+    backBehavior: 'none',         // tab栏是否支持返回到默认页
     tabBarOptions: {
         showLabel: true,
         showIcon: true,
@@ -232,10 +242,8 @@ const AppNavigator = StackNavigator({
             return {
                 title: (state.params && state.params.dataFilling) ? '修改工单' : '创建工单',
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
                 headerRight: <CreateWOHeaderRight navigation={navigation} />,
+                headerStyle,
             };
         },
     },
@@ -246,9 +254,7 @@ const AppNavigator = StackNavigator({
             return {
                 title: '用户信息',
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },
@@ -259,22 +265,18 @@ const AppNavigator = StackNavigator({
             return {
                 title: `${navigation.state.params.personName}`,
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },
     Entry: {
         screen: BottomNavigator,
         path: 'entry',
-        navigationOptions({ navigation, screenProps, navigationOptions }) {
+        navigationOptions({ navigationOptions }) {
             return {
                 title: `${navigationOptions.tabBarLabel}`,
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },
@@ -285,9 +287,7 @@ const AppNavigator = StackNavigator({
             return {
                 title: '设置',
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },
@@ -304,9 +304,7 @@ const AppNavigator = StackNavigator({
                     />
                 ),
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },
@@ -317,11 +315,9 @@ const AppNavigator = StackNavigator({
             const { state } = navigation;
             return {
                 title: state.params.item.title,
-                headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
                 headerRight: <AvatarPreviewHeaderRight />,
+                headerTintColor: theme.header.foregroundColor,
+                headerStyle,
             };
         },
     },
@@ -333,9 +329,7 @@ const AppNavigator = StackNavigator({
             return {
                 title: state.params.title || '图片预览',
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },
@@ -346,13 +340,13 @@ const AppNavigator = StackNavigator({
             const { state } = navigation;
             return {
                 title: state.params.item.title,
+                headerRight: (
+                    <UpdateProfileOptionsHeaderRight
+                        navigation={navigation}
+                    />
+                ),
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
-                headerRight: <UpdateProfileOptionsHeaderRight
-                    navigation={navigation}
-                />,
+                headerStyle,
             };
         },
     },
@@ -362,13 +356,13 @@ const AppNavigator = StackNavigator({
         navigationOptions({ navigation }) {
             return {
                 title: '修改密码',
+                headerRight: (
+                    <UpdatePasswordHeaderRight
+                        navigation={navigation}
+                    />
+                ),
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
-                headerRight: <UpdatePasswordHeaderRight
-                    navigation={navigation}
-                />,
+                headerStyle,
             };
         },
     },
@@ -384,11 +378,9 @@ const AppNavigator = StackNavigator({
                         onPress={() => WOGroup.scrollToTop()}
                     />
                 ),
-                headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
                 headerRight: <WOGroupHeaderRight navigation={navigation} />,
+                headerTintColor: theme.header.foregroundColor,
+                headerStyle,
             };
         },
     },
@@ -404,11 +396,9 @@ const AppNavigator = StackNavigator({
                         onPress={() => WOMyTask.scrollToTop()}
                     />
                 ),
-                headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
                 headerRight: <WOMyTaskHeaderRight navigation={navigation} />,
+                headerTintColor: theme.header.foregroundColor,
+                headerStyle,
             };
         },
     },
@@ -424,11 +414,9 @@ const AppNavigator = StackNavigator({
                         onPress={() => WOICreated.scrollToTop()}
                     />
                 ),
-                headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
                 headerRight: <WOICreatedHeaderRight navigation={navigation} />,
+                headerTintColor: theme.header.foregroundColor,
+                headerStyle,
             };
         },
     },
@@ -439,9 +427,7 @@ const AppNavigator = StackNavigator({
             return {
                 title: '我的跟踪',
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },
@@ -457,11 +443,9 @@ const AppNavigator = StackNavigator({
                         onPress={() => WODrafts.scrollToTop()}
                     />
                 ),
-                headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
                 headerRight: <WODraftsHeaderRight navigation={navigation} />,
+                headerTintColor: theme.header.foregroundColor,
+                headerStyle,
             };
         },
     },
@@ -477,13 +461,13 @@ const AppNavigator = StackNavigator({
                         onPress={() => WORecycleBin.scrollToTop()}
                     />
                 ),
+                headerRight: (
+                    <WORecycleBinHeaderRight
+                        navigation={navigation}
+                    />
+                ),
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
-                headerRight: <WORecycleBinHeaderRight
-                    navigation={navigation}
-                />,
+                headerStyle,
             };
         },
     },
@@ -495,9 +479,7 @@ const AppNavigator = StackNavigator({
             return {
                 title: state.params.obj.title,
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },
@@ -509,9 +491,7 @@ const AppNavigator = StackNavigator({
             return {
                 title: state.params.title,
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
                 headerRight: <WebViewHeaderRight navigation={navigation} />,
                 headerLeft: <WebViewHeaderLeft />,
                 headerTitleStyle: {
@@ -524,13 +504,11 @@ const AppNavigator = StackNavigator({
     Instruction: {
         screen: Instruction,
         path: 'instruction',
-        navigationOptions({ navigation }) {
+        navigationOptions() {
             return {
                 title: '关于平台',
                 headerTintColor: theme.header.foregroundColor,
-                headerStyle: {
-                    backgroundColor: theme.header.backgroundColor,
-                },
+                headerStyle,
             };
         },
     },

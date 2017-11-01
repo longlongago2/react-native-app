@@ -1,7 +1,7 @@
 export default {
     theme: 'rgb(33, 150, 243)',
     background: 'rgb(233, 233, 239)',
-    statusBarColor: 'rgb(24, 116, 205)',
+    statusBarColor: 'rgba(0, 0, 0, 0.3)',
     rippleColor: 'rgb(204, 204, 204)',
     tabBar: {
         backgroundColor: 'rgb(33, 150, 243)',

@@ -1,7 +1,7 @@
 export default {
     popupBtn: {
-        width: 50,
-        height: 50,
+        width: 60,
+        height: 60,
         flex: -1,
         flexDirection: 'row',
         justifyContent: 'center',

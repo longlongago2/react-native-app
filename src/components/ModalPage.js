@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, View, Text, TouchableNativeFeedback, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import HeaderTool from '../components/HeaderTool';
 import theme from '../theme';
 
 export default class ModalFilter extends PureComponent {
@@ -48,9 +49,12 @@ export default class ModalFilter extends PureComponent {
                 >
                     <View
                         style={{
-                            height: 55,
+                            height: 60,
                             width: '100%',
-                            paddingHorizontal: 10,
+                            flex: -1,
+                            flexDirection: 'row',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
                             backgroundColor: theme.header.backgroundColor,
                         }}
                     >
@@ -58,66 +62,39 @@ export default class ModalFilter extends PureComponent {
                             style={{
                                 flex: 1,
                                 flexDirection: 'row',
-                                justifyContent: 'space-between',
+                                justifyContent: 'flex-start',
                                 alignItems: 'center',
-                                borderBottomWidth: 1,
-                                borderBottomColor: theme.theme,
+                                paddingHorizontal: 15,
                             }}
                         >
-                            <View
+                            <Text
+                                numberOfLines={1}
                                 style={{
-                                    flex: 8,
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center',
-                                    paddingHorizontal: 10,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: theme.header.foregroundColor,
                                 }}
                             >
-                                <Text
-                                    numberOfLines={1}
-                                    style={{
-                                        fontSize: 18,
-                                        fontWeight: 'bold',
-                                        color: theme.header.foregroundColor,
-                                    }}
-                                >
-                                    {title || '标题'}
-                                </Text>
-                            </View>
-                            <View
-                                style={{
-                                    flex: 2,
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <TouchableNativeFeedback
-                                    background={
-                                        TouchableNativeFeedback.Ripple(
-                                            theme.header.rippleColor, false,
-                                        )
-                                    }
-                                    onPress={() => this.handleModalVisible(false)}
-                                >
-                                    <View
-                                        style={{
-                                            height: 50,
-                                            width: 50,
-                                            flex: -1,
-                                            flexDirection: 'row',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <Icon
-                                            name="md-close"
-                                            size={22}
-                                            color={theme.header.foregroundColor}
-                                        />
-                                    </View>
-                                </TouchableNativeFeedback>
-                            </View>
+                                {title || '标题'}
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                flex: -1,
+                                height: '100%',
+                                width: 60,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <HeaderTool onPress={() => this.handleModalVisible(false)}>
+                                <Icon
+                                    name="md-close"
+                                    size={22}
+                                    color={theme.header.foregroundColor}
+                                />
+                            </HeaderTool>
                         </View>
                     </View>
                     <View

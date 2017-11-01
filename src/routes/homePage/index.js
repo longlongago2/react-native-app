@@ -38,10 +38,7 @@ class Home extends PureComponent {
         ];
         return (
             <View style={{ flex: 1 }}>
-                <StatusBar
-                    translucent={false}
-                    backgroundColor={theme.statusBarColor}
-                />
+                <StatusBar translucent backgroundColor={theme.statusBarColor} />
                 <Loading loading={loading} />
                 <ScrollView>
                     <View style={styles.container}>
