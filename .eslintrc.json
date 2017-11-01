@@ -1,0 +1,72 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "indent": [
+      "error",
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "linebreak-style": [
+      "error",
+      "windows"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "react/jsx-indent": [
+      "error",
+      4
+    ],
+    "react/jsx-indent-props": [
+      "error",
+      4
+    ],
+    "no-multi-spaces": [
+      "error",
+      {
+        "ignoreEOLComments": true
+      }
+    ],
+    "react/jsx-filename-extension": 0,
+    "react/require-default-props": 0,
+    "react/prefer-stateless-function": 0,
+    "no-unused-vars": 0,
+    "global-require": 0,
+    "import/no-extraneous-dependencies": 1,
+    "react/forbid-prop-types": 0,
+    "react/prop-types": 1,
+    "react/no-string-refs": 1,
+    "no-underscore-dangle": 0,
+    "no-case-declarations": 0,
+    "import/prefer-default-export": 1,
+    "no-plusplus": 0,
+    "max-len": 1,
+    "no-unused-expressions": 1
+  },
+  "globals": {
+    "__DEV__": true
+  }
+}

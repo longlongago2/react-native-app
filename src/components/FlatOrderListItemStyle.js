@@ -1,0 +1,78 @@
+export default {
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.8)',
+    },
+    checkBox: {
+        width: 45,
+        height: '100%',
+        flex: -1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+    },
+    contentLayout: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+    },
+    content: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    logoLayout: {
+        flex: -1,
+        width: 70,
+        height: '100%',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    logo: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        flex: -1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logoText: {
+        color: '#ffffff',
+        fontSize: 12,
+    },
+    mainLayout: {
+        flex: 8,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+    },
+    mainTitle: {
+        color: '#3C3F41',
+        fontSize: 16,
+        paddingVertical: 5,
+    },
+    mainSubtitle: {
+        color: 'rgb(115, 115, 116)',
+        fontSize: 13,
+        paddingVertical: 2,
+    },
+    footer: {
+        paddingTop: 5,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    footerText: {
+        fontSize: 12,
+        color: 'rgb(170, 170, 170)',
+    },
+};

@@ -1,0 +1,49 @@
+{
+  "name": "CFSoftware",
+  "version": "0.0.2",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "restart": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
+    "android-release-install": "cd android && gradlew installRelease",
+    "android-release-build": "cd android && gradlew assembleRelease",
+    "android-gradlew-clean": "cd android && gradlew clean"
+  },
+  "dependencies": {
+    "moment": "^2.19.1",
+    "prop-types": "^15.6.0",
+    "react": "16.0.0-beta.5",
+    "react-native": "0.49.5",
+    "react-native-device-info": "^0.11.0",
+    "react-native-emoji-picker-panel": "github:longlongago2/react-native-emoji-picker-panel",
+    "react-native-flexi-radio-button": "^0.2.1",
+    "react-native-image-crop-picker": "^0.17.3",
+    "react-native-looped-carousel": "github:phil-r/react-native-looped-carousel#e23e1ad41e67ee9e95558e7df00c364fbb1b688b",
+    "react-native-popup-menu": "^0.8.0",
+    "react-native-push-notification": "^3.0.1",
+    "react-native-star-rating": "^1.0.8",
+    "react-native-storage": "^0.2.2",
+    "react-native-vector-icons": "^4.4.2",
+    "react-navigation": "^1.0.0-beta.12",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.15.6",
+    "remote-redux-devtools": "^0.5.12",
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "babel-jest": "21.2.0",
+    "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.4.1",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-react": "^7.2.1",
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0-beta.5"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
