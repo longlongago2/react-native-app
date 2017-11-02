@@ -27,6 +27,12 @@ export default class WorkorderListItem extends PureComponent {
     _handlePress(item) {
         const { dispatch, navigation } = this.props;
         dispatch({
+            type: ACTIONS.TRACKINGWORKORDER.UPDATE,
+            payload: {
+                orderCode: item.ordercode,
+            },
+        });
+        dispatch({
             type: 'Navigation/NAVIGATE',
             routeName: 'WorkOrderDetail',
             params: {

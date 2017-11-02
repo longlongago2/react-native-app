@@ -67,6 +67,7 @@ import {
     queryWorkOrderListByFollowUserId,
     initWOTracking,
     cleanWOTrackingByMainCodeAndFollowUserId,
+    updateWODetailLastReadTimeByOrderCodeAndUserId,
 } from './trackingWorkOrder';
 import {
     queryNotificationListByUserId,
@@ -119,5 +120,6 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.TRACKINGWORKORDER.INITIAL, initWOTracking),         // 初始化我的跟踪
         takeEvery(ACTIONS.TRACKINGWORKORDER.DELETE, cleanWOTrackingByMainCodeAndFollowUserId), // 删除我跟踪的工单
         takeEvery(ACTIONS.NOTIFICATION.INITIAL, initialNotification),         // 初始化通知信息
+        takeEvery(ACTIONS.TRACKINGWORKORDER.UPDATE, updateWODetailLastReadTimeByOrderCodeAndUserId), // 修改工单最后读取时间
     ]);
 }

@@ -3,6 +3,7 @@ import { ToastAndroid } from 'react-native';
 import {
     queryPaginationWorkOrderListByFollowUserId,
     cleanWorkorderDetailByMainCodesAndFollowUserId,
+    updateWorkerOrderDetailLastReadTimeByOrderCodeAndUserId,
 } from '../../services/workorder';
 import ACTIONS from '../actions';
 
@@ -132,6 +133,62 @@ export function* cleanWOTrackingByMainCodeAndFollowUserId({ payload }) {
                     message,
                 },
             });
+        }
+    } else {
+        yield put({
+            type: 'Navigation/NAVIGATE',
+            routeName: 'Login',
+            params: null,
+        });
+    }
+}
+
+/**
+ * ACTIONS.TRACKINGWORKORDER.UPDATE 触发
+ * @param payload
+ */
+export function* updateWODetailLastReadTimeByOrderCodeAndUserId({ payload }) {
+    yield put({
+        type: ACTIONS.TRACKINGWORKORDER.LOADING,
+        payload: {
+            loading: true,
+        },
+    });
+    const { trackingWOList } = yield select(state => state.trackingWorkOrder);
+    const { online, token, userInfo } = yield select(state => state.user);
+    const { orderCode } = payload;
+    const userId = userInfo.userid;
+    const params = {
+        orderCode,
+        userId,
+        token,
+    };
+    const { data, err } = yield call(updateWorkerOrderDetailLastReadTimeByOrderCodeAndUserId, params);
+    if (online) {
+        if (data && data.data.status === '20100') {
+            let newTrackingWOList = trackingWOList.concat();
+            newTrackingWOList = newTrackingWOList.map((item) => {
+                if (item.ordercode === params.orderCode) {
+                    return ({
+                        ...item,
+                        notReadNum: 0,
+                    });
+                }
+                return item;
+            });
+            yield put({
+                type: ACTIONS.TRACKINGWORKORDER.SUCCESS,
+                payload: {
+                    trackingWOList: newTrackingWOList,
+                },
+            });
+            ToastAndroid.show('修改最后读取时间成功', 3000);
+        } else {
+            const message = (err.message) || (data.data.info);
+            yield put({
+                type: ACTIONS.TRACKINGWORKORDER.FAILURE,
+            });
+            ToastAndroid.show(`修改最后读取时间失败: ${message}`, 3000);
         }
     } else {
         yield put({

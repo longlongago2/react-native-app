@@ -45,13 +45,46 @@ export default class FlatWOTrackingListItem extends PureComponent {
                     <View style={styles.contentLayout}>
                         <View style={styles.content}>
                             <View style={styles.mainLayout}>
-                                <View>
-                                    <Text
-                                        numberOfLines={2}
-                                        style={styles.mainTitle}
+                                <View style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                }}
+                                >
+                                    <View style={{
+                                        flex: 0.9,
+                                    }}
                                     >
-                                        {item.title}
-                                    </Text>
+                                        <Text
+                                            numberOfLines={2}
+                                            style={styles.mainTitle}
+                                        >
+                                            {item.title}
+                                        </Text>
+                                    </View>
+                                    <View style={{
+                                        flex: 0.1,
+                                        justifyContent: 'flex-end',
+                                    }}
+                                    >
+                                        {
+                                            item.notReadNum > 0 &&
+                                            <View style={{
+                                                width: 30,
+                                                height: 20,
+                                                borderRadius: 22,
+                                                backgroundColor: 'red',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                            >
+                                                <Text style={{ color: '#ffffff', fontSize: 10 }}>
+                                                    {item.notReadNum < 100 ? item.notReadNum : '99+'}
+                                                </Text>
+                                            </View>
+                                        }
+                                    </View>
                                 </View>
                                 <View>
                                     <Text
