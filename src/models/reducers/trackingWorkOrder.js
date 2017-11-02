@@ -14,8 +14,7 @@ export default function (state = initialState, action) {
         case ACTIONS.TRACKINGWORKORDER.LOADING:
             return {
                 ...state,
-                loading: true,
-                pageLoading: true,
+                ...payload,
             };
         case ACTIONS.TRACKINGWORKORDER.SUCCESS:
             return {
