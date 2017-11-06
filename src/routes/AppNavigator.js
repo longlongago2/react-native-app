@@ -48,7 +48,7 @@ import Instruction from './instructionPage';
 const headerStyle = {
     backgroundColor: theme.header.backgroundColor,
     paddingTop: StatusBar.currentHeight,
-    height: 60 + StatusBar.currentHeight,
+    height: theme.header.height + StatusBar.currentHeight,
 };
 
 const InstantMessaging = TabNavigator({
@@ -94,11 +94,12 @@ const InstantMessaging = TabNavigator({
             bottom: 2,
         },
         labelStyle: {
-            fontSize: 17,
-            fontWeight: 'bold',
+            fontSize: theme.tabBar.fontSize,
+            fontWeight: theme.tabBar.fontWeight,
         },
         style: {
             ...headerStyle,
+            height: theme.tabBar.height + StatusBar.currentHeight,
         },
     },
 });
@@ -495,8 +496,8 @@ const AppNavigator = StackNavigator({
                 headerRight: <WebViewHeaderRight navigation={navigation} />,
                 headerLeft: <WebViewHeaderLeft />,
                 headerTitleStyle: {
-                    width: 200,
-                    marginLeft: 5,
+                    width: 150,
+                    marginHorizontal: 16,
                 },
             };
         },

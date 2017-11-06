@@ -1,14 +1,9 @@
 /** created by zhangqi on 2017-9-7 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    View,
-    Text,
-    FlatList,
-} from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import ItemSeparator from '../../components/ItemSeparator';
 import WODetailImageList from './WODetailImageList';
-import Hyperlink from '../../components/Hyperlink';
 
 const WODetailBody = ({ workOrderDetail, dispatch }) => {
     function handleStatus(status) {
@@ -41,24 +36,6 @@ const WODetailBody = ({ workOrderDetail, dispatch }) => {
             default:
                 return '未识别编码';
         }
-    }
-
-    function filterHtmlTag(domStr) {
-        if (domStr) {
-            return domStr
-                .replace(/<br>|<\/br>|<br\/>|<\/p>/gi, '\n')
-                .replace(/&nbsp;/gi, ' ')
-                .replace(/<([^>]*)>/g, '');
-        }
-        return null;
-    }
-
-    function imgHtmlTip(domStr) {
-        const regexp = new RegExp('<(img|a)\\s.*?>', 'gi'); // 全文匹配(g)不区分大小写(i)
-        if (regexp.test(domStr)) {
-            return '文本包含未能显示的网页内容，点击查看';
-        }
-        return null;
     }
 
     const itemList = [
@@ -104,42 +81,36 @@ const WODetailBody = ({ workOrderDetail, dispatch }) => {
         },
         {
             key: 9,
-            title: '问题描述',
-            text: filterHtmlTag(workOrderDetail.orderbody),
-            link: imgHtmlTip(workOrderDetail.orderbody),
-        },
-        {
-            key: 10,
             title: '终端',
             text: workOrderDetail.terminal,
         },
         {
-            key: 11,
+            key: 10,
             title: '设备型号',
             text: workOrderDetail.device,
         },
         {
-            key: 12,
+            key: 11,
             title: '创建时间',
             text: workOrderDetail.createtime,
         },
         {
-            key: 13,
+            key: 12,
             title: '整体评分',
             text: workOrderDetail.wholescore,
         },
         {
-            key: 14,
+            key: 13,
             title: '完成情况',
             text: workOrderDetail.finishscore,
         },
         {
-            key: 15,
+            key: 14,
             title: '处理速度',
             text: workOrderDetail.speedscore,
         },
         {
-            key: 16,
+            key: 15,
             title: '工单评价',
             text: workOrderDetail.appraise,
         },
@@ -168,28 +139,7 @@ const WODetailBody = ({ workOrderDetail, dispatch }) => {
                                 }}
                             >
                                 <Text style={{ flex: 0.25 }}>{item.title}</Text>
-                                <Text style={{ flex: 0.75 }}>
-                                    <Text>
-                                        {item.text}
-                                    </Text>
-                                    {
-                                        item.link &&
-                                        <Hyperlink
-                                            route={{
-                                                routeName: 'WebView',
-                                                params: {
-                                                    title: '跳转中...',
-                                                    canShare: false,
-                                                    source: {
-                                                        html: workOrderDetail.orderbody,
-                                                    },
-                                                },
-                                            }}
-                                            dispatch={dispatch}
-                                            text={item.link}
-                                        />
-                                    }
-                                </Text>
+                                <Text style={{ flex: 0.75 }}>{item.text}</Text>
                             </View> : null
                     )}
                 />

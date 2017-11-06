@@ -7,10 +7,9 @@ import workorder from './workorder';
 import workorderDetail from './workorderDetail';
 import itemCode from './itemCode';
 import feedbackImage from './feedbackImage';
-import productDetail from './productDetail';
 import userGroup from './userGroup';
 import notice from './notice';
-import trackingWorkOrder from './trackingWorkOrder';
+import trackingWorkOrder from './workorderTracking';
 import notification from './notification';
 
 const rootReducer = combineReducers({
@@ -22,7 +21,6 @@ const rootReducer = combineReducers({
     workorderDetail,
     itemCode,
     feedbackImage,
-    productDetail,
     userGroup,
     notice,
     trackingWorkOrder,

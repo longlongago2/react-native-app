@@ -60,7 +60,8 @@ export default class WorkorderListItem extends PureComponent {
                             type: 'Navigation/NAVIGATE',
                             routeName: 'CreateWO',
                             params: {
-                                dataFilling: true,
+                                dataFilling: true,        // 修改工单
+                                stateName: 'woiCreated',  // 要更新的模块数据
                                 orderCode: item.ordercode,
                             },
                         });

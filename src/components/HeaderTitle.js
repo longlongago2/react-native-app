@@ -4,6 +4,12 @@ import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import TwinkleView from './TwinkleView';
 import theme from '../theme/index';
 
+const titleFont = {
+    color: theme.header.foregroundColor,
+    fontSize: theme.header.fontSize,
+    fontWeight: theme.header.fontWeight,
+};
+
 const HeaderTitle = ({ title, navigation, onPress }) => {
     const { state } = navigation;
     const headerTip = state.params && state.params.headerTip;
@@ -16,29 +22,17 @@ const HeaderTitle = ({ title, navigation, onPress }) => {
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
                     alignItems: 'center',
-                    paddingLeft: 15,
+                    marginLeft: 16,
                 }}
             >
                 {
                     headerTip ?
                         <TwinkleView iterations={4}>
-                            <Text
-                                style={{
-                                    color: theme.header.foregroundColor,
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                }}
-                            >
+                            <Text style={titleFont}>
                                 单击标题返回顶部
                             </Text>
                         </TwinkleView> :
-                        <Text
-                            style={{
-                                color: theme.header.foregroundColor,
-                                fontSize: 20,
-                                fontWeight: 'bold',
-                            }}
-                        >
+                        <Text style={titleFont}>
                             {title}
                         </Text>
                 }

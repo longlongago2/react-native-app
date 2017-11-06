@@ -25,14 +25,17 @@ export default class FlatWOTrackingListItem extends PureComponent {
         cancelAnimationFrame(this.timerOnPress);
         cancelAnimationFrame(this.timerOnLongPress);
     }
+
     _handleLongPress() {
         const { onLongPress } = this.props;
         this.timerOnLongPress = requestAnimationFrame(() => onLongPress());
     }
+
     _handlePress() {
         const { onPress, item } = this.props;
         this.timerOnPress = requestAnimationFrame(() => onPress(item));
     }
+
     render() {
         const { item, index } = this.props;
         return (
@@ -45,15 +48,16 @@ export default class FlatWOTrackingListItem extends PureComponent {
                     <View style={styles.contentLayout}>
                         <View style={styles.content}>
                             <View style={styles.mainLayout}>
-                                <View style={{
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center',
-                                }}
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                    }}
                                 >
                                     <View style={{
-                                        flex: 0.9,
+                                        flex: 1,
                                     }}
                                     >
                                         <Text
@@ -64,8 +68,12 @@ export default class FlatWOTrackingListItem extends PureComponent {
                                         </Text>
                                     </View>
                                     <View style={{
-                                        flex: 0.1,
+                                        flex: -1,
+                                        width: 30,
+                                        height: '100%',
+                                        flexDirection: 'row',
                                         justifyContent: 'flex-end',
+                                        alignItems: 'center',
                                     }}
                                     >
                                         {
@@ -73,7 +81,7 @@ export default class FlatWOTrackingListItem extends PureComponent {
                                             <View style={{
                                                 width: 30,
                                                 height: 20,
-                                                borderRadius: 22,
+                                                borderRadius: 15,
                                                 backgroundColor: 'red',
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
@@ -86,14 +94,12 @@ export default class FlatWOTrackingListItem extends PureComponent {
                                         }
                                     </View>
                                 </View>
-                                <View>
-                                    <Text
-                                        numberOfLines={1}
-                                        style={styles.mainSubtitle}
-                                    >
-                                        {`编号：${item.ordercode}`}
-                                    </Text>
-                                </View>
+                                <Text
+                                    numberOfLines={1}
+                                    style={styles.mainSubtitle}
+                                >
+                                    {`编号：${item.ordercode}`}
+                                </Text>
                                 <OperatingProgress item={item} />
                             </View>
                         </View>

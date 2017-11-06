@@ -6,6 +6,7 @@ import {
     Dimensions,
     ScrollView,
     RefreshControl,
+    StyleSheet,
 } from 'react-native';
 import { connect } from 'react-redux';
 import ACTIONS from '../../models/actions';
@@ -14,6 +15,8 @@ import WODetailBody from './WODetailBody';
 import WorkOrderReply from './WorkOrderReply';
 import WODetailBottom from './WODetailBottom';
 import ModalWoOperation from '../modalWoOperation';
+import HtmlViewer from '../../components/HtmlViewer';
+import TagBoard from '../../components/TagBoard';
 
 class WorkOrderDetail extends PureComponent {
     constructor(props) {
@@ -82,8 +85,22 @@ class WorkOrderDetail extends PureComponent {
                     <View style={{ backgroundColor: '#ffffff', padding: 20 }}>
                         <WODetailHeader workOrderDetail={workOrderDetail} />
                         <WODetailBody workOrderDetail={workOrderDetail} dispatch={dispatch} />
+                        <TagBoard title="详情描述">
+                            <HtmlViewer
+                                value={workOrderDetail.orderbody || '无数据'}
+                                stylesheet={StyleSheet.create({
+                                    a: {
+                                        fontSize: 12,
+                                        color: 'blue',
+                                    },
+                                    p: {
+                                        fontSize: 12,
+                                    },
+                                })}
+                            />
+                        </TagBoard>
                     </View>
-                    <WorkOrderReply workOrderReply={workOrderReply} dispatch={dispatch} />
+                    <WorkOrderReply workOrderReply={workOrderReply} />
                 </ScrollView>
                 <WODetailBottom
                     workOrderDetail={workOrderDetail}

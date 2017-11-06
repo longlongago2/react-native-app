@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, ToastAndroid } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 import ImagePicker from 'react-native-image-crop-picker';
 import HeaderPopupMenu from '../../components/HeaderPopupMenu';
 import ACTIONS from '../../models/actions';
@@ -76,12 +76,12 @@ const WoImagePicker = ({ dispatch }) => {
                     height: 70,
                     width: 70,
                     flex: -1,
-                    flexDirection: 'row',
+                    flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
             >
-                <Icon name="plus-square-o" size={70} color="#cccccc" />
+                <Icon name="plus-circle" size={55} color="#cccccc" />
             </HeaderPopupMenu>
         </View>
     );

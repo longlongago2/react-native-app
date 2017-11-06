@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text } from 'react-native';
 import {
     Menu,
     MenuOptions,
@@ -8,17 +8,20 @@ import {
     MenuTrigger,
     renderers,
 } from 'react-native-popup-menu';
-import styleModule from './HeaderPopupMenuStyle';
+import HeaderTool from './HeaderTool';
 
-const styles = StyleSheet.create(styleModule);
 const { SlideInMenu, ContextMenu } = renderers;
 
 const HeaderPopupMenu = ({ menuOptions, children, display, customMenuTriggerStyle }) => (
     <Menu renderer={display === 'slide' ? SlideInMenu : ContextMenu}>
-        <MenuTrigger>
-            <View style={customMenuTriggerStyle || styles.popupBtn}>
-                {children}
-            </View>
+        <MenuTrigger
+            customStyles={{
+                triggerOuterWrapper: { flex: 1 },
+                triggerWrapper: customMenuTriggerStyle,
+                TriggerTouchableComponent: HeaderTool,
+            }}
+        >
+            {children}
         </MenuTrigger>
         <MenuOptions
             optionsContainerStyle={
@@ -57,7 +60,14 @@ const HeaderPopupMenu = ({ menuOptions, children, display, customMenuTriggerStyl
     </Menu>
 );
 HeaderPopupMenu.propTypes = {
-    menuOptions: PropTypes.array.isRequired,
+    menuOptions: PropTypes.arrayOf(
+        PropTypes.shape({
+            key: PropTypes.string.isRequired,
+            text: PropTypes.string.isRequired,
+            handler: PropTypes.func.isRequired,
+            disabled: PropTypes.bool,
+        }),
+    ),
     children: PropTypes.object.isRequired,
     customMenuTriggerStyle: PropTypes.object,
     display: PropTypes.oneOf(['popup', 'slide']), // popup是弹出，slide是底部滑出

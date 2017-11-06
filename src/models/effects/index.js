@@ -54,9 +54,6 @@ import {
     initialFeedbackImage,
 } from './feedbackImage';
 import {
-    queryProDetailByProductid,
-} from './productDetail';
-import {
     queryAllUserGroupInfo,
     queryUGDetailByGroupId,
     queryPersonNameByProductCode,
@@ -68,7 +65,7 @@ import {
     initWOTracking,
     cleanWOTrackingByMainCodeAndFollowUserId,
     updateWODetailLastReadTimeByOrderCodeAndUserId,
-} from './trackingWorkOrder';
+} from './workorderTracking';
 import {
     queryNotificationListByUserId,
     queryUnreadNotificationNum,
@@ -114,12 +111,11 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.SYS_LIST.INSERT, insertSysList),                    // 插入聊天系统消息
         takeEvery(ACTIONS.USER_INFO.UPDATE, updateUserInfo),                  // 修改用户信息
         takeEvery(ACTIONS.UPLOAD_AVATAR.INSERT, uploadUserAvatar),            // 上传用户头像
-        takeEvery(ACTIONS.PRODUCT_DETAIL.REQUEST, queryProDetailByProductid), // 查询产品详情
         takeEvery(ACTIONS.USERGROUP_TRACKERS.INSERT, insertWOTrackers),       // 新增跟踪者
         takeEvery(ACTIONS.NOTICE.INITIAL, initialNotice),                     // 初始化公告栏
         takeEvery(ACTIONS.TRACKINGWORKORDER.INITIAL, initWOTracking),         // 初始化我的跟踪
         takeEvery(ACTIONS.TRACKINGWORKORDER.DELETE, cleanWOTrackingByMainCodeAndFollowUserId), // 删除我跟踪的工单
-        takeEvery(ACTIONS.NOTIFICATION.INITIAL, initialNotification),         // 初始化通知信息
         takeEvery(ACTIONS.TRACKINGWORKORDER.UPDATE, updateWODetailLastReadTimeByOrderCodeAndUserId), // 修改工单最后读取时间
+        takeEvery(ACTIONS.NOTIFICATION.INITIAL, initialNotification),         // 初始化通知信息
     ]);
 }

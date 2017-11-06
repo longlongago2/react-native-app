@@ -18,11 +18,9 @@ export default class HeaderTool extends PureComponent {
             <View style={styles.menuLayout}>
                 <RAFTouchableNativeFeedback
                     backgroundColor={theme.header.rippleColor}
-                    onPress={() => {
-                        if (onPress) {
-                            this.timer = requestAnimationFrame(() => onPress(route));
-                        }
-                    }}
+                    onPress={onPress ? () => {
+                        this.timer = requestAnimationFrame(() => onPress(route));
+                    } : null}
                 >
                     <View style={styles.menu}>
                         {children}

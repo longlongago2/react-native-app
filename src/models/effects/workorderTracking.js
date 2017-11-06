@@ -163,7 +163,8 @@ export function* updateWODetailLastReadTimeByOrderCodeAndUserId({ payload }) {
         userId,
         token,
     };
-    const { data, err } = yield call(updateWorkerOrderDetailLastReadTimeByOrderCodeAndUserId, params);
+    const { data, err } =
+        yield call(updateWorkerOrderDetailLastReadTimeByOrderCodeAndUserId, params);
     if (online) {
         if (data && data.data.status === '20100') {
             let newTrackingWOList = trackingWOList.concat();
@@ -182,7 +183,6 @@ export function* updateWODetailLastReadTimeByOrderCodeAndUserId({ payload }) {
                     trackingWOList: newTrackingWOList,
                 },
             });
-            ToastAndroid.show('修改最后读取时间成功', 3000);
         } else {
             const message = (err.message) || (data.data.info);
             yield put({

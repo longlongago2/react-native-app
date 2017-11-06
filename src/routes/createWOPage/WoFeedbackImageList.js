@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
     View,
-    Image,
     StyleSheet,
     TouchableWithoutFeedback,
     ActivityIndicator,
@@ -10,6 +9,7 @@ import {
     ToastAndroid,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FastImage from 'react-native-fast-image';
 import WoImagePicker from './WoImagePicker';
 import styleModule from './indexStyle';
 import ACTIONS from '../../models/actions';
@@ -73,7 +73,7 @@ class WoFeedbackImageList extends PureComponent {
             type: 'Navigation/NAVIGATE',
             routeName: 'ImagesPreview',
             params: {
-                images: woImageList.map(item => `${api.database}/${item.uri}`),
+                images: woImageList.map(item => ({ url: `${api.database}/${item.uri}` })),
                 initialPage,
             },
         });
@@ -111,14 +111,10 @@ class WoFeedbackImageList extends PureComponent {
                                 <TouchableWithoutFeedback
                                     onPress={() => this.handleImagePreview(i)}
                                 >
-                                    <Image
+                                    <FastImage
                                         source={{ uri: `${api.database}/${item.uri}` }}
-                                        resizeMode="cover"
-                                        resizeMethod="scale"
-                                        style={[styles.image, {
-                                            borderWidth: 1,
-                                            borderColor: '#000',
-                                        }]}
+                                        resizeMethod={FastImage.resizeMode.cover}
+                                        style={styles.image}
                                     />
                                 </TouchableWithoutFeedback>
                             </View>

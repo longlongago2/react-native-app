@@ -87,20 +87,11 @@ class CreateWOPage extends Component {
                 workOrderDetail.wskind.toString().trim() !== '' &&
                 workOrderDetail.productid.toString().trim() !== ''
             ) {
-                // 1.删除以前的多媒体数据
-                if (feedbackImageList.length > 0) {
-                    feedbackImageList.forEach((image) => {
-                        dispatch({
-                            type: ACTIONS.FEEDBACK_IMAGE.DELETE,
-                            payload: image,
-                        });
-                    });
-                }
-                // 2.修改工单所有数据
+                // 修改工单 todo: bug：修改工单没有清除之前的mediaInfo,导致新图片里有修改前的图片重复
                 dispatch({
                     type: ACTIONS.WORKORDER.UPDATE,
                     payload: {
-                        stateName: 'woiCreated',
+                        stateName: state.params.stateName,   // 重新编辑的按钮在多个数据模块中出现，所以需要指定更改哪个数据模块
                         stateValue: {
                             todo: 'update',
                             params: {
@@ -112,7 +103,6 @@ class CreateWOPage extends Component {
                                 wskind: workOrderDetail.wskind,
                                 servertime: workOrderDetail.servertime,
                                 orderbody: workOrderDetail.orderbody,
-                                wstateclient: '1',
                                 device: DeviceInfo.getModel(),
                                 terminal: Platform.OS,
                                 mediaInfo,

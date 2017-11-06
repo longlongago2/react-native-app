@@ -9,11 +9,17 @@ export default {
         inactiveTintColor: 'rgb(188, 223, 251)',
         indicatorColor: 'rgb(255, 127, 36)',
         rippleColor: 'rgb(54, 100, 139)',
+        height: 56,
+        fontSize: 17,
+        fontWeight: '400',
     },
     header: {
         backgroundColor: 'rgb(33, 150, 243)',
         foregroundColor: 'rgb(255, 255, 255)',
         rippleColor: 'rgb(54, 100, 139)',
+        height: 56,
+        fontSize: 20,
+        fontWeight: '500',
     },
     bottomTabs: {
         backgroundColor: 'rgb(255, 255, 255)',

@@ -2,19 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
+import ImageViewer from 'react-native-image-zoom-viewer';
 import Loading from '../../components/Loading';
 import api from '../../utils/api';
 
 
 const ImagesPreview = ({ userInfo, loading }) => (
-    <View
-        style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-            alignItems: 'stretch',
-        }}
-    >
+    <View style={{ flex: 1, backgroundColor: '#000000' }}>
+        <ImageViewer imageUrls={[{ url: `${api.database}/${userInfo.avatar}` }]} />
         <Loading loading={loading} />
     </View>
 );

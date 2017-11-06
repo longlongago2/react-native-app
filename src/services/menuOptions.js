@@ -14,49 +14,84 @@ export function fetchHomeOptions() {
             key: 'home-menu-01',
             icon: <FeatherIcon name="user-check" size={25} color="#fff" />,
             color: '#0BA29B',
-            redirect: { routeName: 'WOICreated', params: { workOrderType: 'WOICreated' } },
+            redirect: {
+                routeName: 'WOICreated',
+                params: {
+                    workOrderType: 'woiCreated',
+                },
+            },
         },
         {
             name: '组内工单',
             key: 'home-menu-02',
             icon: <FeatherIcon name="users" size={25} color="#fff" />,
             color: '#79B23D',
-            redirect: { routeName: 'WOGroup', params: { workOrderType: 'WOGroup' } },
+            redirect: {
+                routeName: 'WOGroup',
+                params: {
+                    workOrderType: 'woGroup',
+                },
+            },
         },
         {
             name: '我的任务',
             key: 'home-menu-03',
             icon: <FeatherIcon name="file-plus" size={25} color="#fff" />,
             color: '#F39801',
-            redirect: { routeName: 'WOMyTask', params: { workOrderType: 'WOMyTask' } },
+            redirect: {
+                routeName: 'WOMyTask',
+                params: {
+                    workOrderType: 'woMyTask',
+                },
+            },
         },
         {
             name: '我的跟踪',
             key: 'home-menu-04',
             icon: <FeatherIcon name="eye" size={25} color="#fff" />,
             color: '#01A0EA',
-            redirect: { routeName: 'WOTracking', params: { workOrderType: 'WOTracking' } },
+            redirect: {
+                routeName: 'WOTracking',
+                params: {
+                    workOrderType: 'woTracking',
+                },
+            },
         },
         {
             name: '草稿箱',
             key: 'home-menu-05',
             icon: <FeatherIcon name="feather" size={25} color="#fff" />,
             color: '#A9823F',
-            redirect: { routeName: 'WODrafts', params: { workOrderType: 'WODrafts' } },
+            redirect: {
+                routeName: 'WODrafts',
+                params: {
+                    workOrderType: 'woDrafts',
+                },
+            },
         },
         {
             name: '回收站',
             key: 'home-menu-06',
             icon: <FeatherIcon name="trash-2" size={25} color="#fff" />,
             color: '#DD5044',
-            redirect: { routeName: 'WORecycleBin', params: { workOrderType: 'WORecycleBin' } },
+            redirect: {
+                routeName: 'WORecycleBin',
+                params: {
+                    workOrderType: 'woRecycleBin',
+                },
+            },
         },
         {
             name: '更多',
             key: 'home-menu-07',
             icon: <FeatherIcon name="more-horizontal" size={25} color="#fff" />,
             color: '#cccccc',
-            redirect: { routeName: '', params: { workOrderType: 'more' } },
+            redirect: {
+                routeName: '',
+                params: {
+                    workOrderType: 'more',
+                },
+            },
         },
     ];
 }

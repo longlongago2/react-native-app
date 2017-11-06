@@ -1,10 +1,7 @@
 /** created by zhangqi on 2017-10-26 */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-    View,
-    Text,
-} from 'react-native';
+import { View, Text } from 'react-native';
 import ItemSeparator from '../../components/ItemSeparator';
 
 const progressList = [
@@ -57,31 +54,37 @@ class OperatingProgress extends PureComponent {
             });
         }
     }
+
     render() {
         const { operationIndex } = this.state;
         return (
-            <View style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-            }}
+            <View
+                style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingVertical: 5,
+                }}
             >
                 {
                     progressList.map((_item, i) => (
                         <View
                             key={_item.id}
                             style={{
+                                flex: 1,
                                 flexDirection: 'row',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
                             }}
                         >
                             <View
                                 style={[
                                     {
                                         flex: -1,
-                                        width: 30,
-                                        height: 30,
-                                        borderRadius: 22,
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: 20,
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                     },
@@ -94,26 +97,18 @@ class OperatingProgress extends PureComponent {
                                 i < (progressList.length - 1) &&
                                 <View
                                     style={{
-                                        flex: -1,
+                                        flex: 1,
+                                        flexDirection: 'column',
                                         justifyContent: 'center',
-                                        alignItems: 'center',
+                                        alignItems: 'stretch',
                                     }}
                                 >
-                                    {
-                                        i < (operationIndex - 1) ?
-                                            <ItemSeparator
-                                                backgroundColor="rgba(121,178,61,1.0)"
-                                                border={0.8}
-                                                lineColor="rgba(139,139,139,0.5)"
-                                                marginHorizontal={20}
-                                            /> :
-                                            <ItemSeparator
-                                                backgroundColor="rgba(0,0,0,0.4)"
-                                                border={0.8}
-                                                lineColor="rgba(139,139,139,0.5)"
-                                                marginHorizontal={20}
-                                            />
-                                    }
+                                    <ItemSeparator
+                                        lineColor={i < operationIndex - 1 ? '#79B23D' : '#C3C3C3'}
+                                        backgroundColor="transparent"
+                                        border={i < operationIndex - 1 ? 2 : 1}
+                                        marginHorizontal={0}
+                                    />
                                 </View>
                             }
                         </View>

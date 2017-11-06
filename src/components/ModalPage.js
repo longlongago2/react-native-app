@@ -1,9 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, View, Text, TouchableNativeFeedback, Button } from 'react-native';
+import { Modal, View, Text, StyleSheet, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderTool from '../components/HeaderTool';
 import theme from '../theme';
+import styleModule from './ModalPageStyle';
+
+const styles = StyleSheet.create(styleModule);
 
 export default class ModalFilter extends PureComponent {
     constructor(props) {
@@ -38,56 +41,14 @@ export default class ModalFilter extends PureComponent {
                 visible={(state.params && state.params.modalVisible) || false}
                 onRequestClose={() => this.handleModalVisible(false)}
             >
-                <View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                        backgroundColor: 'rgb(255,255,255)',
-                    }}
-                >
-                    <View
-                        style={{
-                            height: 60,
-                            width: '100%',
-                            flex: -1,
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            backgroundColor: theme.header.backgroundColor,
-                        }}
-                    >
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: 'row',
-                                justifyContent: 'flex-start',
-                                alignItems: 'center',
-                                paddingHorizontal: 15,
-                            }}
-                        >
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    color: theme.header.foregroundColor,
-                                }}
-                            >
+                <View style={styles.layout}>
+                    <View style={styles.headerContainer}>
+                        <View style={styles.headerTitleContainer}>
+                            <Text style={styles.headerTitleText} numberOfLines={1}>
                                 {title || '标题'}
                             </Text>
                         </View>
-                        <View
-                            style={{
-                                flex: -1,
-                                height: '100%',
-                                width: 60,
-                                flexDirection: 'row',
-                                justifyContent: 'flex-end',
-                                alignItems: 'center',
-                            }}
-                        >
+                        <View style={styles.headerRightContainer}>
                             <HeaderTool onPress={() => this.handleModalVisible(false)}>
                                 <Icon
                                     name="md-close"
@@ -97,16 +58,7 @@ export default class ModalFilter extends PureComponent {
                             </HeaderTool>
                         </View>
                     </View>
-                    <View
-                        style={{
-                            padding: 10,
-                            flex: 1,
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            alignSelf: 'stretch',
-                        }}
-                    >
+                    <View style={styles.bodyContainer}>
                         {
                             Array.isArray(children) ?
                                 children.map(item => item) :
@@ -114,16 +66,8 @@ export default class ModalFilter extends PureComponent {
                         }
                     </View>
                     {
-                        onSubmit && <View
-                            style={{
-                                flex: -1,
-                                flexDirection: 'column',
-                                justifyContent: 'flex-end',
-                                alignItems: 'stretch',
-                                alignSelf: 'stretch',
-                                padding: 10,
-                            }}
-                        >
+                        onSubmit &&
+                        <View style={styles.footerContainer}>
                             <Button
                                 onPress={this.handleSubmit}
                                 title="确定"

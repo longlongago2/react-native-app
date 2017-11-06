@@ -1,70 +1,31 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
-class ImagesPreview extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentPage: 1,
-            renderToHardwareTextureAndroid: false,
-        };
-        this.timerRenderToHardware = () => requestAnimationFrame(() =>
-            this.setState({ renderToHardwareTextureAndroid: true }),
-        );
-    }
-
-    componentDidMount() {
-        this.timerRenderToHardware();
-    }
-
-    componentWillUnmount() {
-        cancelAnimationFrame(this.timerPageSelected);
-        cancelAnimationFrame(this.timerRenderToHardware);
-        const { renderToHardwareTextureAndroid } = this.state;
-        if (renderToHardwareTextureAndroid) {
-            this.setState({ renderToHardwareTextureAndroid: false });
-        }
-    }
-
-    render() {
-        const { navigation } = this.props;
-        const { currentPage, renderToHardwareTextureAndroid } = this.state;
-        const { state } = navigation;
-        return (
-            <View
-                renderToHardwareTextureAndroid={renderToHardwareTextureAndroid}
-                style={{
-                    flex: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                    alignItems: 'stretch',
-                }}
-            >
-                <View
-                    style={{
-                        position: 'absolute',
-                        bottom: 20,
-                        left: 20,
-                    }}
-                >
-                    {
-                        state.params &&
-                        state.params.images &&
-                        <Text
-                            style={{
-                                fontSize: 15,
-                                color: '#ffffff',
-                            }}
-                        >
-                            {`${currentPage}/${state.params.images.length}`}
-                        </Text>
-                    }
-                </View>
-            </View>
-        );
-    }
-}
+const ImagesPreview = ({ navigation }) => {
+    const { state } = navigation;
+    return (
+        <View style={{ flex: 1, backgroundColor: '#000000' }}>
+            <ImageViewer
+                imageUrls={state.params && state.params.images}
+                index={(state.params && state.params.initialPage) || 0}
+                loadingRender={() => (
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'stretch',
+                        }}
+                    >
+                        <ActivityIndicator color="#ffffff" size="large" />
+                    </View>
+                )}
+            />
+        </View>
+    );
+};
 
 ImagesPreview.propTypes = {
     navigation: PropTypes.object.isRequired,

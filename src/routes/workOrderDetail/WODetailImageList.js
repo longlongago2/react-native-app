@@ -1,43 +1,26 @@
 /** created by zhangqi on 2017-9-8 */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-} from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import api from '../../utils/api';
 
 export default class WODetailImageList extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = {
-            renderToHardwareTextureAndroid: false,
-        };
         this.handleImagePreview = this._handleImagePreview.bind(this);
-        this.timerRenderToHardware = () => requestAnimationFrame(() =>
-            this.setState({ renderToHardwareTextureAndroid: true }),
-        );
-    }
-
-    componentDidMount() {
-        this.timerRenderToHardware();
     }
 
     componentWillUnmount() {
         cancelAnimationFrame(this.timerImagePreview);
-        cancelAnimationFrame(this.timerRenderToHardware);
-        const { renderToHardwareTextureAndroid } = this.state;
-        if (renderToHardwareTextureAndroid) {
-            this.setState({ renderToHardwareTextureAndroid: false });
-        }
     }
 
     _handleImagePreview(initialPage) {
         const { dispatch, workOrderDetail } = this.props;
         this.timerImagePreview = requestAnimationFrame(() => {
-            const images = workOrderDetail.workordermediass.map(item => `${api.database}/${item.mediainfo}`);
+            const images = workOrderDetail.workordermediass.map(item => (
+                { url: `${api.database}/${item.mediainfo}` }
+            ));
             dispatch({
                 type: 'Navigation/NAVIGATE',
                 routeName: 'ImagesPreview',
@@ -51,7 +34,6 @@ export default class WODetailImageList extends PureComponent {
 
     render() {
         const { workOrderDetail } = this.props;
-        const { renderToHardwareTextureAndroid } = this.state;
         return (
             <View>
                 {
@@ -66,7 +48,6 @@ export default class WODetailImageList extends PureComponent {
                     >
                         <Text style={{ flex: 0.25 }}>图片描述</Text>
                         <View
-                            renderToHardwareTextureAndroid={renderToHardwareTextureAndroid}
                             style={{
                                 flex: 0.75,
                                 flexDirection: 'row',
@@ -91,13 +72,10 @@ export default class WODetailImageList extends PureComponent {
                                         <TouchableOpacity
                                             onPress={() => this.handleImagePreview(i)}
                                         >
-                                            <Image
+                                            <FastImage
                                                 source={{ uri: `${api.database}/${item.mediainfo}` }}
-                                                resizeMethod="scale"
-                                                style={{
-                                                    width: 60,
-                                                    height: 60,
-                                                }}
+                                                resizeMethod={FastImage.resizeMode.cover}
+                                                style={{ width: 60, height: 60 }}
                                             />
                                         </TouchableOpacity>
                                     </View>

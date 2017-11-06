@@ -1,18 +1,14 @@
 /** created by zhangqi on 2017-9-7 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    View,
-    Text,
-    FlatList,
-} from 'react-native';
-import Hyperlink from '../../components/Hyperlink';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import hanZiLetter from '../../utils/hanZiLetter';
 import englishLetter from '../../utils/englishLetter';
 import TagBoard from '../../components/TagBoard';
+import HtmlViewer from '../../components/HtmlViewer';
 import theme, { rgba } from '../../theme';
 
-const WorkOrderReply = ({ workOrderReply, dispatch }) => {
+const WorkOrderReply = ({ workOrderReply }) => {
     function handleRandomColor(text) {
         // 根据字母生成颜色
         const arrLetter = hanZiLetter(text)[0].split('');
@@ -32,16 +28,8 @@ const WorkOrderReply = ({ workOrderReply, dispatch }) => {
         return null;
     }
 
-    function imgHtmlTip(domStr) {
-        const regexp = new RegExp('<(img|a)\\s.*?>', 'gi'); // 全文匹配(g)不区分大小写(i)
-        if (regexp.test(domStr)) {
-            return '文本包含网页内容，点击查看';
-        }
-        return '';
-    }
-
     return (
-        <TagBoard title="操作记录" loading={false}>
+        <TagBoard title="操作记录">
             <FlatList
                 data={workOrderReply}
                 keyExtractor={(item, index) => item.replycode}
@@ -208,24 +196,17 @@ const WorkOrderReply = ({ workOrderReply, dispatch }) => {
                                                     alignItems: 'flex-start',
                                                 }}
                                             >
-                                                <Text style={{ fontSize: 12 }}>
-                                                    {
-                                                        filterHtmlTag(item.replyinfo)
-                                                    }
-                                                </Text>
-                                                <Hyperlink
-                                                    route={{
-                                                        routeName: 'WebView',
-                                                        params: {
-                                                            title: '跳转中...',
-                                                            canShare: false,
-                                                            source: {
-                                                                html: item.replyinfo,
-                                                            },
+                                                <HtmlViewer
+                                                    value={item.replyinfo}
+                                                    stylesheet={StyleSheet.create({
+                                                        a: {
+                                                            fontSize: 12,
+                                                            color: 'blue',
                                                         },
-                                                    }}
-                                                    dispatch={dispatch}
-                                                    text={imgHtmlTip(item.replyinfo)}
+                                                        p: {
+                                                            fontSize: 12,
+                                                        },
+                                                    })}
                                                 />
                                             </View>
                                         </View>
@@ -242,7 +223,6 @@ const WorkOrderReply = ({ workOrderReply, dispatch }) => {
 
 WorkOrderReply.propTypes = {
     workOrderReply: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired,
 };
 
 export default WorkOrderReply;

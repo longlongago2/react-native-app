@@ -192,6 +192,7 @@ export function* updateWorkOrder({ payload }) {
                         },
                     });
                     ToastAndroid.show(`工单编号：${payloadParams.ordercode}，修改成功！`, 5000);
+                    yield put({ type: 'Navigation/BACK' });
                 } else {
                     const message = (err && err.message) || (data && data.data.info);
                     yield put({

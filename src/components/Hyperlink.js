@@ -14,12 +14,11 @@ const Hyperlink = ({ route, style, dispatch, text }) => {
         <Text
             onPress={handlePress}
             style={{
-                fontSize: 10,
+                fontSize: 13,
                 color: 'blue',
                 lineHeight: 25,
                 textDecorationLine: 'underline',
                 textDecorationStyle: 'solid',
-                textDecorationColor: 'red',
                 ...style,
             }}
         >

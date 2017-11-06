@@ -1,3 +1,6 @@
+import theme from '../theme';
+
+const layoutSize = theme.header.height;
 export default {
     menuLayout: {
         flex: 1,
@@ -7,8 +10,8 @@ export default {
         marginHorizontal: 5,
     },
     menu: {
-        width: 60,
-        height: 60,
+        width: layoutSize,
+        height: layoutSize,
         alignItems: 'center',
         justifyContent: 'center',
     },

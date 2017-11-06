@@ -17,7 +17,7 @@ const dataList = [
         data2: [
             { key: 'reply', name: '留言', redirect: { type: 'modal', params: { name: 'reply' } } },
         ],
-        key: 'group',
+        key: 'woGroup',
     },
     {
         data: [
@@ -28,11 +28,21 @@ const dataList = [
         data2: [
             { key: 'reply', name: '留言', redirect: { type: 'modal', params: { name: 'reply' } } },
         ],
-        key: 'myTask',
+        key: 'woMyTask',
     },
     {
         data: [
-            { key: 'edit', name: '重新编辑', redirect: { type: 'route', params: { name: 'CreateWO' } } },
+            {
+                key: 'edit',
+                name: '重新编辑',
+                redirect: {
+                    type: 'route',
+                    params: {
+                        name: 'CreateWO',
+                        stateName: 'woiCreated',
+                    },
+                },
+            },
             { key: 'recall', name: '撤回', redirect: { type: 'currentPage', params: { name: 'recall' } } },
             { key: 'reply', name: '留言', redirect: { type: 'modal', params: { name: 'reply' } } },
         ],
@@ -44,41 +54,51 @@ const dataList = [
             { key: 'delete', name: '删除', redirect: { type: 'currentPage', params: { name: 'delete' } } },
             { key: 'reply', name: '留言', redirect: { type: 'modal', params: { name: 'reply' } } },
         ],
-        key: 'myOrder',
+        key: 'woiCreated',
     },
     {
         data: [
             { key: 'noTracking', name: '取消跟踪', redirect: { type: 'currentPage', params: { name: 'noTracking' } } },
             { key: 'reply', name: '留言', redirect: { type: 'modal', params: { name: 'reply' } } },
         ],
-        key: 'myTracking',
+        key: 'woTracking',
     },
     {
         data: [
-            { key: 'edit', name: '重新编辑', redirect: { type: 'route', params: { name: 'CreateWO' } } },
+            {
+                key: 'edit',
+                name: '重新编辑',
+                redirect: {
+                    type: 'route',
+                    params: {
+                        name: 'CreateWO',
+                        stateName: 'woDrafts',
+                    },
+                },
+            },
             { key: 'reSubmit', name: '重新提交', redirect: { type: 'currentPage', params: { name: 'reSubmit' } } },
             { key: 'clean', name: '删除', redirect: { type: 'currentPage', params: { name: 'clean' } } },
         ],
-        key: 'drafts',
+        key: 'woDrafts',
     },
     {
         data: [
             { key: 'restore', name: '还原', redirect: { type: 'currentPage', params: { name: 'restore' } } },
             { key: 'clean', name: '删除', redirect: { type: 'currentPage', params: { name: 'clean' } } },
         ],
-        key: 'recycleBin',
+        key: 'woRecycleBin',
     },
 ];
 
 const WODetailBottom = ({ workOrderDetail, navigation, userid, dispatch }) => {
-    const { wsstatus, wstateclient, wsstateemployee } = workOrderDetail;
+    const { wsstatus, wstateclient } = workOrderDetail;
     const { state } = navigation;
-    const workOrderType = state.params.workOrderType;
-    const productPrincipal = state.params.obj.productprincipal;
+    const workOrderType = state.params.workOrderType;            // 工单模块（我的工单，组内工单，我的跟踪...）
+    const productPrincipal = state.params.obj.productprincipal;  // 工单负责人
 
     function handleDataList() {
         switch (workOrderType) {
-            case 'WOGroup': // 组内工单
+            case 'woGroup':        // 组内工单
                 let groupList = [];
                 if (wsstatus === 0 && (userid.toString() === productPrincipal)) { // 未评审&&当前用户为产品负责人
                     groupList = dataList[0].data;
@@ -86,7 +106,7 @@ const WODetailBottom = ({ workOrderDetail, navigation, userid, dispatch }) => {
                     groupList = dataList[0].data2;
                 }
                 return groupList;
-            case 'WOICreated': // 我的工单
+            case 'woiCreated':    // 我的工单
                 let iCreatedList = [];
                 if (wstateclient === 1) { // 未处理
                     iCreatedList = dataList[2].data;
@@ -98,43 +118,55 @@ const WODetailBottom = ({ workOrderDetail, navigation, userid, dispatch }) => {
                     iCreatedList = dataList[2].data3;
                 }
                 return iCreatedList;
-            case 'WOMyTask': // 我的任务
+            case 'woMyTask':      // 我的任务
                 let myTaskList = [];
-                if (wstateclient === 4 && wsstateemployee === 3) { // 客户状态已关闭&&员工状态已解决
+                if (wstateclient === 4) { // 客户状态已关闭
                     myTaskList = dataList[1].data2;
                 } else {
                     myTaskList = dataList[1].data;
                 }
                 return myTaskList;
-            case 'WOTracking': // 我的跟踪
+            case 'woTracking':    // 我的跟踪
                 return dataList[3].data;
-            case 'WODrafts': // 草稿箱
+            case 'woDrafts':      // 草稿箱
                 return dataList[4].data;
-            case 'WORecycleBin': // 回收站
+            case 'woRecycleBin':  // 回收站
                 return dataList[5].data;
             default:
                 return [];
         }
     }
 
-    function handleOptions(value) {
+    function handleOptions(item) {
         const { setParams } = navigation;
-        switch (value.redirect.type) {
+        switch (item.redirect.type) {
             case 'route':
-                dispatch({
-                    type: 'Navigation/NAVIGATE',
-                    routeName: value.redirect.params.name,
-                    params: {
-                        dataFilling: true,
-                        orderCode: workOrderDetail.ordercode,
-                    },
-                });
+                if (item.redirect.params.name === 'CreateWO') {
+                    // 重新编辑
+                    dispatch({
+                        type: 'Navigation/NAVIGATE',
+                        routeName: item.redirect.params.name,
+                        params: {
+                            dataFilling: true,                          // 修改工单
+                            stateName: item.redirect.params.stateName,  // 数据来源模块，方便重新编辑时更新本地数据
+                            orderCode: workOrderDetail.ordercode,
+                        },
+                    });
+                } else {
+                    dispatch({
+                        type: 'Navigation/NAVIGATE',
+                        routeName: item.redirect.params.name,
+                    });
+                }
                 break;
             case 'modal':
-                setParams({ modalVisible: true, type: value.redirect.params.name });
+                setParams({
+                    modalVisible: true,
+                    type: item.redirect.params.name,
+                });
                 break;
             case 'currentPage':
-                switch (value.redirect.params.name) {
+                switch (item.redirect.params.name) {
                     case 'recall':
                         // 撤回
                         dispatch({

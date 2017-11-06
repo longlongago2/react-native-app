@@ -42,7 +42,9 @@ const TagBoard = ({ title, children, onRefresh, loading }) => (
                 <Text style={{ fontSize: 13, color: '#575757' }}>{title}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 5 }}>
-                <ActivityIndicator animating={loading} size={20} color={theme.theme} />
+                {
+                    loading && <ActivityIndicator animating size={20} color={theme.theme} />
+                }
                 {
                     onRefresh && !loading &&
                     <TouchableOpacity onPress={onRefresh}>

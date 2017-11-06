@@ -6,14 +6,6 @@ export default {
         alignItems: 'center',
         backgroundColor: 'rgba(255,255,255,0.8)',
     },
-    checkBox: {
-        width: 45,
-        height: '100%',
-        flex: -1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-    },
     contentLayout: {
         paddingVertical: 10,
         paddingHorizontal: 20,
@@ -27,25 +19,6 @@ export default {
         flexDirection: 'row',
         justifyContent: 'center',
     },
-    logoLayout: {
-        flex: 2,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignSelf: 'center',
-    },
-    logo: {
-        width: 44,
-        height: 44,
-        borderRadius: 22,
-        flex: -1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    logoText: {
-        color: '#ffffff',
-        fontSize: 12,
-    },
     mainLayout: {
         flex: 8,
         flexDirection: 'column',
@@ -55,6 +28,7 @@ export default {
     mainTitle: {
         color: '#3C3F41',
         fontSize: 16,
+        fontWeight: 'bold',
         paddingVertical: 5,
     },
     mainSubtitle: {
