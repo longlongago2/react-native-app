@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, ToastAndroid } from 'react-native';
-import ACTIONS from '../../models/actions';
+import { ToastAndroid } from 'react-native';
 import SectionLineItemWithIcon from '../../components/SectionLineItemWithIcon';
 
 const InstructionListOption = ({ item, dispatch }) => {
     function handItemPress() {
         if (item.redirect) {
-            const { routeName } = item.redirect;
+            const { routeName, params } = item.redirect;
             dispatch({
                 type: 'Navigation/NAVIGATE',
                 routeName,
+                params,
             });
         } else {
             const { key } = item;

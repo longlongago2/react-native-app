@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Text, Image } from 'react-native';
 import HtmlView from 'react-native-htmlview';
 
 class HtmlViewer extends PureComponent {
@@ -25,13 +26,51 @@ class HtmlViewer extends PureComponent {
     }
 
     render() {
-        const { value, style, stylesheet } = this.props;
+        const { value, style, stylesheet, dispatch } = this.props;
+
+        function renderNode(node, index) {
+            if (node.name === 'img') {
+                const width = node.attribs.width;
+                const height = node.attribs.height;
+                const ratio = Math.round((width / height) * 100) / 100; // 小数点后两位
+                const uri = node.attribs.src;
+                return (
+                    <Text
+                        key={index}
+                        onPress={() => {
+                            dispatch({
+                                type: 'Navigation/NAVIGATE',
+                                routeName: 'ImagesPreview',
+                                params: {
+                                    images: [{ url: uri }],
+                                    initialPage: 0,
+                                },
+                            });
+                        }}
+                    >
+                        <Image
+                            style={
+                                width && height ?
+                                    { width: 400, height: 400 / ratio } :
+                                    { width: 200, height: 200 }
+                            }
+                            source={{ uri }}
+                            resizeMethod="scale"
+                            resizeMode="cover"
+                        />
+                    </Text>
+                );
+            }
+            return false;
+        }
+
         return (
             <HtmlView
                 style={style || null}
                 value={value}
                 onLinkPress={this.handleLinkPress}
                 stylesheet={stylesheet}
+                renderNode={renderNode}
             />
         );
     }

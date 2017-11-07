@@ -11,11 +11,6 @@ import styleModule from './indexStyle';
 const styles = StyleSheet.create(styleModule);
 
 class Instruction extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
     render() {
         const { dispatch } = this.props;
         return (
@@ -27,14 +22,7 @@ class Instruction extends PureComponent {
                             style={{ width: 50, height: 50, tintColor: '#E26F26' }}
                             resizeMethod="scale"
                         />
-                        <Text
-                            style={{
-                                fontSize: 15,
-                                fontWeight: 'bold',
-                                lineHeight: 30,
-                                color: '#9C9C9C',
-                            }}
-                        >
+                        <Text style={styles.logoTitle}>
                             才丰服务平台 {deviceInfo.getVersion()}
                         </Text>
                     </View>

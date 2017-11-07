@@ -16,6 +16,12 @@ export default {
         justifyContent: 'center',
         alignItems: 'center',
     },
+    logoTitle: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        lineHeight: 30,
+        color: '#6B6B6B',
+    },
     footer: {
         flex: -1,
         height: 80,

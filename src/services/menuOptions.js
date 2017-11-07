@@ -197,14 +197,30 @@ export function fetchInstructionOptions() {
                     text: '功能介绍',
                     showBadge: false,
                     icon: <Icon name="rocket" size={20} color="#4C8BF5" />,
-                    redirect: { routeName: 'Readme' },
+                    redirect: {
+                        routeName: 'WebView',
+                        params: {
+                            title: '跳转中...',
+                            source: {
+                                uri: 'http://www.baidu.com',
+                            },
+                        },
+                    },
                     key: 'readme',
                 },
                 {
                     text: '开源协议',
                     showBadge: false,
-                    icon: <Icon name="code" size={20} color="#E26F26" />,
-                    redirect: { routeName: 'License' },
+                    icon: <Icon name="code" size={20} color="#4C8BF5" />,
+                    redirect: {
+                        routeName: 'WebView',
+                        params: {
+                            title: '跳转中...',
+                            source: {
+                                uri: 'http://www.baidu.com',
+                            },
+                        },
+                    },
                     key: 'license',
                 },
             ],
@@ -215,7 +231,7 @@ export function fetchInstructionOptions() {
                 {
                     text: '检查更新',
                     showBadge: false,
-                    icon: <Icon name="cloud-download" size={20} color="#FFAA25" />,
+                    icon: <Icon name="cloud-download" size={20} color="#4C8BF5" />,
                     redirect: false,
                     key: 'upgrade',
                 },
