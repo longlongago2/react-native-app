@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableNativeFeedback, View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import TabBarBadgeWithIcon from '../components/TabBarBadgeWithIcon';
+import TabBarBadgeWithIcon from './BadgeIcon';
 import flatChatItemStyle from './FlatChatListItemStyle';
 
 const styles = StyleSheet.create(flatChatItemStyle);

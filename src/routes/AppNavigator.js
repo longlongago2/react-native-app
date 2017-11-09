@@ -6,7 +6,6 @@ import IonicIcon from 'react-native-vector-icons/Ionicons';
 import theme from '../theme';
 import HeaderTitle from '../components/HeaderTitle';
 import Home from './homePage';
-import HomeHeader from './homePage/Header';
 import AddressList from './addressListPage';
 import ChatList from './chatListPage';
 import WorkOrder from './workOrderPage';
@@ -110,7 +109,7 @@ export const BottomNavigator = TabNavigator({
         path: 'home',
         navigationOptions() {
             return {
-                header: <HomeHeader />,
+                header: null,
                 tabBarLabel: '首页',
                 tabBarIcon({ tintColor }) {
                     return (

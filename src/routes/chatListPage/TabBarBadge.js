@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import TabBarBadgeWithIcon from '../../components/TabBarBadgeWithIcon';
+import TabBarBadgeWithIcon from '../../components/BadgeIcon';
 
 const TabBarBadge = ({ icon, tintColor, display, unreadSum }) => (
     <TabBarBadgeWithIcon

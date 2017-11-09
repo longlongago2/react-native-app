@@ -1,58 +1,166 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, Text, StatusBar, TouchableOpacity } from 'react-native';
+import { View, Text, StatusBar, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import BadgeIcon from '../../components/BadgeIcon';
+import theme, { rgba } from '../../theme';
 
 class Header extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.handleSearch = this._handleSearch.bind(this);
+        this.handleRedirect = this._handleRedirect.bind(this);
+    }
+
+    _handleSearch() {
+        const { dispatch } = this.props;
+        alert('暂未开发');
+    }
+
+    _handleRedirect(routeName, params) {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'Navigation/NAVIGATE',
+            routeName,
+            params,
+        });
     }
 
     render() {
+        const { scrollY, unread } = this.props;
         return (
-            <View
+            <Animated.View
                 style={{
                     position: 'absolute',
-                    top: StatusBar.currentHeight + 10,
-                    left: '50%',
-                    marginLeft: -125,
+                    top: 0,
+                    height: theme.header.height + StatusBar.currentHeight,
+                    width: '100%',
+                    paddingTop: StatusBar.currentHeight,
                     flex: -1,
                     flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    width: 250,
-                    height: 30,
-                    borderRadius: 15,
-                    borderWidth: 0.5,
-                    borderColor: '#ffffff',
-                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    backgroundColor: scrollY.interpolate({
+                        inputRange: [0, 100],
+                        outputRange: [
+                            rgba(theme.header.backgroundColor, 0),
+                            rgba(theme.header.backgroundColor, 1),
+                        ],
+                    }),
+                    shadowOpacity: scrollY.interpolate({
+                        inputRange: [0, 100],
+                        outputRange: [0, 0.1],
+                    }),
+                    elevation: scrollY.interpolate({
+                        inputRange: [0, 100],
+                        outputRange: [0, 4],
+                    }),
+                    shadowColor: '#000000',
+                    shadowRadius: StyleSheet.hairlineWidth,
+                    shadowOffset: {
+                        height: StyleSheet.hairlineWidth,
+                    },
                 }}
             >
-                <TouchableOpacity onPress={() => alert('搜索')}>
-                    <View
-                        style={{
-                            flex: -1,
-                            width: 250,
-                            height: '100%',
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Icon name="search" size={20} color="#ffffff" style={{ position: 'absolute', left: 10 }} />
-                        <Text style={{ color: '#fff', fontSize: 13 }}>
-                            搜索
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+                <Animated.View
+                    style={{
+                        flex: -1,
+                        width: scrollY.interpolate({
+                            inputRange: [0, 100],
+                            outputRange: [60, 0],
+                        }),
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        opacity: scrollY.interpolate({
+                            inputRange: [0, 100],
+                            outputRange: [1, 0],
+                        }),
+                    }}
+                >
+                    <TouchableOpacity onPress={() => this.handleRedirect('CreateWO', null)}>
+                        <Icon name="edit-3" size={20} color="#ffffff" />
+                    </TouchableOpacity>
+                </Animated.View>
+                <View
+                    style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'stretch',
+                    }}
+                >
+                    <TouchableOpacity onPress={this.handleSearch}>
+                        <View
+                            style={{
+                                flex: -1,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: 30,
+                                borderRadius: 15,
+                                borderWidth: 0.5,
+                                borderColor: '#ffffff',
+                                backgroundColor: 'rgba(0,0,0,0.5)',
+                                paddingHorizontal: 10,
+                            }}
+                        >
+                            <Text style={{ flex: 1, color: '#cccccc', fontSize: 13, textAlign: 'center' }}>
+                                搜索服务平台
+                            </Text>
+                            <Icon
+                                name="search"
+                                size={20}
+                                color="#ffffff"
+                                style={{ flex: -1 }}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <Animated.View
+                    style={{
+                        flex: -1,
+                        width: scrollY.interpolate({
+                            inputRange: [0, 100],
+                            outputRange: [60, 0],
+                        }),
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        opacity: scrollY.interpolate({
+                            inputRange: [0, 100],
+                            outputRange: [1, 0],
+                        }),
+                    }}
+                >
+                    <TouchableOpacity onPress={() => this.handleRedirect('Notification', null)}>
+                        <BadgeIcon
+                            badge={unread}
+                            display="dot"
+                            component="icon"
+                            icon={<Icon name="message-square" size={20} color="#ffffff" />}
+                            badgeStyle={{
+                                top: 0,
+                                right: 0,
+                                width: 8,
+                                height: 8,
+                                borderRadius: 4,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </Animated.View>
+            </Animated.View>
         );
     }
 }
 
 Header.propTypes = {
     dispatch: PropTypes.func.isRequired,
+    scrollY: PropTypes.object.isRequired,
+    unread: PropTypes.number.isRequired,
 };
-export default connect()(Header);
+const mapStateToProps = state => ({
+    unread: state.notification.unread,
+});
+export default connect(mapStateToProps)(Header);

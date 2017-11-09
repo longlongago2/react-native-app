@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, StatusBar, StyleSheet, ScrollView, FlatList, Dimensions } from 'react-native';
+import { View, StatusBar, StyleSheet, ScrollView, FlatList, Dimensions, Animated } from 'react-native';
 import CarouselImage from './SlideImages';
 import HomeFlatSquaredItem from './HomeFlatSquaredItem';
 import NoticeBoard from './NoticeBoard';
 import Loading from '../../components/Loading';
+import Header from './Header';
 import { fetchHomeOptions } from '../../services/menuOptions';
 import styleModule from './indexStyle';
 import theme from '../../theme';
@@ -19,6 +20,7 @@ class Home extends PureComponent {
         this.state = {
             screenWidth: width,
             numColumns: 4,
+            scrollY: new Animated.Value(0),
         };
         this.handleLayoutChange = this._handleLayoutChange.bind(this);
     }
@@ -30,7 +32,7 @@ class Home extends PureComponent {
 
     render() {
         const { dispatch, noticeList, noticeListLoading, online, loading } = this.props;
-        const { screenWidth, numColumns } = this.state;
+        const { screenWidth, numColumns, scrollY } = this.state;
         const images = [
             'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1508819472188&di=bdebb8c243a13049a7a1df95c1cca35e&imgtype=0&src=http%3A%2F%2Fimg2.niutuku.com%2Fdesk%2F130220%2F37%2F37-niutuku.com-927.jpg',
             'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1508820299148&di=b6b396c534c7a29fcb6a82ee5c136577&imgtype=0&src=http%3A%2F%2Ft1.niutuku.com%2F960%2F42%2F42-207375.jpg',
@@ -39,14 +41,27 @@ class Home extends PureComponent {
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar translucent backgroundColor={theme.statusBarColor} />
-                <Loading loading={loading} />
-                <ScrollView>
+                <ScrollView
+                    onScroll={Animated.event(
+                        [{
+                            nativeEvent: {
+                                contentOffset: {
+                                    y: scrollY,
+                                },
+                            },
+                        }],
+                    )}
+                >
                     <View style={styles.container}>
                         <CarouselImage images={images} />
                         <View onLayout={this.handleLayoutChange}>
                             <FlatList
                                 horizontal={false}
-                                columnWrapperStyle={{ height: 100, paddingVertical: 5, backgroundColor: '#fff' }}
+                                columnWrapperStyle={{
+                                    backgroundColor: '#ffffff',
+                                    height: 100,
+                                    paddingVertical: 5,
+                                }}
                                 numColumns={numColumns}
                                 data={fetchHomeOptions()}
                                 renderItem={({ item }) => (
@@ -68,6 +83,8 @@ class Home extends PureComponent {
                         }
                     </View>
                 </ScrollView>
+                <Loading loading={loading} />
+                <Header scrollY={scrollY} />
             </View>
         );
     }

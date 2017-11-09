@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Image } from 'react-native';
 
-const TabBarBadgeWithIcon = ({ icon, image, imageStyle, badge, badgeStyle, tintColor, display, component }) => (
-    <View>
+const TabBarBadgeWithIcon = ({ icon, image, imageStyle, badge, badgeStyle, tintColor, display, component, containerStyle }) => (
+    <View style={containerStyle}>
         {
             component && component === 'icon' ?
                 icon : null
@@ -68,7 +68,7 @@ const TabBarBadgeWithIcon = ({ icon, image, imageStyle, badge, badgeStyle, tintC
     </View>
 );
 TabBarBadgeWithIcon.propTypes = {
-    icon: PropTypes.object,
+    icon: PropTypes.element,
     image: PropTypes.number,
     imageStyle: PropTypes.object,
     badge: PropTypes.number.isRequired,
@@ -76,5 +76,6 @@ TabBarBadgeWithIcon.propTypes = {
     tintColor: PropTypes.string,
     display: PropTypes.oneOf(['dot', 'number', false]).isRequired,
     component: PropTypes.oneOf(['image', 'icon', false]).isRequired,
+    containerStyle: PropTypes.object,
 };
 export default TabBarBadgeWithIcon;
