@@ -42,19 +42,20 @@ class Header extends PureComponent {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: scrollY.interpolate({
-                        inputRange: [0, 100],
+                        inputRange: [0, 50, 150],
                         outputRange: [
+                            rgba(theme.header.backgroundColor, 0),
                             rgba(theme.header.backgroundColor, 0),
                             rgba(theme.header.backgroundColor, 1),
                         ],
                     }),
                     shadowOpacity: scrollY.interpolate({
-                        inputRange: [0, 100],
-                        outputRange: [0, 0.1],
+                        inputRange: [0, 50, 150],
+                        outputRange: [0, 0, 0.1],
                     }),
                     elevation: scrollY.interpolate({
-                        inputRange: [0, 100],
-                        outputRange: [0, 4],
+                        inputRange: [0, 50, 150],
+                        outputRange: [0, 0, 4],
                     }),
                     shadowColor: '#000000',
                     shadowRadius: StyleSheet.hairlineWidth,
@@ -63,26 +64,19 @@ class Header extends PureComponent {
                     },
                 }}
             >
-                <Animated.View
+                <View
                     style={{
                         flex: -1,
-                        width: scrollY.interpolate({
-                            inputRange: [0, 100],
-                            outputRange: [60, 0],
-                        }),
+                        width: 60,
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        opacity: scrollY.interpolate({
-                            inputRange: [0, 100],
-                            outputRange: [1, 0],
-                        }),
                     }}
                 >
                     <TouchableOpacity onPress={() => this.handleRedirect('CreateWO', null)}>
-                        <Icon name="edit-3" size={20} color="#ffffff" />
+                        <Icon name="edit-3" size={25} color="#ffffff" />
                     </TouchableOpacity>
-                </Animated.View>
+                </View>
                 <View
                     style={{
                         flex: 1,
@@ -118,20 +112,13 @@ class Header extends PureComponent {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <Animated.View
+                <View
                     style={{
                         flex: -1,
-                        width: scrollY.interpolate({
-                            inputRange: [0, 100],
-                            outputRange: [60, 0],
-                        }),
+                        width: 60,
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        opacity: scrollY.interpolate({
-                            inputRange: [0, 100],
-                            outputRange: [1, 0],
-                        }),
                     }}
                 >
                     <TouchableOpacity onPress={() => this.handleRedirect('Notification', null)}>
@@ -139,17 +126,17 @@ class Header extends PureComponent {
                             badge={unread}
                             display="dot"
                             component="icon"
-                            icon={<Icon name="message-square" size={20} color="#ffffff" />}
+                            icon={<Icon name="message-square" size={25} color="#ffffff" />}
                             badgeStyle={{
                                 top: 0,
                                 right: 0,
-                                width: 8,
-                                height: 8,
-                                borderRadius: 4,
+                                width: 10,
+                                height: 10,
+                                borderRadius: 5,
                             }}
                         />
                     </TouchableOpacity>
-                </Animated.View>
+                </View>
             </Animated.View>
         );
     }
