@@ -71,6 +71,9 @@ import {
     queryUnreadNotificationNum,
     initialNotification,
 } from './notification';
+import {
+    queryLatestVersion,
+} from './instruction';
 
 export default function* rootSaga() {
     yield all([
@@ -91,6 +94,7 @@ export default function* rootSaga() {
         takeLatest(ACTIONS.TRACKINGWORKORDER.REQUEST, queryWorkOrderListByFollowUserId), // 查询跟踪工单列表
         takeLatest(ACTIONS.NOTIFICATION.REQUEST, queryNotificationListByUserId), // 查询本地消息列表
         takeLatest(ACTIONS.UNREAD_NOTIFICATION.REQUEST, queryUnreadNotificationNum), // 查询未读消息
+        takeLatest(ACTIONS.APPVERSION.REQUEST, queryLatestVersion),           // 查询最新的app版本
         takeEvery(ACTIONS.USER_PASSWORD.UPDATE, updateUserPassword),          // 修改密码
         takeEvery(ACTIONS.FEEDBACK_IMAGE.INSERT, insertFeedbackImage),        // 创建工单上传工单图片
         takeEvery(ACTIONS.FEEDBACK_IMAGE.DELETE, deleteFeedbackImage),        // 删除创建工单回显的图片

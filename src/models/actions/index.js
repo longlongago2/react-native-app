@@ -16,6 +16,7 @@ import { USERGROUP, USERGROUP_DETAIL, USERGROUP_ASSIGNED, USERGROUP_TRACKERS } f
 import { NOTICE } from './notice';
 import { TRACKINGWORKORDER } from './trackingWorkOrder';
 import { NOTIFICATION, UNREAD_NOTIFICATION } from './notification';
+import { APPVERSION, LATESTAPP_DOWNLOAD } from './instruction';
 
 export default {
     USER_LOGIN,
@@ -44,4 +45,6 @@ export default {
     TRACKINGWORKORDER,
     NOTIFICATION,
     UNREAD_NOTIFICATION,
+    APPVERSION,
+    LATESTAPP_DOWNLOAD,
 };

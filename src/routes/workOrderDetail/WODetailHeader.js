@@ -4,9 +4,14 @@ import PropTypes from 'prop-types';
 import {
     View,
     Text,
+    TouchableNativeFeedback,
+    Alert,
 } from 'react-native';
+import SendIntentAndroid from 'react-native-send-intent';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import hanZiLetter from '../../utils/hanZiLetter';
 import englishLetter from '../../utils/englishLetter';
+import theme from '../../theme';
 
 const WODetailHeader = ({ workOrderDetail }) => {
     function handleRandomColor(text) {
@@ -27,6 +32,26 @@ const WODetailHeader = ({ workOrderDetail }) => {
             default:
                 return '未识别编码';
         }
+    }
+
+    function handleIconPress() {
+        Alert.alert(
+            '询问',
+            '您是否确定拨打此电话？',
+            [
+                {
+                    text: '取消',
+                    style: 'cancel',
+                },
+                {
+                    text: '是',
+                    onPress: () => {
+                        SendIntentAndroid.sendPhoneDial('17705158337');
+                    },
+                },
+            ],
+            { cancelable: false },
+        );
     }
 
     return (
@@ -68,9 +93,21 @@ const WODetailHeader = ({ workOrderDetail }) => {
             <View style={{ flex: 0.15 }} />
             {
                 (workOrderDetail.wsstatus === 1 && workOrderDetail.assginpersonname) &&
-                <View style={{ flex: 0.4 }}>
-                    <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>负责人</Text>
-                    <Text style={{ textAlign: 'center' }}>{workOrderDetail.assginpersonname}</Text>
+                <View style={{ flex: 0.4, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold' }}>负责人</Text>
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                    }}
+                    >
+                        <Text>{workOrderDetail.assginpersonname}</Text>
+                        <TouchableNativeFeedback
+                            onPress={() => handleIconPress()}
+                            background={TouchableNativeFeedback.Ripple(theme.rippleColor)}
+                        >
+                            <Icon name="phone" size={20} color={'#79B23D'} />
+                        </TouchableNativeFeedback>
+                    </View>
                 </View>
             }
         </View>

@@ -7,14 +7,30 @@ import InstructionOption from './instructionListOption';
 import ItemSeparator from '../../components/ItemSeparator';
 import { fetchInstructionOptions } from '../../services/menuOptions';
 import styleModule from './indexStyle';
+import ACTIONS from '../../models/actions';
+import DownloadProgress from './DownloadProgress';
 
 const styles = StyleSheet.create(styleModule);
 
 class Instruction extends PureComponent {
-    render() {
+    constructor(props) {
+        super(props);
+        this.queryLatestVersion = this._queryLatestVersion.bind(this);
+    }
+    componentDidMount() {
+        this.queryLatestVersion();
+    }
+    _queryLatestVersion() {
         const { dispatch } = this.props;
+        dispatch({
+            type: ACTIONS.APPVERSION.REQUEST,
+        });
+    }
+    render() {
+        const { dispatch, navigation, loading } = this.props;
         return (
             <View style={styles.container}>
+                <DownloadProgress loading={loading} text={'正在下载'} dispatch={dispatch} />
                 <View style={styles.body}>
                     <View style={styles.logo}>
                         <Image
@@ -29,7 +45,11 @@ class Instruction extends PureComponent {
                     <SectionList
                         sections={fetchInstructionOptions()}
                         renderItem={({ item }) => (
-                            <InstructionOption item={item} dispatch={dispatch} />
+                            <InstructionOption
+                                item={item}
+                                dispatch={dispatch}
+                                navigation={navigation}
+                            />
                         )}
                         ItemSeparatorComponent={() => (
                             <ItemSeparator
@@ -54,6 +74,12 @@ class Instruction extends PureComponent {
 
 Instruction.propTypes = {
     dispatch: PropTypes.func.isRequired,
+    navigation: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
 };
 
-export default connect()(Instruction);
+const mapStateToProps = state => ({
+    ...state.instruction,
+});
+
+export default connect(mapStateToProps)(Instruction);
