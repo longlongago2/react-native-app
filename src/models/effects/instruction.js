@@ -1,7 +1,5 @@
 /** created by zhanqi on 2017-11-02 */
 import { put, call, select } from 'redux-saga/effects';
-import RNFS from 'react-native-fs';
-import FileOpener from 'react-native-file-opener';
 import { queryTheNewestVersion } from '../../services/instruction';
 import ACTIONS from '../../models/actions';
 

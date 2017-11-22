@@ -7,6 +7,6 @@ export default {
         height: '100%',
         left: 0,
         top: 0,
-        zIndex: 99999,
+        zIndex: 10,
     },
 };

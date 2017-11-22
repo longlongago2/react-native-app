@@ -7,30 +7,20 @@ import InstructionOption from './instructionListOption';
 import ItemSeparator from '../../components/ItemSeparator';
 import { fetchInstructionOptions } from '../../services/menuOptions';
 import styleModule from './indexStyle';
-import ACTIONS from '../../models/actions';
 import DownloadProgress from './DownloadProgress';
 
 const styles = StyleSheet.create(styleModule);
 
 class Instruction extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.queryLatestVersion = this._queryLatestVersion.bind(this);
-    }
-    componentDidMount() {
-        this.queryLatestVersion();
-    }
-    _queryLatestVersion() {
-        const { dispatch } = this.props;
-        dispatch({
-            type: ACTIONS.APPVERSION.REQUEST,
-        });
-    }
     render() {
         const { dispatch, navigation, loading } = this.props;
+        const { state } = navigation;
         return (
             <View style={styles.container}>
-                <DownloadProgress loading={loading} text={'正在下载'} dispatch={dispatch} />
+                {
+                    state.params && (state.params.allowUpdate === true) &&
+                    <DownloadProgress loading={loading} text={'正在下载'} dispatch={dispatch} />
+                }
                 <View style={styles.body}>
                     <View style={styles.logo}>
                         <Image

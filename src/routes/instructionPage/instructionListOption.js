@@ -21,7 +21,8 @@ class InstructionListOption extends PureComponent {
         });
     }
     render() {
-        const { item, dispatch, latestVersion } = this.props;
+        const { item, dispatch, latestVersion, navigation } = this.props;
+        const { setParams } = navigation;
         function handItemPress() {
             if (item.redirect) {
                 const { routeName, params } = item.redirect;
@@ -41,9 +42,7 @@ class InstructionListOption extends PureComponent {
                                 [
                                     { text: '立即更新',
                                         onPress: () => {
-                                            // dispatch({
-                                            //     type: ACTIONS.LATESTAPP_DOWNLOAD.INSERT,
-                                            // });
+                                            setParams({ allowUpdate: true });
                                             dispatch({
                                                 type: ACTIONS.LATESTAPP_DOWNLOAD.LOADING,
                                                 payload: {
@@ -76,6 +75,7 @@ InstructionListOption.propTypes = {
     item: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     latestVersion: PropTypes.string.isRequired,
+    navigation: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

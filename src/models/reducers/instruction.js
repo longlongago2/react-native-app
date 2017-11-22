@@ -11,6 +11,7 @@ export default function (state = initialState, action) {
     switch (type) {
         case ACTIONS.LATESTAPP_DOWNLOAD.LOADING:
             return {
+                ...state,
                 ...payload,
             };
         case ACTIONS.APPVERSION.SUCCESS:
@@ -28,7 +29,6 @@ export default function (state = initialState, action) {
                 loading: false,
             };
         case ACTIONS.LATESTAPP_DOWNLOAD.FAILURE:
-            ToastAndroid.show('下载或安装失败,请重试', 3000);
             return {
                 ...state,
                 loading: false,
