@@ -7,15 +7,15 @@ export default {
     },
     banner: {
         width: '100%',
-        height: 170,
+        height: 180,
         backgroundColor: 'rgb(139, 139, 139)',
     },
     avatar: {
-        width: 50,
-        height: 50,
+        width: 60,
+        height: 60,
         borderColor: '#ffffff',
         borderWidth: 1,
-        borderRadius: 25,
+        borderRadius: 30,
     },
     layout: {
         flex: 1,
@@ -44,5 +44,23 @@ export default {
         lineHeight: 25,
         fontSize: 12,
         padding: 10,
+    },
+    tip: {
+        backgroundColor: theme.header.backgroundColor,
+        width: 80,
+        height: 30,
+        flex: -1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: '#ffffff',
+        borderWidth: 1,
+        borderTopLeftRadius: 15,
+        borderBottomLeftRadius: 15,
+    },
+    tipText: {
+        color: theme.header.foregroundColor,
+        fontSize: 14,
+        paddingHorizontal: 5,
     },
 };

@@ -11,18 +11,22 @@ class InstructionListOption extends PureComponent {
         super(props);
         this.queryLatestVersion = this._queryLatestVersion.bind(this);
     }
+
     componentDidMount() {
         this.queryLatestVersion();
     }
+
     _queryLatestVersion() {
         const { dispatch } = this.props;
         dispatch({
             type: ACTIONS.APPVERSION.REQUEST,
         });
     }
+
     render() {
         const { item, dispatch, latestVersion, navigation } = this.props;
         const { setParams } = navigation;
+
         function handItemPress() {
             if (item.redirect) {
                 const { routeName, params } = item.redirect;
@@ -40,18 +44,14 @@ class InstructionListOption extends PureComponent {
                                 '询问',
                                 '发现新版本，是否立即更新?',
                                 [
-                                    { text: '立即更新',
+                                    {
+                                        text: '立即更新',
                                         onPress: () => {
-                                            setParams({ allowUpdate: true });
-                                            dispatch({
-                                                type: ACTIONS.LATESTAPP_DOWNLOAD.LOADING,
-                                                payload: {
-                                                    loading: true,
-                                                },
-                                            });
+                                            setParams({ showDownloadComponent: true }); // 打开下载面板组件
+                                            dispatch({ type: ACTIONS.LATESTAPP_DOWNLOAD.LOADING });
                                         },
                                     },
-                                    { text: '取消', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                                    { text: '取消', style: 'cancel' },
                                 ],
                                 { cancelable: false },
                             );

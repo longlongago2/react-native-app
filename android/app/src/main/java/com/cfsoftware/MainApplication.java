@@ -3,6 +3,9 @@ package com.cfsoftware;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.burnweb.rnsendintent.RNSendIntentPackage;
+import com.rnfs.RNFSPackage;
+import com.fileopener.FileOpenerPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
@@ -28,6 +31,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSendIntentPackage(),
+            new RNFSPackage(),
+            new FileOpenerPackage(),
             new FastImageViewPackage(),
             new VectorIconsPackage(),
             new ReactNativePushNotificationPackage(),

@@ -6,6 +6,7 @@ import ACTIONS from '../../models/actions';
 export function* queryLatestVersion() {
     const { online } = yield select(state => state.user);
     if (online) {
+        yield put({ type: ACTIONS.APPVERSION.LOADING });
         const { data } = yield call(queryTheNewestVersion);
         if (data && data.data.status === 'true') {
             yield put({
@@ -17,6 +18,9 @@ export function* queryLatestVersion() {
         } else {
             yield put({
                 type: ACTIONS.APPVERSION.FAILURE,
+                payload: {
+                    message: '查询失败',
+                },
             });
         }
     } else {

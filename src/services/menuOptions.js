@@ -110,11 +110,11 @@ export function fetchUserOptions() {
                     key: 'notification',
                 },
                 {
-                    text: '打卡签到',
+                    text: '最近浏览',
                     showBadge: false,
-                    icon: <Icon name="flag" size={20} color="#BB4628" />,
+                    icon: <Icon name="clock-o" size={20} color="#009ACD" />,
                     redirect: { routeName: '' },
-                    key: 'sign',
+                    key: 'history',
                 },
             ],
             key: 's1',
@@ -123,7 +123,7 @@ export function fetchUserOptions() {
             data: [{
                 text: '设置',
                 showBadge: false,
-                icon: <Icon name="cog" size={20} color="#79B23D" />,
+                icon: <Icon name="cog" size={20} color="#4169E1" />,
                 redirect: { routeName: 'Setting' },
                 key: 'setting',
             }],
@@ -141,7 +141,7 @@ export function fetchUserOptions() {
                 {
                     text: '意见反馈',
                     showBadge: false,
-                    icon: <Icon name="paper-plane" size={20} color="#A9823F" />,
+                    icon: <Icon name="paper-plane" size={20} color="#00868B" />,
                     redirect: false,
                     key: 'feedback',
                 },
