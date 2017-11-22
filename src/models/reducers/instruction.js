@@ -3,6 +3,7 @@ import ACTIONS from '../actions';
 
 const initialState = {
     latestVersion: '',
+    latestApkPath: '',
     loading: false,
     downloading: false,
 };

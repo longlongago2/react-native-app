@@ -39,7 +39,7 @@ class InstructionListOption extends PureComponent {
                 const { key } = item;
                 switch (key) {
                     case 'upgrade':
-                        if (latestVersion && (deviceInfo.getVersion() !== latestVersion)) {
+                        if (latestVersion && deviceInfo.getVersion() < latestVersion) {
                             Alert.alert(
                                 '询问',
                                 '发现新版本，是否立即更新?',

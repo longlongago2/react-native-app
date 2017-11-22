@@ -59,7 +59,7 @@ const Banner = ({ userInfo, online, onPress }) => (
                 duration={500}
                 position={{
                     right: { initial: -81, final: -1 },
-                    top: { initial: -30, final: 20 },
+                    top: 20,
                 }}
             >
                 <TouchableOpacity onPress={() => alert('正在开发，敬请期待')}>

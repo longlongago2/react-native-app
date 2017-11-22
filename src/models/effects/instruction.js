@@ -13,6 +13,7 @@ export function* queryLatestVersion() {
                 type: ACTIONS.APPVERSION.SUCCESS,
                 payload: {
                     latestVersion: data.data.info.versioninfo,
+                    latestApkPath: data.data.info.path,
                 },
             });
         } else {

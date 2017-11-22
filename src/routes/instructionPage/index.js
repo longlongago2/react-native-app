@@ -13,7 +13,7 @@ const styles = StyleSheet.create(styleModule);
 
 class Instruction extends PureComponent {
     render() {
-        const { dispatch, navigation, downloading } = this.props;
+        const { dispatch, navigation, downloading, latestApkPath } = this.props;
         const { state } = navigation;
         return (
             <View style={styles.container}>
@@ -21,6 +21,7 @@ class Instruction extends PureComponent {
                     state.params && state.params.showDownloadComponent === true &&
                     <DownloadProgress
                         downloading={downloading}
+                        latestApkPath={latestApkPath}
                         text="正在下载"
                         dispatch={dispatch}
                         navigation={navigation}
@@ -71,6 +72,7 @@ Instruction.propTypes = {
     dispatch: PropTypes.func.isRequired,
     navigation: PropTypes.object.isRequired,
     downloading: PropTypes.bool.isRequired,
+    latestApkPath: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
