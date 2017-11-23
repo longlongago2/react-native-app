@@ -5,20 +5,21 @@ import { connect } from 'react-redux';
 import deviceInfo from 'react-native-device-info';
 import PropTypes from 'prop-types';
 
-const InstructionBage = ({ latestVersion }) => {
+const InstructionBadge = ({ latestVersion }) => {
     if (deviceInfo.getVersion() < latestVersion) { // app当前版本小于服务器版本
         return (
-            <View style={{
-                width: 30,
-                height: 15,
-                left: 10,
-                borderRadius: 15,
-                backgroundColor: 'red',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
+            <View
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 30,
+                    height: 15,
+                    left: 10,
+                    borderRadius: 15,
+                    backgroundColor: 'red',
+                }}
             >
-                <Text style={{ color: '#ffffff', fontSize: 10 }}>
+                <Text style={{ color: '#ffffff', fontSize: 10, fontWeight: '500' }}>
                     new
                 </Text>
             </View>
@@ -27,7 +28,7 @@ const InstructionBage = ({ latestVersion }) => {
     return null;
 };
 
-InstructionBage.propTypes = {
+InstructionBadge.propTypes = {
     latestVersion: PropTypes.string.isRequired,
 };
 
@@ -35,4 +36,4 @@ const mapStateToProps = state => ({
     latestVersion: state.instruction.latestVersion,
 });
 
-export default connect(mapStateToProps)(InstructionBage);
+export default connect(mapStateToProps)(InstructionBadge);
