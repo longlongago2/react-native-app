@@ -21,6 +21,7 @@ class App extends Component {
         this.handleNotificationClick = this._handleNotificationClick.bind(this);
         this.handleChatNotification = this._handleChatNotification.bind(this);
         this.handleWONotification = this._handleWONotification.bind(this);
+        this.handleAutoLogin = this._handleAutoLogin.bind(this);
     }
 
     componentWillMount() {
@@ -33,15 +34,24 @@ class App extends Component {
     }
 
     componentDidMount() {
-        const { dispatch } = this.props;
         AppState.addEventListener('change', this.handleAppStateChange);
         BackHandler.addEventListener('hardwareBackPress', this.handleBackAndroid);
-        // 1.通知标题点击监听
+        // 1.通知栏配置
         PushNotification.configure({
             onNotification: this.handleNotificationClick,
             popInitialNotification: true,
         });
         // 2.自动登录
+        this.handleAutoLogin();
+    }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackAndroid);
+    }
+
+    _handleAutoLogin() {
+        const { dispatch } = this.props;
         global.storage.load({
             key: 'currentUser',
             autoSync: false,
@@ -72,11 +82,6 @@ class App extends Component {
                 routeName: 'Login',
             });
         });
-    }
-
-    componentWillUnmount() {
-        AppState.removeEventListener('change', this.handleAppStateChange);
-        BackHandler.removeEventListener('hardwareBackPress', this.handleBackAndroid);
     }
 
     _handleChatNotification(notification) {
