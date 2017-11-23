@@ -1,12 +1,10 @@
-/**
- * 主页九宫格菜单选项
- * workOrderType为工单类型：如：组内工单，我的任务...
- */
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import OptionBadge from '../routes/userPage/OptionBadge';
+import InstructionBage from '../routes/instructionPage/InstructionBage';
 
+// 首页 功能模块 选项
 export function fetchHomeOptions() {
     return [
         {
@@ -230,7 +228,8 @@ export function fetchInstructionOptions() {
             data: [
                 {
                     text: '检查更新',
-                    showBadge: false,
+                    showBadge: true,
+                    badge: <InstructionBage />,
                     icon: <Icon name="cloud-download" size={20} color="#4C8BF5" />,
                     redirect: false,
                     key: 'upgrade',

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { ToastAndroid } from 'react-native';
 import RNFS from 'react-native-fs';
 import FileOpener from 'react-native-file-opener';
 import Loading from '../../components/Loading';
@@ -39,7 +38,7 @@ export default class DownloadProgress extends PureComponent {
         const rootUrl = RNFS.ExternalDirectoryPath;         // 获取本地的根目录
         const targetFile = `${rootUrl}/${latestApkPath}`;   // 目标文件
         const targetFileArr = targetFile.split('/');        // 计算目标文件夹
-        targetFileArr.pop();
+        targetFileArr.pop();                                 // 删除数组最后项
         const targetPath = targetFileArr.join('/');         // 目标文件夹
         const exist = await RNFS.exists(targetPath);        // 判断文件夹路径是否存在
         if (!exist) await RNFS.mkdir(targetPath);           // 不存在就创建
