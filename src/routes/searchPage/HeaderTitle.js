@@ -11,7 +11,7 @@ export default class HeaderRight extends PureComponent {
 
     render() {
         return (
-            <View style={{ width: '100%' }}>
+            <View style={{ width: '100%', paddingHorizontal: 14 }}>
                 <TextInput
                     autoFocus
                     placeholder="搜索服务平台"
