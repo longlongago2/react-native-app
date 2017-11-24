@@ -43,6 +43,8 @@ import WebView from './webViewPage';
 import WebViewHeaderRight from './webViewPage/HeaderRight';
 import WebViewHeaderLeft from './webViewPage/HeaderLeft';
 import Instruction from './instructionPage';
+import Search from './searchPage';
+import SearchHeaderTitle from './searchPage/HeaderTitle';
 
 const headerStyle = {
     backgroundColor: theme.header.backgroundColor,
@@ -507,6 +509,17 @@ const AppNavigator = StackNavigator({
         navigationOptions() {
             return {
                 title: '关于平台',
+                headerTintColor: theme.header.foregroundColor,
+                headerStyle,
+            };
+        },
+    },
+    Search: {
+        screen: Search,
+        path: 'search',
+        navigationOptions() {
+            return {
+                headerTitle: <SearchHeaderTitle />,
                 headerTintColor: theme.header.foregroundColor,
                 headerStyle,
             };

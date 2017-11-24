@@ -15,7 +15,11 @@ class Header extends PureComponent {
 
     _handleSearch() {
         const { dispatch } = this.props;
-        alert('暂未开发');
+        dispatch({
+            type: 'Navigation/NAVIGATE',
+            routeName: 'Search',
+            params: null,
+        });
     }
 
     _handleRedirect(routeName, params) {

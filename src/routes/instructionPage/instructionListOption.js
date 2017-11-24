@@ -56,7 +56,12 @@ class InstructionListOption extends PureComponent {
                                 { cancelable: false },
                             );
                         } else {
-                            alert('已经是最新版本');
+                            Alert.alert(
+                                '版本信息',
+                                `当前版本：v${latestVersion}，已经是最新版本！`,
+                                [{ text: '知道了', style: 'cancel' }],
+                                { cancelable: false },
+                            );
                         }
                         break;
                     default:

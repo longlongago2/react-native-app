@@ -148,6 +148,8 @@ class App extends Component {
                     // 工单消息通知
                     this.handleWONotification(notification);
                     break;
+                case 'progress':
+                    break;
                 default:
                     ToastAndroid.show('未处理的消息点击事件', 3000);
             }
