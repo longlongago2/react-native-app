@@ -37,7 +37,7 @@ const WODetailHeader = ({ workOrderDetail }) => {
     function handleIconPress() {
         Alert.alert(
             '询问',
-            '您是否确定拨打此电话？',
+            '您是否确定拨打负责人电话？',
             [
                 {
                     text: '取消',
@@ -93,22 +93,41 @@ const WODetailHeader = ({ workOrderDetail }) => {
             <View style={{ flex: 0.15 }} />
             {
                 (workOrderDetail.wsstatus === 1 && workOrderDetail.assginpersonname) &&
-                <View style={{ flex: 0.4, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontWeight: 'bold' }}>负责人</Text>
                     <View style={{
-                        flex: 1,
+                        flex: 0.4,
                         flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                     }}
                     >
-                        <Text>{workOrderDetail.assginpersonname}</Text>
+                        <View style={{
+                            flex: 0.7,
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                        >
+                            <Text style={{ fontWeight: 'bold' }}>负责人</Text>
+                            <Text>{workOrderDetail.assginpersonname}</Text>
+                        </View>
                         <TouchableNativeFeedback
                             onPress={() => handleIconPress()}
                             background={TouchableNativeFeedback.Ripple(theme.rippleColor)}
                         >
-                            <Icon name="phone" size={20} color={'#79B23D'} />
+                            <View style={{
+                                flex: -1,
+                                width: 40,
+                                height: 40,
+                                backgroundColor: '#79B23D',
+                                borderRadius: 20,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
+                            >
+                                <Icon name="phone" size={25} color={'#ffffff'} />
+                            </View>
                         </TouchableNativeFeedback>
                     </View>
-                </View>
             }
         </View>
     );

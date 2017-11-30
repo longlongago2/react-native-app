@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import OptionBadge from '../routes/userPage/OptionBadge';
-import InstructionBage from '../routes/instructionPage/InstructionBage';
+import InstructionBadge from '../routes/instructionPage/InstructionBadge';
 
 // 首页 功能模块 选项
 export function fetchHomeOptions() {
@@ -111,7 +111,7 @@ export function fetchUserOptions() {
                     text: '最近浏览',
                     showBadge: false,
                     icon: <Icon name="clock-o" size={20} color="#009ACD" />,
-                    redirect: { routeName: '' },
+                    redirect: { routeName: 'RecentBrowse' },
                     key: 'history',
                 },
             ],
@@ -229,7 +229,7 @@ export function fetchInstructionOptions() {
                 {
                     text: '检查更新',
                     showBadge: true,
-                    badge: <InstructionBage />,
+                    badge: <InstructionBadge />,
                     icon: <Icon name="cloud-download" size={20} color="#4C8BF5" />,
                     redirect: false,
                     key: 'upgrade',
