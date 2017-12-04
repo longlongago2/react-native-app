@@ -88,6 +88,12 @@ const dataList = [
         ],
         key: 'woRecycleBin',
     },
+    {
+        data: [
+            { key: 'reply', name: '留言', redirect: { type: 'modal', params: { name: 'reply' } } },
+        ],
+        key: 'other',
+    },
 ];
 
 const WODetailBottom = ({ workOrderDetail, navigation, userid, dispatch }) => {
@@ -132,8 +138,8 @@ const WODetailBottom = ({ workOrderDetail, navigation, userid, dispatch }) => {
                 return dataList[4].data;
             case 'woRecycleBin':  // 回收站
                 return dataList[5].data;
-            default:
-                return [];
+            default:              // 其他
+                return dataList[6].data;
         }
     }
 

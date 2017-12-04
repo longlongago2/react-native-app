@@ -1,17 +1,11 @@
 /** created by zhangqi on 2017-9-8 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    View,
-    Text,
-    TouchableNativeFeedback,
-    Alert,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import SendIntentAndroid from 'react-native-send-intent';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import hanZiLetter from '../../utils/hanZiLetter';
 import englishLetter from '../../utils/englishLetter';
-import theme from '../../theme';
 
 const WODetailHeader = ({ workOrderDetail }) => {
     function handleRandomColor(text) {
@@ -93,41 +87,38 @@ const WODetailHeader = ({ workOrderDetail }) => {
             <View style={{ flex: 0.15 }} />
             {
                 (workOrderDetail.wsstatus === 1 && workOrderDetail.assginpersonname) &&
+                <View style={{
+                    flex: 0.4,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+                >
                     <View style={{
-                        flex: 0.4,
-                        flexDirection: 'row',
+                        flex: 0.7,
+                        flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}
                     >
+                        <Text style={{ fontWeight: 'bold' }}>负责人</Text>
+                        <Text>{workOrderDetail.assginpersonname}</Text>
+                    </View>
+                    <TouchableOpacity onPress={handleIconPress}>
                         <View style={{
-                            flex: 0.7,
-                            flexDirection: 'column',
+                            flex: -1,
+                            width: 40,
+                            height: 40,
+                            backgroundColor: '#79B23D',
+                            borderRadius: 20,
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}
                         >
-                            <Text style={{ fontWeight: 'bold' }}>负责人</Text>
-                            <Text>{workOrderDetail.assginpersonname}</Text>
+                            <Icon name="phone" size={25} color={'#ffffff'} />
                         </View>
-                        <TouchableNativeFeedback
-                            onPress={() => handleIconPress()}
-                            background={TouchableNativeFeedback.Ripple(theme.rippleColor)}
-                        >
-                            <View style={{
-                                flex: -1,
-                                width: 40,
-                                height: 40,
-                                backgroundColor: '#79B23D',
-                                borderRadius: 20,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            }}
-                            >
-                                <Icon name="phone" size={25} color={'#ffffff'} />
-                            </View>
-                        </TouchableNativeFeedback>
-                    </View>
+                    </TouchableOpacity>
+                </View>
             }
         </View>
     );

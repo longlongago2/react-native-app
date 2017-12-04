@@ -16,13 +16,25 @@ class RecentBrowse extends PureComponent {
             userArray: [],
         };
     }
+
     componentWillMount() {
         // 开启数据库
         if (!db) {
             db = sqLite.open();
         }
         // 建表
-        // sqLite.createTable();
+        // sqLite.createTable({
+        //     tableName: 'people',
+        //     tableFields: [
+        //         {
+        //             columnName: 'name',
+        //             dataType: 'varchar',
+        //         }, {
+        //             columnName: 'age',
+        //             dataType: 'varchar',
+        //         },
+        //     ],
+        // });
         // 模拟插入数据
         const userData = [];
         const user = {
@@ -35,7 +47,7 @@ class RecentBrowse extends PureComponent {
         };
         userData.push(user);
         // 插入数据
-        sqLite.insertUserData(userData);
+        sqLite.insertData(userData);
         // 查询
         db.transaction((tx) => {
             tx.executeSql('select * from user', [], (_tx, results) => {
