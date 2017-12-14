@@ -45,7 +45,7 @@ import WebViewHeaderLeft from './webViewPage/HeaderLeft';
 import Instruction from './instructionPage';
 import Search from './searchPage';
 import SearchHeaderTitle from './searchPage/HeaderTitle';
-import RecentBrowse from './recentBrowsePage';
+import BrowsingHistory from './browsingHistoryPage';
 
 const headerStyle = {
     backgroundColor: theme.header.backgroundColor,
@@ -526,9 +526,9 @@ const AppNavigator = StackNavigator({
             };
         },
     },
-    RecentBrowse: {
-        screen: RecentBrowse,
-        path: 'recentBrowse',
+    BrowsingHistory: {
+        screen: BrowsingHistory,
+        path: 'browsingHistory',
         navigationOptions() {
             return {
                 title: '最近浏览',

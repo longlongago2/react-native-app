@@ -1,11 +1,13 @@
-const INSERT = 'INSERT';    // ACTION:增
-const DELETE = 'DELETE';    // ACTION:删
-const UPDATE = 'UPDATE';    // ACTION:改
-const REQUEST = 'REQUEST';  // ACTION:查
-const LOADING = 'LOADING';  // REDUCER:加载
-const SUCCESS = 'SUCCESS';  // REDUCER:成功
-const FAILURE = 'FAILURE';  // REDUCER:失败
-const INITIAL = 'INITIAL';  // REDUCER:初始值
+export const INSERT = 'INSERT';    // ACTION:增
+export const DELETE = 'DELETE';    // ACTION:删
+export const UPDATE = 'UPDATE';    // ACTION:改
+export const REQUEST = 'REQUEST';  // ACTION:查
+export const LOADING = 'LOADING';  // REDUCER:加载
+export const SUCCESS = 'SUCCESS';  // REDUCER:成功
+export const FAILURE = 'FAILURE';  // REDUCER:失败
+export const INITIAL = 'INITIAL';  // REDUCER:初始值
+export const OPEN = 'OPEN';        // other:OPEN: 打开
+export const CLOSE = 'CLOSE';      // other:CLOSE: 关闭
 
 /**
  * 基于 base action 创建 action 的 7 种形态
@@ -14,7 +16,7 @@ const INITIAL = 'INITIAL';  // REDUCER:初始值
  */
 export default function createActionTypes(base) {
     const upperBase = base.toUpperCase();
-    return [INSERT, DELETE, UPDATE, REQUEST, LOADING, SUCCESS, FAILURE, INITIAL]
+    return [INSERT, DELETE, UPDATE, REQUEST, LOADING, SUCCESS, FAILURE, INITIAL, OPEN, CLOSE]
         .reduce((acc, type) => {
             acc[type] = `${upperBase}_${type}`;
             return acc;

@@ -12,6 +12,7 @@ import notice from './notice';
 import trackingWorkOrder from './workorderTracking';
 import notification from './notification';
 import instruction from './instruction';
+import browsingHistory from './browsingHistory';
 
 const rootReducer = combineReducers({
     user,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
     trackingWorkOrder,
     notification,
     instruction,
+    browsingHistory,
 });
 
 export default rootReducer;

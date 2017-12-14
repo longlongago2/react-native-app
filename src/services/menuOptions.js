@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import OptionBadge from '../routes/userPage/OptionBadge';
 import InstructionBadge from '../routes/instructionPage/InstructionBadge';
+import BrowsingHistory from '../routes/browsingHistoryPage';
 
 // 首页 功能模块 选项
 export function fetchHomeOptions() {
@@ -111,7 +112,7 @@ export function fetchUserOptions() {
                     text: '最近浏览',
                     showBadge: false,
                     icon: <Icon name="clock-o" size={20} color="#009ACD" />,
-                    redirect: { routeName: 'RecentBrowse' },
+                    redirect: { routeName: 'BrowsingHistory' },
                     key: 'history',
                 },
             ],

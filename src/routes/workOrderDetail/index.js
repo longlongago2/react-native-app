@@ -9,6 +9,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import ACTIONS from '../../models/actions';
 import WODetailHeader from './WODetailHeader';
 import WODetailBody from './WODetailBody';
@@ -33,7 +34,7 @@ class WorkOrderDetail extends PureComponent {
     }
 
     _queryInitialData() {
-        const { dispatch } = this.props;
+        const { dispatch, userid } = this.props;
         const { state } = this.props.navigation;
         // 查询单条工单的详情信息(主表+图片)
         dispatch({
@@ -47,6 +48,20 @@ class WorkOrderDetail extends PureComponent {
             type: ACTIONS.WORKORDER_REPLY.REQUEST,
             payload: {
                 orderCode: state.params.obj.ordercode,
+            },
+        });
+        // 记录浏览历史
+        dispatch({
+            type: ACTIONS.BROWSING_HISTORY.INSERT,
+            payload: {
+                items: [
+                    {
+                        userid,
+                        orderCode: state.params.obj.ordercode,
+                        title: state.params.obj.title,
+                        time: moment().format('YYYY-MM-DD HH:MM:SS'),
+                    },
+                ],
             },
         });
     }

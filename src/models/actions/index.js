@@ -17,6 +17,7 @@ import { NOTICE } from './notice';
 import { TRACKINGWORKORDER } from './trackingWorkOrder';
 import { NOTIFICATION, UNREAD_NOTIFICATION } from './notification';
 import { APPVERSION, LATESTAPP_DOWNLOAD } from './instruction';
+import { BROWSING_HISTORY, BROWSING_HISTORY_TABLE } from './browsingHistory';
 
 export default {
     USER_LOGIN,
@@ -47,4 +48,6 @@ export default {
     UNREAD_NOTIFICATION,
     APPVERSION,
     LATESTAPP_DOWNLOAD,
+    BROWSING_HISTORY,
+    BROWSING_HISTORY_TABLE,
 };

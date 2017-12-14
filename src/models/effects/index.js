@@ -71,9 +71,15 @@ import {
     queryUnreadNotificationNum,
     initialNotification,
 } from './notification';
+import { queryLatestVersion } from './instruction';
 import {
-    queryLatestVersion,
-} from './instruction';
+    openDataBase,
+    closeDataBase,
+    deleteDataBase,
+    insertHistory,
+    createTable,
+    queryHistoryList,
+} from './browsingHistory';
 
 export default function* rootSaga() {
     yield all([
@@ -95,6 +101,9 @@ export default function* rootSaga() {
         takeLatest(ACTIONS.NOTIFICATION.REQUEST, queryNotificationListByUserId), // 查询本地消息列表
         takeLatest(ACTIONS.UNREAD_NOTIFICATION.REQUEST, queryUnreadNotificationNum), // 查询未读消息
         takeLatest(ACTIONS.APPVERSION.REQUEST, queryLatestVersion),           // 查询最新的app版本
+        takeLatest(ACTIONS.BROWSING_HISTORY.OPEN, openDataBase),              // 打开sqlite
+        takeLatest(ACTIONS.BROWSING_HISTORY.CLOSE, closeDataBase),            // 关闭sqlite
+        takeLatest(ACTIONS.BROWSING_HISTORY.DELETE, deleteDataBase),          // 删除database
         takeEvery(ACTIONS.USER_PASSWORD.UPDATE, updateUserPassword),          // 修改密码
         takeEvery(ACTIONS.FEEDBACK_IMAGE.INSERT, insertFeedbackImage),        // 创建工单上传工单图片
         takeEvery(ACTIONS.FEEDBACK_IMAGE.DELETE, deleteFeedbackImage),        // 删除创建工单回显的图片
@@ -121,5 +130,8 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.TRACKINGWORKORDER.DELETE, cleanWOTrackingByMainCodeAndFollowUserId), // 删除我跟踪的工单
         takeEvery(ACTIONS.TRACKINGWORKORDER.UPDATE, updateWODetailLastReadTimeByOrderCodeAndUserId), // 修改工单最后读取时间
         takeEvery(ACTIONS.NOTIFICATION.INITIAL, initialNotification),         // 初始化通知信息
+        takeEvery(ACTIONS.BROWSING_HISTORY.REQUEST, queryHistoryList),        // 查询历史记录
+        takeEvery(ACTIONS.BROWSING_HISTORY.INSERT, insertHistory),            // 插入历史记录
+        takeEvery(ACTIONS.BROWSING_HISTORY_TABLE.INSERT, createTable),        // 创建表
     ]);
 }

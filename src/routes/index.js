@@ -34,6 +34,7 @@ class App extends Component {
     }
 
     componentDidMount() {
+        const { dispatch } = this.props;
         AppState.addEventListener('change', this.handleAppStateChange);
         BackHandler.addEventListener('hardwareBackPress', this.handleBackAndroid);
         // 1.通知栏配置
@@ -43,6 +44,8 @@ class App extends Component {
         });
         // 2.自动登录
         this.handleAutoLogin();
+        // 3.创建 浏览历史的 sqLite database 表
+        dispatch({ type: ACTIONS.BROWSING_HISTORY_TABLE.INSERT });
     }
 
     componentWillUnmount() {
