@@ -57,9 +57,10 @@ class WorkOrderDetail extends PureComponent {
                 items: [
                     {
                         userid,
-                        orderCode: state.params.obj.ordercode,
+                        ordercode: state.params.obj.ordercode,
                         title: state.params.obj.title,
-                        time: moment().format('YYYY-MM-DD HH:MM:SS'),
+                        time: moment().format('YYYY-MM-DD HH:mm:ss'),
+                        workOrderType: state.params.workOrderType,
                     },
                 ],
             },

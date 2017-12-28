@@ -79,6 +79,7 @@ import {
     insertHistory,
     createTable,
     queryHistoryList,
+    updateHistory,
 } from './browsingHistory';
 
 export default function* rootSaga() {
@@ -132,6 +133,7 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.NOTIFICATION.INITIAL, initialNotification),         // 初始化通知信息
         takeEvery(ACTIONS.BROWSING_HISTORY.REQUEST, queryHistoryList),        // 查询历史记录
         takeEvery(ACTIONS.BROWSING_HISTORY.INSERT, insertHistory),            // 插入历史记录
+        takeEvery(ACTIONS.BROWSING_HISTORY.UPDATE, updateHistory),            // 修改历史记录
         takeEvery(ACTIONS.BROWSING_HISTORY_TABLE.INSERT, createTable),        // 创建表
     ]);
 }

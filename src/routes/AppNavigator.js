@@ -46,6 +46,7 @@ import Instruction from './instructionPage';
 import Search from './searchPage';
 import SearchHeaderTitle from './searchPage/HeaderTitle';
 import BrowsingHistory from './browsingHistoryPage';
+import BrowsingHistoryHeaderRight from './browsingHistoryPage/HeaderRight';
 
 const headerStyle = {
     backgroundColor: theme.header.backgroundColor,
@@ -529,10 +530,13 @@ const AppNavigator = StackNavigator({
     BrowsingHistory: {
         screen: BrowsingHistory,
         path: 'browsingHistory',
-        navigationOptions() {
+        navigationOptions({ navigation }) {
             return {
                 title: '最近浏览',
                 headerTintColor: theme.header.foregroundColor,
+                headerRight: (
+                    <BrowsingHistoryHeaderRight navigation={navigation} />
+                ),
                 headerStyle,
             };
         },
