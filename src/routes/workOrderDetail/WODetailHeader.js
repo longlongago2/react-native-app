@@ -1,9 +1,8 @@
-/** created by zhangqi on 2017-9-8 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
-import SendIntentAndroid from 'react-native-send-intent';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Communications from 'react-native-communications';
 import hanZiLetter from '../../utils/hanZiLetter';
 import englishLetter from '../../utils/englishLetter';
 
@@ -40,7 +39,7 @@ const WODetailHeader = ({ workOrderDetail }) => {
                 {
                     text: '是',
                     onPress: () => {
-                        SendIntentAndroid.sendPhoneDial('17705158337');
+                        Communications.phonecall('17705158337', true);
                     },
                 },
             ],

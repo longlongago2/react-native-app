@@ -42,15 +42,19 @@ const SettingListOption = ({ item, dispatch }) => {
 
 
     function handItemPress(value) {
-        const { routeName } = value.redirect;
+        const { routeName, params } = value.redirect;
         if (routeName === 'clearAllStorage') {
             clearAllStorage();
-        }
-        if (routeName === 'logout') {
+        } else if (routeName === 'logout') {
             logout();
-        }
-        if (routeName === 'UpdatePassword') {
+        } else if (routeName === 'UpdatePassword') {
             updatePassword(routeName);
+        } else {
+            dispatch({
+                type: 'Navigation/NAVIGATE',
+                routeName,
+                params,
+            });
         }
     }
 

@@ -152,7 +152,7 @@ export function* queryHistoryList({ payload }) {
     // 查询当天的浏览记录
     const date = payload.date;      // 查询日期：格式：YYYY-MM-DD
     const userid = payload.userid;  // 用户id
-    const { res, err } = yield global.db.executeSql(`select * from record where time > '${date} 00:00:01' and time < '${date} 23:59:59' and userid='${userid}'`)
+    const { res, err } = yield global.db.executeSql(`select * from record where time > '${date} 00:00:01' and time < '${date} 23:59:59' and userid='${userid}' order by time desc`)
         .then((data) => {
             const queryResult = [];
             const len = data[0].rows.length;
@@ -201,17 +201,18 @@ export function* updateHistory({ payload }) {
             });
             return { res: newHistoryList };
         });
-    yield put({
-        type: ACTIONS.BROWSING_HISTORY.SUCCESS,
-        payload: {
-            historyList: res,
-        },
-    });
     if (err) {
         yield put({
             type: ACTIONS.BROWSING_HISTORY.FAILURE,
             payload: {
                 message: 'updateItem failed: 修改数据失败！',
+            },
+        });
+    } else {
+        yield put({
+            type: ACTIONS.BROWSING_HISTORY.SUCCESS,
+            payload: {
+                historyList: res,
             },
         });
     }

@@ -12,10 +12,13 @@ export default class HeaderRight extends PureComponent {
     }
 
     render() {
+        const { navigation } = this.props;
+        const { state } = navigation;
         return (
             <View style={{ width: '100%', paddingLeft: 10, paddingRight: 15 }}>
                 <TextInput
                     autoFocus
+                    defaultValue={(state.params && state.params.keyword) || ''}
                     placeholder=" 搜索服务平台 "
                     placeholderTextColor={rgba(theme.header.foregroundColor, 0.5)}
                     numberOfLines={1}
@@ -31,4 +34,6 @@ export default class HeaderRight extends PureComponent {
         );
     }
 }
-HeaderRight.propTypes = {};
+HeaderRight.propTypes = {
+    navigation: PropTypes.object.isRequired,
+};

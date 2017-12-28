@@ -8,11 +8,11 @@ import ItemSeparator from '../../components/ItemSeparator';
 import { fetchSettingOptions } from '../../services/menuOptions';
 
 const SettingPage = ({ user, dispatch }) => {
-    const { loading } = user;
+    const { loading, online } = user;
 
     const sectionListProps = {
         style: { marginVertical: 10 },
-        sections: fetchSettingOptions(),
+        sections: fetchSettingOptions(online),
         renderItem({ item }) {
             return <SettingListOption item={item} dispatch={dispatch} />;
         },

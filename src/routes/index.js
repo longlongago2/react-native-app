@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNavigationHelpers } from 'react-navigation';
-import { AppState, BackHandler, ToastAndroid } from 'react-native';
+import { AppState, BackHandler, DeviceEventEmitter, ToastAndroid } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import { MenuContext } from 'react-native-popup-menu';
+import ActiveMQ from 'react-native-activemq';
 import { initialStorage } from '../utils/storage';
 import ACTIONS from '../models/actions';
 import AppNavigator from './AppNavigator';
@@ -13,8 +14,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            appState: AppState.currentState,    // app显示状态：active,inactive,background
-            doubleBackExit: false,              // 是否通过双击返回键退出app
+            appState: AppState.currentState,    // app状态：active,inactive,background
         };
         this.handleAppStateChange = this._handleAppStateChange.bind(this);
         this.handleBackAndroid = this._handleBackAndroid.bind(this);
@@ -46,6 +46,17 @@ class App extends Component {
         this.handleAutoLogin();
         // 3.创建 浏览历史的 sqLite database 表
         dispatch({ type: ACTIONS.BROWSING_HISTORY_TABLE.INSERT });
+
+        // test
+        // ActiveMQ.checkConnected((connectState) => {
+        //     console.log(`检测连接状态：${connectState}`);
+        //     if (!connectState) {
+        //         ActiveMQ.connectAndReserve('CFSP/PTP', 'zhanggl');  // activeMQ 连接
+        //     }
+        // });
+        // DeviceEventEmitter.addListener('MqttMsg', (e) => {
+        //     console.log(e.message);
+        // });
     }
 
     componentWillUnmount() {
@@ -160,13 +171,17 @@ class App extends Component {
     }
 
     _handleAppStateChange(nextAppState) {
-        const { appState, doubleBackExit } = this.state;
-        if (appState === 'active' && nextAppState === 'background' && !doubleBackExit) {
-            console.log('才丰软件服务平台：处于后台状态！');
+        const { appState } = this.state;
+        if (appState === 'active' && nextAppState === 'background') {
+            if (__DEV__) {
+                console.log('才丰软件服务平台：处于后台状态！');
+            }
         } else if (appState === 'background' && nextAppState === 'active') {
-            console.log('才丰软件服务平台：处于活动状态！');
+            if (__DEV__) {
+                console.log('才丰软件服务平台：处于活动状态！');
+            }
         }
-        this.setState({ appState: nextAppState, doubleBackExit: false });
+        this.setState({ appState: nextAppState });
     }
 
     _handleBackAndroid() {
@@ -175,7 +190,6 @@ class App extends Component {
         if (nav.index === 0) {
             if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
                 // 最近2秒内按过back键，可以退出应用
-                this.setState({ doubleBackExit: true });
                 BackHandler.exitApp();
                 return false;
             }

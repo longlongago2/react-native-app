@@ -1,4 +1,3 @@
-import { ToastAndroid } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import api from '../utils/api';
 import ACTIONS from '../models/actions';
@@ -12,7 +11,7 @@ export async function openChatWS(userId, dispatch) {
     const url = `${api.webSocket}/chat?userId=${userId}`;
     const chatWS = new WebSocket(url);
     chatWS.onopen = function onOpen(e) {
-        ToastAndroid.show('webSocket：chat会话建立！', 1000);
+        console.log('webSocket：chat会话建立！');
     };
     chatWS.onmessage = function onMessage(e) {
         const msg = JSON.parse(e.data);
@@ -36,7 +35,7 @@ export async function openChatWS(userId, dispatch) {
         }
     };
     chatWS.onclose = function onClose() {
-        ToastAndroid.show('webSocket：chat会话关闭！', 1000);
+        console.log('webSocket：chat会话关闭！');
     };
     // 储存在全局(webSocket对象)
     global.CHATWS = chatWS;
@@ -58,7 +57,7 @@ export async function openMessageWS(userId, dispatch) {
     const url = `${api.webSocket}/message?userId=${userId}`;
     const messageWS = new WebSocket(url);
     messageWS.onopen = function onOpen() {
-        ToastAndroid.show('webSocket：message会话建立！', 1000);
+        console.log('webSocket：message会话建立！');
     };
     messageWS.onmessage = function onMessage(e) {
         const message = JSON.parse(e.data);
@@ -81,7 +80,7 @@ export async function openMessageWS(userId, dispatch) {
         dispatch({ type: ACTIONS.UNREAD_NOTIFICATION.REQUEST });
     };
     messageWS.onclose = function onClose() {
-        ToastAndroid.show('webSocket:message会话关闭', 1000);
+        console.log('webSocket:message会话关闭');
     };
     // 储存在全局(webSocket对象)
     global.MESSAGEWS = messageWS;

@@ -519,9 +519,9 @@ const AppNavigator = StackNavigator({
     Search: {
         screen: Search,
         path: 'search',
-        navigationOptions() {
+        navigationOptions({ navigation }) {
             return {
-                headerTitle: <SearchHeaderTitle />,
+                headerTitle: <SearchHeaderTitle navigation={navigation} />,
                 headerTintColor: theme.header.foregroundColor,
                 headerStyle,
             };

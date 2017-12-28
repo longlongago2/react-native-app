@@ -4,15 +4,17 @@ import { connect } from 'react-redux';
 import FlatChatListHeader from '../../components/FlatChatListHeader';
 import theme from '../../theme';
 
-const ChatListHeader = ({ dispatch, sysList }) => {
+const ChatListHeader = ({ dispatch }) => {
     function handlePress() {
-        alert('广播');
+        dispatch({
+            type: 'Navigation/NAVIGATE',
+            routeName: 'AddressList',
+        });
     }
 
     return (
         <FlatChatListHeader
-            onPress={() => handlePress()}
-            sysList={sysList}
+            onPress={handlePress}
             pressColor={theme.rippleColor}
         />
     );
@@ -20,10 +22,6 @@ const ChatListHeader = ({ dispatch, sysList }) => {
 
 ChatListHeader.propTypes = {
     dispatch: PropTypes.func.isRequired,
-    sysList: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => ({
-    sysList: state.instantMessaging.sysList,
-});
-export default connect(mapStateToProps)(ChatListHeader);
+export default ChatListHeader;

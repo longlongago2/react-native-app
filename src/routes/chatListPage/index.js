@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions, NetInfo, ToastAndroid } from 'react-native';
 import chatListStyle from './indexStyle';
 import ChatListItem from './ChatListItem';
 import ChatListHeader from './ChatListHeader';
@@ -16,17 +16,51 @@ class ChatListPage extends PureComponent {
         super(props);
         this.state = {
             screenHeight: Dimensions.get('window').height,
+            netStatus: 'UNKNOWN',
         };
+        this.handleConnectivityChange = this._handleConnectivityChange.bind(this);
     }
 
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch({ type: ACTIONS.CHAT_LIST.REQUEST });
+        NetInfo.addEventListener('connectionChange', this.handleConnectivityChange);
+    }
+
+    componentWillUnmount() {
+        NetInfo.removeEventListener(
+            'connectionChange',
+            this.handleConnectivityChange,
+        );
+    }
+
+    _handleConnectivityChange(connectionInfo) {
+        this.setState((prevState) => {
+            if (prevState.netStatus === 'none') {
+                // alert('重新连接activeMQ', 3000);
+            }
+            switch (connectionInfo.type) {
+                case 'wifi':
+                    ToastAndroid.show('您正在使用WIFI网络连接', 3000);
+                    break;
+                case 'cellular':
+                    ToastAndroid.show('您正在使用移动数据连接', 3000);
+                    break;
+                case 'unknown':
+                    ToastAndroid.show('未知网络', 3000);
+                    break;
+                case 'none':
+                    ToastAndroid.show('您的网络已断开', 3000);
+                    break;
+                default:
+            }
+            return { netStatus: connectionInfo.type };
+        });
     }
 
     render() {
         const { instantMessaging, dispatch } = this.props;
-        const { screenHeight } = this.state;
+        const { screenHeight, netStatus } = this.state;
         const { loading, chatList } = instantMessaging;
         return (
             <View
@@ -57,7 +91,7 @@ class ChatListPage extends PureComponent {
                             }}
                         />
                     )}
-                    ListHeaderComponent={ChatListHeader}
+                    ListHeaderComponent={() => netStatus === 'none' && <ChatListHeader dispatch={dispatch} />}
                     refreshing={loading}
                     onRefresh={() => dispatch({ type: ACTIONS.CHAT_LIST.REQUEST })}
                 />

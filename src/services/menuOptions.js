@@ -151,7 +151,30 @@ export function fetchUserOptions() {
 }
 
 // 我的 设置 页面 操作选项
-export function fetchSettingOptions() {
+export function fetchSettingOptions(loginState) {
+    if (!loginState) {
+        return [
+            {
+                data: [
+                    {
+                        text: '清除本地缓存',
+                        showBadge: false,
+                        icon: <Icon name="hdd-o" size={20} color="#FFAA25" />,
+                        redirect: { routeName: 'clearAllStorage' },
+                        key: 'clean',
+                    },
+                    {
+                        text: '请您登录',
+                        showBadge: false,
+                        icon: <Icon name="user" size={20} color="#01A0EA" />,
+                        redirect: { routeName: 'Login' },
+                        key: 'login',
+                    },
+                ],
+                key: 's1',
+            },
+        ];
+    }
     return [
         {
             data: [
