@@ -8,8 +8,9 @@ import HeaderTool from '../../components/HeaderTool';
 import ACTIONS from '../../models/actions/index';
 import theme from '../../theme';
 
-const BrowsingHistoryHeaderRight = ({ dispatch, userid }) => {
+const BrowsingHistoryHeaderRight = ({ dispatch, userid, navigation }) => {
     async function handlePress() {
+        const { setParams } = navigation;
         let finishTime = '';
         const { action, year, month, day } = await
             DatePickerAndroid.open({
@@ -17,7 +18,10 @@ const BrowsingHistoryHeaderRight = ({ dispatch, userid }) => {
                 date: new Date(),
             });
         if (action !== DatePickerAndroid.dismissedAction) {
-            finishTime = `${year}-${month + 1}-${day}`;
+            finishTime = `${year}-${(month + 1) < 10 ? `0${month + 1}` : month + 1}-${day < 10 ? `0${day}` : day}`;
+            setParams({
+                endTime: finishTime,
+            });
             dispatch({
                 type: ACTIONS.BROWSING_HISTORY.REQUEST,
                 payload: {
@@ -41,6 +45,7 @@ const BrowsingHistoryHeaderRight = ({ dispatch, userid }) => {
 BrowsingHistoryHeaderRight.propTypes = {
     dispatch: PropTypes.func.isRequired,
     userid: PropTypes.number.isRequired,
+    navigation: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

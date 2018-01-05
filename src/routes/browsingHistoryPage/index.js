@@ -1,6 +1,6 @@
 /** created by zhangqi on 2017-11-27 */
 import React, { PureComponent } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -32,18 +32,20 @@ class BrowsingHistory extends PureComponent {
     }
 
     _handleInitialData() {
-        const { dispatch, userid } = this.props;
+        const { dispatch, userid, navigation } = this.props;
+        const { state } = navigation;
         dispatch({
             type: ACTIONS.BROWSING_HISTORY.REQUEST,
             payload: {
                 userid,
-                date: moment().format('YYYY-MM-DD'),
+                date: (state.params && state.params.endTime) ? state.params.endTime : moment().format('YYYY-MM-DD'),
             },
         });
     }
 
     render() {
-        const { historyList, loading } = this.props;
+        const { historyList, loading, navigation } = this.props;
+        const { state } = navigation;
         function getMonthAndDate(time) {
             const obj = time.replace(/-/g, '/');
             const newTime = new Date(obj);
@@ -64,58 +66,64 @@ class BrowsingHistory extends PureComponent {
                         color: '#FF7F50',
                     }}
                     >
-                        今日：总共查询到{historyList.length}条数据
+                        { (state.params && state.params.endTime) ? state.params.endTime : moment().format('YYYY-MM-DD')}：总共查询到{historyList.length}条数据
                     </Text>
                 </View>
-                {
-                    historyList.length > 0 && historyList.map(item => (
-                        <TouchableOpacity key={item.id} onPress={() => this.handlePress(item)}>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center',
-                                    backgroundColor: '#ffffff',
-                                    marginTop: 5,
-                                }}
-                            >
-                                <View style={{ flex: 0.05 }} />
-                                <View style={{ flex: 0.15, alignItems: 'center' }}>
-                                    <View
-                                        style={{
-                                            width: 50,
-                                            height: 50,
-                                            flex: -1,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            borderRadius: 10,
-                                            backgroundColor: '#FF6853',
-                                        }}
-                                    >
-                                        <Icon
-                                            size={20}
-                                            name="calendar"
-                                            color={theme.header.foregroundColor}
-                                        />
-                                        <Text style={{ color: '#ffffff', fontSize: 12 }}>{ getMonthAndDate(item.time) }</Text>
-                                    </View>
-                                </View>
+                <View>
+                    <FlatList
+                        data={historyList}
+                        refreshing={loading}
+                        onRefresh={this.handleInitialData}
+                        keyExtractor={(item, index) => item.id}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity onPress={() => this.handlePress(item)}>
                                 <View
                                     style={{
-                                        flex: 0.7,
-                                        paddingVertical: 10,
-                                        paddingHorizontal: 10,
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                        backgroundColor: '#ffffff',
+                                        marginTop: 5,
                                     }}
                                 >
-                                    <Text>工单编号：{item.ordercode}</Text>
-                                    <Text>工单主题：{item.title}</Text>
-                                    <Text>浏览时间：{item.time}</Text>
+                                    <View style={{ flex: 0.05 }} />
+                                    <View style={{ flex: 0.15, alignItems: 'center' }}>
+                                        <View
+                                            style={{
+                                                width: 50,
+                                                height: 50,
+                                                flex: -1,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                borderRadius: 10,
+                                                backgroundColor: '#FF6853',
+                                            }}
+                                        >
+                                            <Icon
+                                                size={20}
+                                                name="calendar"
+                                                color={theme.header.foregroundColor}
+                                            />
+                                            <Text style={{ color: '#ffffff', fontSize: 12 }}>{ getMonthAndDate(item.time) }</Text>
+                                        </View>
+                                    </View>
+                                    <View
+                                        style={{
+                                            flex: 0.7,
+                                            paddingVertical: 10,
+                                            paddingHorizontal: 10,
+                                        }}
+                                    >
+                                        <Text>工单编号：{item.ordercode}</Text>
+                                        <Text>工单主题：{item.title}</Text>
+                                        <Text>浏览时间：{item.time}</Text>
+                                    </View>
                                 </View>
-                            </View>
-                        </TouchableOpacity>
-                    ))
-                }
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
             </ScrollView>
         );
     }
@@ -126,6 +134,7 @@ BrowsingHistory.propTypes = {
     loading: PropTypes.bool.isRequired,
     userid: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
+    navigation: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
