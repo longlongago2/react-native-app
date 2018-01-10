@@ -45,13 +45,7 @@ class BrowsingHistory extends PureComponent {
     render() {
         const { historyList, loading, navigation } = this.props;
         const { state } = navigation;
-        function getMonthAndDate(time) {
-            const obj = time.replace(/-/g, '/');
-            const newTime = new Date(obj);
-            const month = newTime.getMonth() + 1;
-            const date = newTime.getDate();
-            return `${month}.${date}`;
-        }
+
         return (
             <ScrollView>
                 <View style={{
@@ -60,12 +54,13 @@ class BrowsingHistory extends PureComponent {
                     justifyContent: 'center',
                 }}
                 >
-                    <Text style={{
-                        left: 10,
-                        color: '#FF7F50',
-                    }}
+                    <Text
+                        style={{
+                            left: 10,
+                            color: '#FF7F50',
+                        }}
                     >
-                        { (state.params && state.params.endTime) ? state.params.endTime : moment().format('YYYY-MM-DD')}：总共查询到{historyList.length}条数据
+                        {(state.params && state.params.endTime) ? state.params.endTime : moment().format('YYYY-MM-DD')}：总共查询到{historyList.length}条数据
                     </Text>
                 </View>
                 <View>
@@ -95,7 +90,7 @@ class BrowsingHistory extends PureComponent {
                                                 flex: -1,
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                borderRadius: 10,
+                                                borderRadius: 8,
                                                 backgroundColor: '#FF6853',
                                             }}
                                         >
@@ -104,7 +99,12 @@ class BrowsingHistory extends PureComponent {
                                                 name="calendar"
                                                 color={theme.header.foregroundColor}
                                             />
-                                            <Text style={{ color: '#ffffff', fontSize: 12 }}>{ getMonthAndDate(item.time) }</Text>
+                                            <Text
+                                                style={{
+                                                    color: '#ffffff',
+                                                    fontSize: 12,
+                                                }}
+                                            >{moment(item.time).format('MM.DD')}</Text>
                                         </View>
                                     </View>
                                     <View
