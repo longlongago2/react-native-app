@@ -32,12 +32,11 @@ class BrowsingHistory extends PureComponent {
     }
 
     _handleInitialData() {
-        const { dispatch, userid, navigation } = this.props;
+        const { dispatch, navigation } = this.props;
         const { state } = navigation;
         dispatch({
             type: ACTIONS.BROWSING_HISTORY.REQUEST,
             payload: {
-                userid,
                 date: (state.params && state.params.endTime) ? state.params.endTime : moment().format('YYYY-MM-DD'),
             },
         });
@@ -132,13 +131,11 @@ class BrowsingHistory extends PureComponent {
 BrowsingHistory.propTypes = {
     historyList: PropTypes.array.isRequired,
     loading: PropTypes.bool.isRequired,
-    userid: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired,
     navigation: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-    userid: state.user.userInfo.userid,
     ...state.browsingHistory,
 });
 export default connect(mapStateToProps)(BrowsingHistory);

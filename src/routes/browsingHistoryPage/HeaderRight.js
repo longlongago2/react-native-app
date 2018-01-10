@@ -8,7 +8,7 @@ import HeaderTool from '../../components/HeaderTool';
 import ACTIONS from '../../models/actions/index';
 import theme from '../../theme';
 
-const BrowsingHistoryHeaderRight = ({ dispatch, userid, navigation }) => {
+const BrowsingHistoryHeaderRight = ({ dispatch, navigation }) => {
     async function handlePress() {
         const { setParams } = navigation;
         let finishTime = '';
@@ -25,7 +25,6 @@ const BrowsingHistoryHeaderRight = ({ dispatch, userid, navigation }) => {
             dispatch({
                 type: ACTIONS.BROWSING_HISTORY.REQUEST,
                 payload: {
-                    userid,
                     date: finishTime,
                 },
             });
@@ -44,12 +43,7 @@ const BrowsingHistoryHeaderRight = ({ dispatch, userid, navigation }) => {
 
 BrowsingHistoryHeaderRight.propTypes = {
     dispatch: PropTypes.func.isRequired,
-    userid: PropTypes.number.isRequired,
     navigation: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-    userid: state.user.userInfo.userid,
-});
-
-export default connect(mapStateToProps)(BrowsingHistoryHeaderRight);
+export default connect()(BrowsingHistoryHeaderRight);

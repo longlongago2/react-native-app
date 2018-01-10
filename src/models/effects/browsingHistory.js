@@ -1,5 +1,6 @@
 import { put, select } from 'redux-saga/effects';
 import SQLiteHelper from 'react-native-sqlite-helper';
+import { ToastAndroid } from 'react-native';
 import moment from 'moment';
 import ACTIONS from '../actions';
 
@@ -143,38 +144,43 @@ export function* queryHistoryList({ payload }) {
     if (!global.db) {
         yield openDataBase();
     }
-    yield put({
-        type: ACTIONS.BROWSING_HISTORY.LOADING,
-        payload: {
-            loading: true,
-        },
-    });
-    // 查询当天的浏览记录
-    const date = payload.date;      // 查询日期：格式：YYYY-MM-DD
-    const userid = payload.userid;  // 用户id
-    const { res, err } = yield global.db.executeSql(`select * from record where time > '${date} 00:00:01' and time < '${date} 23:59:59' and userid='${userid}' order by time desc`)
-        .then((data) => {
-            const queryResult = [];
-            const len = data[0].rows.length;
-            for (let i = 0; i < len; i++) {
-                queryResult.push(data[0].rows.item(i));
-            }
-            return { res: queryResult };
-        })
-        .catch(error => ({ err: error }));
-    yield put({
-        type: ACTIONS.BROWSING_HISTORY.SUCCESS,
-        payload: {
-            historyList: res,
-        },
-    });
-    if (err) {
+    const { online, userInfo } = yield select(state => state.user);
+    if (online) {
         yield put({
-            type: ACTIONS.BROWSING_HISTORY.FAILURE,
+            type: ACTIONS.BROWSING_HISTORY.LOADING,
             payload: {
-                message: 'executeSql 查询失败！',
+                loading: true,
             },
         });
+        // 查询当天的浏览记录
+        const date = payload.date;      // 查询条件：日期（格式：YYYY-MM-DD）
+        const userid = userInfo.userid; // 查询条件：userid
+        const { res, err } = yield global.db.executeSql(`select * from record where time > '${date} 00:00:01' and time < '${date} 23:59:59' and userid='${userid}' order by time desc`)
+            .then((data) => {
+                const queryResult = [];
+                const len = data[0].rows.length;
+                for (let i = 0; i < len; i++) {
+                    queryResult.push(data[0].rows.item(i));
+                }
+                return { res: queryResult };
+            })
+            .catch(error => ({ err: error }));
+        yield put({
+            type: ACTIONS.BROWSING_HISTORY.SUCCESS,
+            payload: {
+                historyList: res,
+            },
+        });
+        if (err) {
+            yield put({
+                type: ACTIONS.BROWSING_HISTORY.FAILURE,
+                payload: {
+                    message: 'executeSql 查询失败！',
+                },
+            });
+        }
+    } else {
+        ToastAndroid.show('尚未登录', 3000);
     }
 }
 
