@@ -11,7 +11,7 @@ import ACTIONS from '../actions';
  * ACTIONS.TRACKINGWORKORDER.REQUEST 触发
  * @param payload
  */
-export function* queryWorkOrderListByFollowUserId({ payload }) {
+export function* queryFollowWorkOrderList({ payload }) {
     const { online, token, userInfo } = yield select(state => state.user);
     const { pageNumber, trackingWOList } = yield select(state => state.trackingWorkOrder);
     const userId = userInfo.userid;
@@ -96,7 +96,7 @@ export function* initWOTracking({ payload }) {
  * ACTIONS.TRACKINGWORKORDER.DELETE 触发
  * @param payload
  */
-export function* cleanWOTrackingByMainCodeAndFollowUserId({ payload }) {
+export function* cleanWOTracking({ payload }) {
     const { online, token, userInfo } = yield select(state => state.user);
     const followUserId = userInfo.userid;
     const { orderCodes } = payload;
@@ -147,7 +147,7 @@ export function* cleanWOTrackingByMainCodeAndFollowUserId({ payload }) {
  * ACTIONS.TRACKINGWORKORDER.UPDATE 触发
  * @param payload
  */
-export function* updateWODetailLastReadTimeByOrderCodeAndUserId({ payload }) {
+export function* updateWODetailLastReadTime({ payload }) {
     yield put({
         type: ACTIONS.TRACKINGWORKORDER.LOADING,
         payload: {

@@ -6,8 +6,6 @@ export const LOADING = 'LOADING';  // REDUCER:加载
 export const SUCCESS = 'SUCCESS';  // REDUCER:成功
 export const FAILURE = 'FAILURE';  // REDUCER:失败
 export const INITIAL = 'INITIAL';  // REDUCER:初始值
-export const OPEN = 'OPEN';        // other:OPEN: 打开
-export const CLOSE = 'CLOSE';      // other:CLOSE: 关闭
 
 /**
  * 基于 base action 创建 action 的 7 种形态
@@ -16,7 +14,7 @@ export const CLOSE = 'CLOSE';      // other:CLOSE: 关闭
  */
 export default function createActionTypes(base) {
     const upperBase = base.toUpperCase();
-    return [INSERT, DELETE, UPDATE, REQUEST, LOADING, SUCCESS, FAILURE, INITIAL, OPEN, CLOSE]
+    return [INSERT, DELETE, UPDATE, REQUEST, LOADING, SUCCESS, FAILURE, INITIAL]
         .reduce((acc, type) => {
             acc[type] = `${upperBase}_${type}`;
             return acc;

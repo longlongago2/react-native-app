@@ -34,7 +34,6 @@ class App extends Component {
     }
 
     componentDidMount() {
-        const { dispatch } = this.props;
         AppState.addEventListener('change', this.handleAppStateChange);
         BackHandler.addEventListener('hardwareBackPress', this.handleBackAndroid);
         // 1.通知栏配置
@@ -42,21 +41,8 @@ class App extends Component {
             onNotification: this.handleNotificationClick,
             popInitialNotification: true,
         });
-        // 2.自动登录
+        // 2.自动登录并连接ActiveMQ
         this.handleAutoLogin();
-        // 3.创建 浏览历史的 sqLite database 表
-        dispatch({ type: ACTIONS.BROWSING_HISTORY_TABLE.INSERT });
-
-        // test
-        // ActiveMQ.checkConnected((connectState) => {
-        //     console.log(`检测连接状态：${connectState}`);
-        //     if (!connectState) {
-        //         ActiveMQ.connectAndReserve('CFSP/PTP', 'zhanggl');  // activeMQ 连接
-        //     }
-        // });
-        // DeviceEventEmitter.addListener('MqttMsg', (e) => {
-        //     console.log(e.message);
-        // });
     }
 
     componentWillUnmount() {
@@ -71,6 +57,7 @@ class App extends Component {
             autoSync: false,
         }).then((data) => {
             const { username, password } = data;
+            // 1.自动登录
             dispatch({
                 type: ACTIONS.USER_LOGIN.REQUEST,
                 payload: {
@@ -79,6 +66,12 @@ class App extends Component {
                     dispatch,
                     runBackground: true, // 后台自动登录
                 },
+            });
+            // 2.连接ActiveMQ
+            ActiveMQ.checkConnected((connectStatus) => {
+                if (!connectStatus) {
+                    ActiveMQ.connectAndReserve('CFSP/PTP', username);
+                }
             });
         }).catch((err) => {
             switch (err.name) {

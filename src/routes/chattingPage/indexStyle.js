@@ -1,6 +1,6 @@
 export default {
     hashTag: {
-        color: '#FFFF00',
+        color: '#FFA500',
         fontWeight: '500',
     },
     phone: {

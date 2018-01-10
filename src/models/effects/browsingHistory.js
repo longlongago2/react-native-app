@@ -4,7 +4,7 @@ import moment from 'moment';
 import ACTIONS from '../actions';
 
 /**
- * 打开数据库(ACTIONS.BROWSING_HISTORY.OPEN 触发)
+ * 打开数据库
  */
 export function* openDataBase() {
     const sqLite = new SQLiteHelper('browsingHistory', '1.0', 'browsingHistory', 3000);
@@ -24,7 +24,7 @@ export function* openDataBase() {
 }
 
 /**
- * 关闭数据库(ACTIONS.BROWSING_HISTORY.CLOSE 触发)
+ * 关闭数据库
  */
 export function* closeDataBase() {
     if (!global.sqLiteHelper) {
@@ -34,7 +34,7 @@ export function* closeDataBase() {
 }
 
 /**
- * 删除数据库(ACTIONS.BROWSING_HISTORY.DELETE 触发)
+ * 删除数据库
  */
 export function* deleteDataBase() {
     if (!global.sqLiteHelper) {
@@ -46,7 +46,7 @@ export function* deleteDataBase() {
 }
 
 /**
- * 创建表(ACTIONS.BROWSING_HISTORY_TABLE.INSERT 触发)
+ * 创建表 fork
  */
 export function* createTable() {
     if (!global.sqLiteHelper) {

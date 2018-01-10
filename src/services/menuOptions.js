@@ -263,3 +263,65 @@ export function fetchInstructionOptions() {
         },
     ];
 }
+
+// 聊天功能面板选项
+export function fetchFunctionOptions() {
+    return [
+        {
+            name: '语音',
+            key: 'function-menu-01',
+            icon: <FeatherIcon name="mic" size={25} color="#fff" />,
+            color: '#0BA29B',
+            type: 0,
+        },
+        {
+            name: '视频',
+            key: 'function-menu-02',
+            icon: <FeatherIcon name="video" size={25} color="#fff" />,
+            color: '#233AAE',
+            type: 1,
+        },
+        {
+            name: '相册',
+            key: 'function-menu-03',
+            icon: <FeatherIcon name="image" size={25} color="#fff" />,
+            color: '#79B23D',
+            type: 2,
+        },
+        {
+            name: '拍摄',
+            key: 'function-menu-04',
+            icon: <FeatherIcon name="camera" size={25} color="#fff" />,
+            color: '#3C3F41',
+            type: 3,
+        },
+        {
+            name: '文件',
+            key: 'function-menu-05',
+            icon: <FeatherIcon name="folder" size={25} color="#fff" />,
+            color: '#FFAA25',
+            type: 4,
+        },
+        {
+            name: '位置',
+            key: 'function-menu-06',
+            icon: <FeatherIcon name="map-pin" size={25} color="#fff" />,
+            color: '#A9823F',
+            type: 5,
+        },
+        {
+            name: '工单',
+            key: 'function-menu-07',
+            icon: <FeatherIcon name="hash" size={25} color="#fff" />,
+            color: '#DD5044',
+            type: 6,
+        },
+        {
+            name: '名片',
+            key: 'function-menu-08',
+            icon: <FeatherIcon name="credit-card" size={25} color="#fff" />,
+            color: '#007AF9',
+            type: 7,
+        },
+    ];
+}

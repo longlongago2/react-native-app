@@ -27,19 +27,27 @@ class FlatSquaredItem extends PureComponent {
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}
-                    onLayout={this.onLayoutDidChange}
                 >
                     <View
-                        style={{
-                            width: 50,
-                            height: 50,
-                            borderRadius: 25,
-                            backgroundColor: item.color || theme.theme,
-                            flex: -1,
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
+                        style={[
+                            {
+                                backgroundColor: item.color || theme.theme,
+                                flex: -1,
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            },
+                            width > 50 ?
+                                {
+                                    width: 50,
+                                    height: 50,
+                                    borderRadius: 25,
+                                } : {
+                                    width: width - 5,
+                                    height: width - 5,
+                                    borderRadius: (width - 5) / 2,
+                                },
+                        ]}
                     >
                         {item.icon}
                     </View>
@@ -64,7 +72,7 @@ FlatSquaredItem.propTypes = {
         key: PropTypes.string.isRequired,
         icon: PropTypes.element.isRequired,
         color: PropTypes.string,
-        redirect: PropTypes.object.isRequired,
+        redirect: PropTypes.object,
     }).isRequired,
     onPress: PropTypes.func.isRequired,
     width: PropTypes.number.isRequired,

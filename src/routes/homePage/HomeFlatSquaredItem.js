@@ -7,11 +7,13 @@ import FlatSquaredItem from '../../components/FlatSquaredItem';
 
 const HomeFlatSquaredItem = ({ dispatch, item, width }) => {
     function handlePress(value) {
-        dispatch({
-            type: 'Navigation/NAVIGATE',
-            routeName: value.redirect.routeName,
-            params: value.redirect.params,
-        });
+        if (value.redirect) {
+            dispatch({
+                type: 'Navigation/NAVIGATE',
+                routeName: value.redirect.routeName,
+                params: value.redirect.params,
+            });
+        }
     }
 
     return (

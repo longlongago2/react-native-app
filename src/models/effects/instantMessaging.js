@@ -2,13 +2,10 @@ import { put, select } from 'redux-saga/effects';
 import PushNotification from 'react-native-push-notification';
 import { AppState } from 'react-native';
 import ACTIONS from '../actions';
-import {
-    getStorageByKeyAndId,
-    getChatListStorageKey,
-} from '../../utils/storage';
+import { getStorageByKeyAndId, getChatListStorageKey } from '../../utils/storage';
 
 /**
- * ************ CHAT_LIST ********** *
+ * ************ SQLite: CHAT_LIST ********** *
  */
 
 /**
@@ -231,52 +228,4 @@ export function* deleteChatList({ payload }) {
             },
         });
     }
-}
-
-
-/**
- * *********** SYS_LIST **********
- */
-
-/**
- * ACTIONS.SYS_LIST.INSERT 触发
- */
-export function* insertSysList({ payload }) {
-    const newLog = JSON.parse(payload.data);
-    const { sysList } = yield select(state => state.instantMessaging);
-    const newSysList = sysList.concat();  // 变换内存地址，防止 pureComponent 浅比较相同，不更新
-    newSysList.push(newLog);
-    yield put({
-        type: ACTIONS.SYS_LIST.SUCCESS,
-        payload: {
-            sysList: newSysList,
-        },
-    });
-}
-
-/**
- * *********** ADDRESS_LIST ********** *
- */
-
-/**
- * ACTIONS.ADDRESS_LIST.REQUEST 触发
- */
-export function* queryAddressList() {
-    yield put({
-        type: ACTIONS.ADDRESS_LIST.SUCCESS,
-        payload: {
-            addressList: [],
-        },
-    });
-}
-
-/**
- * ACTIONS.ADDRESS_LIST.INSERT 触发
- * @param payload
- */
-export function* insertAddressList({ payload }) {
-    yield put({
-        type: ACTIONS.ADDRESS_LIST.SUCCESS,
-        payload: {},
-    });
 }

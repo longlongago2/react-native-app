@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Keyboard, Clipboard, StyleSheet } from 'react-native';
-import { GiftedChat, Send } from 'react-native-gifted-chat';
+import { View, Text, Keyboard, Clipboard, StyleSheet, BackHandler } from 'react-native';
+import { GiftedChat, Send, LoadEarlier, Actions, Composer, InputToolbar, Bubble } from 'react-native-gifted-chat';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
+import Icon from 'react-native-vector-icons/Feather';
+import uuid from 'uuid/v4';
+import moment from 'moment';
 import api from '../../utils/api';
 import styleModule from './indexStyle';
+import theme from '../../theme';
+import UtilitiesPanel from './UtilitiesPanel';
 
 const styles = StyleSheet.create(styleModule);
 
@@ -14,31 +19,55 @@ class ChattingPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            messages: [],
+            messages: [],      // 聊天数据：应该接入Redux
+            inputBoxText: '',  // 文本框内容：应该接入Redux
+            utilities: false,  // 消息扩展功能栏显示状态 true:显示，false:隐藏
+            actionBtn: true,   // 消息框扩展按钮状态 true:打开按钮，false:关闭按钮
+            layoutHeight: 0,
+            keyboardHeight: 0,
         };
+        this.onLayout = this._onLayout.bind(this);
         this.onSend = this._onSend.bind(this);
         this.onPressAvatar = this._onPressAvatar.bind(this);
         this.onLongPress = this._onLongPress.bind(this);
         this.onPressPhoneNumber = this._onPressPhoneNumber.bind(this);
         this.onPressHashTag = this._onPressHashTag.bind(this);
+        this.keyboardDidShow = this._keyboardDidShow.bind(this);
+        this.keyboardDidHide = this._keyboardDidHide.bind(this);
+        this.handleBackPress = this._handleBackPress.bind(this);
     }
 
     componentWillMount() {
         AndroidKeyboardAdjust.setAdjustResize();
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
 
     componentDidMount() {
+        console.log(moment().utc()._d);
+        // test code ...
         this.setState({
             messages: [
                 {
-                    _id: 1,
+                    _id: uuid(),
                     text: 'Hello developer',
                     createdAt: new Date(),
                     user: {
-                        _id: 2,
+                        _id: 1,
                         name: 'React Native',
                         avatar: require('../../assets/avatar_default.png'),
                     },
+                },
+                {
+                    _id: uuid(),
+                    createdAt: new Date(),
+                    user: {
+                        _id: 1,
+                        name: 'React Native',
+                        avatar: require('../../assets/avatar_default.png'),
+                    },
+                    image: 'http://192.168.1.101/CFSP/media/images/20171122/d6248a2a-75e6-4699-8649-243d9f9fdb06avatar.jpg',
                 },
             ],
         });
@@ -46,6 +75,31 @@ class ChattingPage extends Component {
 
     componentWillUnmount() {
         AndroidKeyboardAdjust.setAdjustPan();
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+        clearTimeout(this.timerFirstAction);
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    }
+
+    _handleBackPress() {
+        const { utilities } = this.state;
+        if (utilities) {
+            AndroidKeyboardAdjust.setAdjustResize();
+            this.setState({
+                actionBtn: true,
+                utilities: false,
+            });
+            return true;
+        }
+        return false;
+    }
+
+    _keyboardDidShow() {
+        this.keyboardShow = true;
+    }
+
+    _keyboardDidHide() {
+        this.keyboardShow = false;
     }
 
     _onSend(messages = []) {
@@ -106,7 +160,7 @@ class ChattingPage extends Component {
     }
 
     _onPressPhoneNumber(phone) {
-        const options = ['呼叫', '短信', '取消'];
+        const options = ['呼叫', '短信', '复制号码', '取消'];
         const cancelButtonIndex = options.length - 1;
         this.giftedChat.getChildContext().actionSheet().showActionSheetWithOptions(
             { options, cancelButtonIndex },
@@ -118,6 +172,9 @@ class ChattingPage extends Component {
                     case 1:
                         Communications.text(phone);
                         break;
+                    case 2:
+                        Clipboard.setString(phone);
+                        break;
                     default:
                         break;
                 }
@@ -127,11 +184,59 @@ class ChattingPage extends Component {
 
     _onPressHashTag(hashTag) {
         const { dispatch } = this.props;
-        console.log(hashTag);
+        dispatch({
+            type: 'Navigation/NAVIGATE',
+            routeName: 'Search',
+            params: {
+                keyword: hashTag.replace(/#/g, ''),
+            },
+        });
+    }
+
+    _onLayout(e) {
+        const currentLayoutHeight = e.nativeEvent.layout.height;
+        // 计算并赋值：键盘高度
+        this.setState((prevState) => {
+            const nextState = { layoutHeight: currentLayoutHeight };
+            if (this.keyboardShow) {
+                nextState.keyboardHeight = prevState.layoutHeight - currentLayoutHeight;
+            }
+            return nextState;
+        });
     }
 
     render() {
         const { userInfo } = this.props;
+        const { utilities, keyboardHeight, actionBtn } = this.state;
+        const user = {
+            _id: userInfo.userid,
+            name: userInfo.username,
+            avatar: `${api.database}/${userInfo.avatar}`,
+        };
+        const parsePatterns = linkStyle => [
+            {
+                type: 'phone',
+                style: [linkStyle, styles.phone],
+                onPress: this.onPressPhoneNumber,
+            }, {
+                pattern: /#(.+)#/,
+                style: [linkStyle, styles.hashTag],
+                onPress: this.onPressHashTag,
+            },
+        ];
+        const actionPress = () => {
+            if (actionBtn) {
+                AndroidKeyboardAdjust.setAdjustNothing();
+                this.setState({
+                    utilities: true,
+                    actionBtn: false,
+                }, () => Keyboard.dismiss());
+            } else {
+                this.setState({ actionBtn: false }, () => {
+                    this.giftedChat.focusTextInput();
+                });
+            }
+        };
         const renderSend = props => (
             <Send {...props}>
                 <View
@@ -149,37 +254,121 @@ class ChattingPage extends Component {
                 </View>
             </Send>
         );
-        return (
-            <GiftedChat
-                ref={(component) => {
-                    this.giftedChat = component;
-                }}
-                locale="zh-cn"
-                placeholder="输入信息..."
-                messages={this.state.messages}
-                user={{
-                    _id: userInfo.userid,
-                    avatar: `${api.database}/${userInfo.avatar}`,
-                }}
-                onSend={messages => this.onSend(messages)}
-                onPressAvatar={this.onPressAvatar}
-                onLongPress={this.onLongPress}
-                showUserAvatar
-                renderAvatarOnTop
-                keyboardShouldPersistTaps="never"
-                renderSend={renderSend}
-                parsePatterns={linkStyle => [
-                    {
-                        type: 'phone',
-                        style: [linkStyle, styles.phone],
-                        onPress: this.onPressPhoneNumber,
-                    }, {
-                        pattern: /#(.+)#/,
-                        style: [linkStyle, styles.hashTag],
-                        onPress: this.onPressHashTag,
-                    },
-                ]}
+        const renderLoadEarlier = props => (
+            <LoadEarlier
+                {...props}
+                label="加载更早..."
             />
+        );
+        const renderActions = props => (
+            <Actions
+                {...props}
+                containerStyle={{ elevation: 0 }}
+                icon={() => (
+                    <Icon
+                        name="plus-circle"
+                        size={26}
+                        color={actionBtn ? theme.theme : '#87939A'}
+                        style={actionBtn ? {} : { transform: [{ rotate: '45deg' }] }}
+                    />
+                )}
+                onPressActionButton={() => {
+                    if (keyboardHeight !== 0) {
+                        actionPress();
+                    } else {
+                        this.giftedChat.focusTextInput();
+                        this.timerFirstAction = setTimeout(() => {
+                            actionPress();
+                        }, 500);
+                    }
+                    // test code ...
+                    // this.onSend([
+                    //     {
+                    //         _id: uuid(), // 消息编号，唯一，不可重复
+                    //         text: 'test',
+                    //         createdAt: new Date(),
+                    //         user: {
+                    //             _id: 1,  // userid，可以重复
+                    //             name: 'React Native',
+                    //             avatar: require('../../assets/avatar_default.png'),
+                    //         },
+                    //     },
+                    // ]);
+                }}
+            />
+        );
+        const renderComposer = props => (
+            <Composer
+                {...props}
+                textInputProps={{
+                    ...props.textInputProps,
+                    selectionColor: theme.theme,
+                    onBlur: () => {
+                        if (this.state.actionBtn) {
+                            AndroidKeyboardAdjust.setAdjustResize();
+                            this.setState({ utilities: false });
+                        }
+                    },
+                    onFocus: () => {
+                        if (!this.state.actionBtn) {
+                            this.setState({ actionBtn: true });
+                        }
+                    },
+                }}
+            />
+        );
+        const renderInputToolbar = props => (
+            <InputToolbar
+                {...props}
+                containerStyle={{
+                    borderTopWidth: 0,
+                    elevation: 3,
+                }}
+            />
+        );
+        const renderBubble = props => (
+            <Bubble
+                {...props}
+                containerStyle={{
+                    right: { marginVertical: 5 },
+                    left: { marginVertical: 5 },
+                }}
+            />
+        );
+        return (
+            <View style={{ flex: 1 }} onLayout={this.onLayout}>
+                <GiftedChat
+                    ref={(component) => {
+                        this.giftedChat = component;
+                    }}
+                    showUserAvatar
+                    renderAvatarOnTop
+                    loadEarlier
+                    locale="zh-cn"
+                    placeholder="输入消息..."
+                    messages={this.state.messages}
+                    user={user}
+                    onSend={messages => this.onSend(messages)}
+                    onPressAvatar={this.onPressAvatar}
+                    onLongPress={this.onLongPress}
+                    onLoadEarlier={() => alert('loading')}
+                    isLoadingEarlier={false}
+                    keyboardShouldPersistTaps="never"
+                    renderSend={renderSend}
+                    renderLoadEarlier={renderLoadEarlier}
+                    renderActions={renderActions}
+                    parsePatterns={parsePatterns}
+                    renderInputToolbar={renderInputToolbar}
+                    renderBubble={renderBubble}
+                    renderComposer={renderComposer}
+                />
+                {
+                    utilities &&
+                    <UtilitiesPanel
+                        boardHeight={keyboardHeight}
+                    />
+                }
+            </View>
         );
     }
 }
