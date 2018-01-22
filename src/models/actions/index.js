@@ -8,7 +8,7 @@ import {
 import { WORKORDER } from './workorder';
 import { WORKORDER_DETAIL, WORKORDER_REPLY } from './workorderDetail';
 import { USER_LIST, LOGIN_GATHER } from './logging';
-import { CHAT_LIST, ADDRESS_LIST, SYS_LIST } from './instantMessaging';
+import { CHAT_LIST, MESSAGES } from './iMStorage';
 import { WO_PRODUCT, WO_KIND, WO_TYPE } from './itemCode';
 import { FEEDBACK_IMAGE } from './feedbackImage';
 import { PRODUCT_DETAIL } from './productDetail';
@@ -17,7 +17,8 @@ import { NOTICE } from './notice';
 import { TRACKINGWORKORDER } from './trackingWorkOrder';
 import { NOTIFICATION, UNREAD_NOTIFICATION } from './notification';
 import { APPVERSION, LATESTAPP_DOWNLOAD } from './instruction';
-import { BROWSING_HISTORY, BROWSING_HISTORY_TABLE } from './browsingHistory';
+import { BROWSING_HISTORY } from './browsingHistory';
+import { ACTIVE_MQ } from './activeMQ';
 
 export default {
     USER_LOGIN,
@@ -27,8 +28,7 @@ export default {
     WORKORDER,
     FEEDBACK_IMAGE,
     CHAT_LIST,
-    ADDRESS_LIST,
-    SYS_LIST,
+    MESSAGES,
     USER_INFO,
     UPLOAD_AVATAR,
     USER_PASSWORD,
@@ -49,5 +49,5 @@ export default {
     APPVERSION,
     LATESTAPP_DOWNLOAD,
     BROWSING_HISTORY,
-    BROWSING_HISTORY_TABLE,
+    ACTIVE_MQ,
 };

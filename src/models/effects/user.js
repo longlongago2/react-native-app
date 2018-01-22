@@ -2,18 +2,13 @@ import { call, put, select } from 'redux-saga/effects';
 import moment from 'moment';
 import ACTIONS from '../actions';
 import {
-    openChatWS,
-    closeChatWS,
-    openMessageWS,
-    closeMessageWS,
-} from '../../utils/webSocket';
-import {
     fetchLogin,
     fetchLogout,
     updateUserOptions,
     updateUserPwd,
 } from '../../services/user';
 import { fileUpload } from '../../services/fileOperation';
+import initialDatabase from './initialDb';
 
 /**
  * action: ACTIONS.USER_LOGIN.REQUEST 触发
@@ -24,7 +19,7 @@ export function* login({ payload }) {
         type: ACTIONS.USER_LOGIN.LOADING,
         payload: { loading: true },
     });
-    const { username, password, dispatch, runBackground } = payload;
+    const { username, password, runBackground } = payload;
     const { data, err } = yield call(fetchLogin, { username, password });
     if (data && data.data.status === '20000') {
         // 非后台自动登录：手动登录
@@ -75,12 +70,8 @@ export function* login({ payload }) {
                 expirationTime: moment().format('YYYY-MM-DD HH:mm:ss'),
             },
         });
-        // 建立webSocket连接
-        const { userid } = data.data.info;
-        // 1.建立聊天会话
-        openChatWS(userid, dispatch);
-        // 2.建立消息会话
-        openMessageWS(userid, dispatch);
+        // 数据库初始化
+        yield initialDatabase(username);
     } else {
         const message = (err && err.message) || (data && data.data.info);
         yield put({
@@ -116,11 +107,6 @@ export function* logout({ payload }) {
                 password: '',
             },
         });
-        // 关闭 webSocket 连接
-        // 1.关闭聊天会话
-        closeChatWS();
-        // 2.关闭消息会话
-        closeMessageWS();
     } else {
         const message = (err && err.message) || (data && data.data.info);
         yield put({

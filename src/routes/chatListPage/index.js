@@ -59,9 +59,9 @@ class ChatListPage extends PureComponent {
     }
 
     render() {
-        const { instantMessaging, dispatch } = this.props;
+        const { iMStorage, dispatch } = this.props;
         const { screenHeight, netStatus } = this.state;
-        const { loading, chatList } = instantMessaging;
+        const { loading, chatList } = iMStorage;
         return (
             <View
                 style={styles.container}
@@ -101,12 +101,12 @@ class ChatListPage extends PureComponent {
 }
 
 ChatListPage.propTypes = {
-    instantMessaging: PropTypes.object.isRequired,
+    iMStorage: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    instantMessaging: state.instantMessaging,
+    iMStorage: state.iMStorage,
 });
 
 export default connect(mapStateToProps)(ChatListPage);

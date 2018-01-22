@@ -34,7 +34,7 @@ class WorkOrderDetail extends PureComponent {
     }
 
     _queryInitialData() {
-        const { dispatch, userid } = this.props;
+        const { dispatch } = this.props;
         const { state } = this.props.navigation;
         // 查询单条工单的详情信息(主表+图片)
         dispatch({
@@ -54,15 +54,12 @@ class WorkOrderDetail extends PureComponent {
         dispatch({
             type: ACTIONS.BROWSING_HISTORY.INSERT,
             payload: {
-                items: [
-                    {
-                        userid,
-                        ordercode: state.params.obj.ordercode,
-                        title: state.params.obj.title,
-                        time: moment().format('YYYY-MM-DD HH:mm:ss'),
-                        workOrderType: state.params.workOrderType,
-                    },
-                ],
+                item: {
+                    ordercode: state.params.obj.ordercode,
+                    title: state.params.obj.title,
+                    time: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    workOrderType: state.params.workOrderType,
+                },
             },
         });
     }

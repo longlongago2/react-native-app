@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import user from './user';
 import nav from './nav';
 import logging from './logging';
-import instantMessaging from './instantMessaging';
+import iMStorage from './iMStorage';
 import workorder from './workorder';
 import workorderDetail from './workorderDetail';
 import itemCode from './itemCode';
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
     user,
     nav,
     logging,
-    instantMessaging,
+    iMStorage,
     workorder,
     workorderDetail,
     itemCode,

@@ -7,7 +7,7 @@
  * race       : 竞速，只处理最先完成的任务
  */
 
-import { takeEvery, takeLatest, all, fork } from 'redux-saga/effects';
+import { takeEvery, takeLatest, all } from 'redux-saga/effects';
 import ACTIONS from '../actions';
 import {
     login,
@@ -40,11 +40,12 @@ import {
     queryWOProductCodeItemList,
 } from './itemCode';
 import {
+    insertMessage,
     insertChatList,
     queryChatList,
     updateChatList,
     deleteChatList,
-} from './instantMessaging';
+} from './iMStorage';
 import {
     insertFeedbackImage,
     deleteFeedbackImage,
@@ -69,16 +70,11 @@ import {
     initialNotification,
 } from './notification';
 import { queryLatestVersion } from './instruction';
-import {
-    createTable,
-    insertHistory,
-    queryHistoryList,
-    updateHistory,
-} from './browsingHistory';
+import { insertHistory, queryHistoryList } from './browsingHistory';
+import { sendMessage } from './activeMQ';
 
 export default function* rootSaga() {
     yield all([
-        fork(createTable),
         takeLatest(ACTIONS.USER_LOGIN.REQUEST, login),                          // 用户登录
         takeLatest(ACTIONS.USER_LOGOUT.REQUEST, logout),                        // 用户登出
         takeLatest(ACTIONS.WO_TYPE.REQUEST, queryWOTypeCodeItemList),           // 查询工单类型下拉菜单代码项
@@ -122,6 +118,7 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.NOTIFICATION.INITIAL, initialNotification),         // 初始化通知信息
         takeEvery(ACTIONS.BROWSING_HISTORY.REQUEST, queryHistoryList),        // 查询历史记录
         takeEvery(ACTIONS.BROWSING_HISTORY.INSERT, insertHistory),            // 插入历史记录
-        takeEvery(ACTIONS.BROWSING_HISTORY.UPDATE, updateHistory),            // 修改历史记录
+        takeEvery(ACTIONS.MESSAGES.INSERT, insertMessage),                    // 添加聊天消息
+        takeEvery(ACTIONS.ACTIVE_MQ.REQUEST, sendMessage),                    // 发送聊天
     ]);
 }

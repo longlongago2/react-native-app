@@ -20,7 +20,7 @@ class ChattingPage extends Component {
         super(props);
         this.state = {
             messages: [],      // 聊天数据：应该接入Redux
-            inputBoxText: '',  // 文本框内容：应该接入Redux
+            inputText: '',     // 文本框内容
             utilities: false,  // 消息扩展功能栏显示状态 true:显示，false:隐藏
             actionBtn: true,   // 消息框扩展按钮状态 true:打开按钮，false:关闭按钮
             layoutHeight: 0,
@@ -45,14 +45,13 @@ class ChattingPage extends Component {
     }
 
     componentDidMount() {
-        console.log(moment().utc()._d);
         // test code ...
         this.setState({
             messages: [
                 {
                     _id: uuid(),
                     text: 'Hello developer',
-                    createdAt: new Date(),
+                    createdAt: moment().format('YYYY-MM-DD HH:MM:SS'),
                     user: {
                         _id: 1,
                         name: 'React Native',
@@ -348,6 +347,8 @@ class ChattingPage extends Component {
                     placeholder="输入消息..."
                     messages={this.state.messages}
                     user={user}
+                    text={this.state.inputText}
+                    onInputTextChanged={text => this.setState({ inputText: text })}
                     onSend={messages => this.onSend(messages)}
                     onPressAvatar={this.onPressAvatar}
                     onLongPress={this.onLongPress}

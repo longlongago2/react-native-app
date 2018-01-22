@@ -1,17 +1,22 @@
 import { ToastAndroid } from 'react-native';
+import moment from 'moment';
 import ACTIONS from '../actions';
 
 const initialState = {
-    unreadSum: 0,    // 未读消息总数
-    chatList: [],    // 用户所有聊天数据
-    sysList: [],     // 系统消息
-    addressList: [], // 通讯录消息
-    loading: false,  // 加载状态
+    chatList: [],                                  // 聊天用户列表
+    messages: {                                    // 当前用户聊天数据
+        timeStamp: moment().format('YYYY-MM-DD'),  // 时间戳（查询时间戳往后一页数据）
+        data: [],                                  // 分页累加的所有数据
+        loaded: false,                             // 所有数据加载完毕
+    },
+    unreadSum: 0,                                  // 未读消息总数
+    loading: false,                                // 加载状态
 };
 export default function (state = initialState, action) {
     const { type, payload } = action;
     switch (type) {
         case ACTIONS.CHAT_LIST.LOADING:
+        case ACTIONS.MESSAGES.LOADING:
             const { loading } = payload;
             return { ...state, loading };
         case ACTIONS.CHAT_LIST.SUCCESS:
@@ -23,14 +28,11 @@ export default function (state = initialState, action) {
                 loading: false,
             };
         case ACTIONS.CHAT_LIST.FAILURE:
-            const { message } = payload;
-            ToastAndroid.show(`请求聊天列表失败：${message}`, 3000);
+        case ACTIONS.MESSAGES.FAILURE:
+            ToastAndroid.show(payload.message, 3000);
             return { ...state, loading: false };
         case ACTIONS.CHAT_LIST.INITIAL:
             return initialState;
-        case ACTIONS.SYS_LIST.SUCCESS:
-            const { sysList } = payload;
-            return { ...state, sysList };
         default:
             return state;
     }

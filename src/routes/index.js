@@ -22,6 +22,7 @@ class App extends Component {
         this.handleChatNotification = this._handleChatNotification.bind(this);
         this.handleWONotification = this._handleWONotification.bind(this);
         this.handleAutoLogin = this._handleAutoLogin.bind(this);
+        this.handleActiveMQ = this._handleActiveMQ.bind(this);
     }
 
     componentWillMount() {
@@ -36,6 +37,7 @@ class App extends Component {
     componentDidMount() {
         AppState.addEventListener('change', this.handleAppStateChange);
         BackHandler.addEventListener('hardwareBackPress', this.handleBackAndroid);
+        DeviceEventEmitter.addListener('MqttMsg', this.handleActiveMQ);
         // 1.通知栏配置
         PushNotification.configure({
             onNotification: this.handleNotificationClick,
@@ -48,6 +50,7 @@ class App extends Component {
     componentWillUnmount() {
         AppState.removeEventListener('change', this.handleAppStateChange);
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackAndroid);
+        DeviceEventEmitter.removeListener('MqttMsg', this.handleActiveMQ);
     }
 
     _handleAutoLogin() {
@@ -89,6 +92,10 @@ class App extends Component {
                 routeName: 'Login',
             });
         });
+    }
+
+    _handleActiveMQ(e) {
+        console.log(e.message);
     }
 
     _handleChatNotification(notification) {

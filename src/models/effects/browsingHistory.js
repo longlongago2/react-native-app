@@ -1,68 +1,21 @@
 import { put, select } from 'redux-saga/effects';
 import SQLiteHelper from 'react-native-sqlite-helper';
-import { ToastAndroid } from 'react-native';
 import moment from 'moment';
 import ACTIONS from '../actions';
 
 /**
- * 打开数据库
+ * 创建record表 (fork触发)
  */
-export function* openDataBase() {
-    const sqLite = new SQLiteHelper('browsingHistory', '1.0', 'browsingHistory', 3000);
-    const { res, err } = yield sqLite.open();
-    if (res) {
-        global.sqLiteHelper = sqLite;
-        global.db = res;
-    }
-    if (err) {
-        yield put({
-            type: ACTIONS.BROWSING_HISTORY.FAILURE,
-            payload: {
-                message: 'sqLite打开失败！',
-            },
-        });
-    }
-}
-
-/**
- * 关闭数据库
- */
-export function* closeDataBase() {
-    if (!global.sqLiteHelper) {
-        yield openDataBase();
-    }
-    yield global.sqLiteHelper.close();
-}
-
-/**
- * 删除数据库
- */
-export function* deleteDataBase() {
-    if (!global.sqLiteHelper) {
-        yield openDataBase();
-    }
-    yield global.sqLiteHelper.delete();
-    global.sqLiteHelper = null;
-    global.db = null;
-}
-
-/**
- * 创建表 fork
- */
-export function* createTable() {
-    if (!global.sqLiteHelper) {
-        yield openDataBase();
-    }
-    const { err } = yield global.sqLiteHelper.createTable({
+export function* createBrowsingHistoryTable() {
+    const { userInfo, online } = yield select(state => state.user);
+    if (!online) return;
+    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
+    const { err } = yield sqLiteHelper.createTable({
         tableName: 'record',
         tableFields: [
             {
                 columnName: 'id',
                 dataType: 'INTEGER PRIMARY KEY AUTOINCREMENT',
-            },
-            {
-                columnName: 'userid',
-                dataType: 'varchar',
             },
             {
                 columnName: 'ordercode',
@@ -79,14 +32,7 @@ export function* createTable() {
             },
         ],
     });
-    if (err) {
-        yield put({
-            type: ACTIONS.BROWSING_HISTORY.FAILURE,
-            payload: {
-                message: 'createTable failed：创建表失败！',
-            },
-        });
-    }
+    if (err) throw new Error('创建record表失败：用于记录浏览历史');
 }
 
 /**
@@ -94,38 +40,12 @@ export function* createTable() {
  * @param payload
  */
 export function* insertHistory({ payload }) {
-    if (!global.sqLiteHelper) {
-        yield openDataBase();
-    }
-    // 检查db里是否有相同的工单数据(根据ordercode进行查询)
-    const { res: _res, err: _err } = yield global.db.executeSql(`select * from record where ordercode='${payload.items[0].ordercode}'`)
-        .then((data) => {
-            const count = data[0].rows.length;
-            return { res: count };
-        });
-    if (_res > 0) { // 若数据库中已经存在此条数据, 则修改工单的浏览时间
-        yield put({
-            type: ACTIONS.BROWSING_HISTORY.UPDATE,
-            payload: {
-                item: {
-                    time: moment().format('YYYY-MM-DD HH:mm:ss'),
-                },
-                condition: {
-                    ordercode: payload.items[0].ordercode,
-                },
-            },
-        });
-    } else { // 没有此条数据, 创建一条新记录
-        const { err } = yield global.sqLiteHelper.insertItems('record', payload.items);
-        if (err) {
-            yield put({
-                type: ACTIONS.BROWSING_HISTORY.FAILURE,
-                payload: {
-                    message: 'insertItems failed：插入数据失败！',
-                },
-            });
-        }
-    }
+    const { userInfo, online } = yield select(state => state.user);
+    if (!online) return;
+    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
+    // 检查db里是否有相同的工单数据
+    const { item } = payload;
+    const { res: _res, err: _err } = yield sqLiteHelper.selectItems('record', '*', { ordercode: item.ordercode });
     if (_err) {
         yield put({
             type: ACTIONS.BROWSING_HISTORY.FAILURE,
@@ -134,6 +54,52 @@ export function* insertHistory({ payload }) {
             },
         });
     }
+    if (_res.length > 0) {
+        // 已存在就更新time为即时时间
+        const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+        // 1.sqLite
+        const { err } = yield sqLiteHelper.updateItem(
+            'record',
+            { time: currentTime },
+            { ordercode: item.ordercode });
+        if (err) {
+            yield put({
+                type: ACTIONS.BROWSING_HISTORY.FAILURE,
+                payload: {
+                    message: 'table record updateItem failed：更改数据失败！',
+                },
+            });
+        }
+        // 2.state
+        const { historyList } = yield select(state => state.browsingHistory);
+        let newHistoryList = historyList.concat();
+        newHistoryList = newHistoryList.map((_item) => {
+            if (_item.ordercode === item.ordercode) {
+                return {
+                    ..._item,
+                    time: currentTime,
+                };
+            }
+            return _item;
+        });
+        yield put({
+            type: ACTIONS.BROWSING_HISTORY.SUCCESS,
+            payload: {
+                historyList: newHistoryList,
+            },
+        });
+    } else {
+        // 不存在就创建
+        const { err } = yield sqLiteHelper.insertItems('record', [item]);
+        if (err) {
+            yield put({
+                type: ACTIONS.BROWSING_HISTORY.FAILURE,
+                payload: {
+                    message: 'table record insertItems failed：插入数据失败！',
+                },
+            });
+        }
+    }
 }
 
 /**
@@ -141,84 +107,41 @@ export function* insertHistory({ payload }) {
  * @param payload
  */
 export function* queryHistoryList({ payload }) {
-    if (!global.db) {
-        yield openDataBase();
-    }
-    const { online, userInfo } = yield select(state => state.user);
-    if (online) {
-        yield put({
-            type: ACTIONS.BROWSING_HISTORY.LOADING,
-            payload: {
-                loading: true,
-            },
-        });
-        // 查询当天的浏览记录
-        const date = payload.date;      // 查询条件：日期（格式：YYYY-MM-DD）
-        const userid = userInfo.userid; // 查询条件：userid
-        const { res, err } = yield global.db.executeSql(`select * from record where time > '${date} 00:00:01' and time < '${date} 23:59:59' and userid='${userid}' order by time desc`)
-            .then((data) => {
-                const queryResult = [];
-                const len = data[0].rows.length;
-                for (let i = 0; i < len; i++) {
-                    queryResult.push(data[0].rows.item(i));
-                }
-                return { res: queryResult };
-            })
-            .catch(error => ({ err: error }));
-        yield put({
-            type: ACTIONS.BROWSING_HISTORY.SUCCESS,
-            payload: {
-                historyList: res,
-            },
-        });
-        if (err) {
-            yield put({
-                type: ACTIONS.BROWSING_HISTORY.FAILURE,
-                payload: {
-                    message: 'executeSql 查询失败！',
-                },
-            });
-        }
-    } else {
-        ToastAndroid.show('尚未登录', 3000);
-    }
-}
-
-/**
- * 修改历浏览记录(ACTIONS.BROWSING_HISTORY.UPDATE 触发)
- * @param payload
- */
-export function* updateHistory({ payload }) {
-    if (!global.sqLiteHelper) {
-        yield openDataBase();
-    }
-    const { historyList } = yield select(state => state.browsingHistory);
-    const { res, err } = yield global.sqLiteHelper.updateItem('record', payload.item, payload.condition)
-        .then(() => {
-            let newHistoryList = historyList.concat();
-            newHistoryList = newHistoryList.map((item) => {
-                if (item.ordercode === payload.condition.ordercode) {
-                    return {
-                        ...item,
-                        time: payload.item.time,
-                    };
-                }
-                return item;
-            });
-            return { res: newHistoryList };
-        });
+    const { userInfo, online } = yield select(state => state.user);
+    if (!online) return;
+    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
+    const { res: sqLite, err: _err } = yield sqLiteHelper.open();
+    if (_err) return;
+    yield put({
+        type: ACTIONS.BROWSING_HISTORY.LOADING,
+        payload: {
+            loading: true,
+        },
+    });
+    // 查询当天的浏览记录
+    const date = moment(payload.date).format('YYYY-MM-DD');      // 查询条件：日期（格式：YYYY-MM-DD）
+    const { res, err } = yield sqLite.executeSql(`select * from record where time > '${date} 00:00:01' and time < '${date} 23:59:59' order by time desc`)
+        .then((data) => {
+            const queryResult = [];
+            const len = data[0].rows.length;
+            for (let i = 0; i < len; i++) {
+                queryResult.push(data[0].rows.item(i));
+            }
+            return { res: queryResult };
+        })
+        .catch(error => ({ err: error }));
+    yield sqLiteHelper.close();
+    yield put({
+        type: ACTIONS.BROWSING_HISTORY.SUCCESS,
+        payload: {
+            historyList: res,
+        },
+    });
     if (err) {
         yield put({
             type: ACTIONS.BROWSING_HISTORY.FAILURE,
             payload: {
-                message: 'updateItem failed: 修改数据失败！',
-            },
-        });
-    } else {
-        yield put({
-            type: ACTIONS.BROWSING_HISTORY.SUCCESS,
-            payload: {
-                historyList: res,
+                message: 'executeSql 查询失败！',
             },
         });
     }
