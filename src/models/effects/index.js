@@ -9,48 +9,17 @@
 
 import { takeEvery, takeLatest, all } from 'redux-saga/effects';
 import ACTIONS from '../actions';
-import {
-    login,
-    logout,
-    updateUserInfo,
-    uploadUserAvatar,
-    updateUserPassword,
-} from './user';
-import {
-    queryWorkOrderList,
-    initialWorkOrder,
-    updateWorkOrder,
-    insertWorkOrder,
-    cleanWorkOrder,
-} from './workorder';
+import { login, logout, updateUserInfo, uploadUserAvatar, updateUserPassword } from './user';
+import { queryWorkOrderList, initialWorkOrder, updateWorkOrder, insertWorkOrder, cleanWorkOrder } from './workorder';
 import {
     queryWODetailByOrderCode,
     queryWOReplyByOrderCode,
     updateWODetailState,
     insertWOReplyByOrderCode,
 } from './workorderDetail';
-import {
-    receiveUserList,
-    deleteUserListByKeyAndId,
-    loginInfoGather,
-} from './logging';
-import {
-    queryWOKindCodeItemList,
-    queryWOTypeCodeItemList,
-    queryWOProductCodeItemList,
-} from './itemCode';
-import {
-    insertMessage,
-    insertChatList,
-    queryChatList,
-    updateChatList,
-    deleteChatList,
-} from './iMStorage';
-import {
-    insertFeedbackImage,
-    deleteFeedbackImage,
-    initialFeedbackImage,
-} from './feedbackImage';
+import { receiveUserList, deleteUserListByKeyAndId, loginInfoGather } from './logging';
+import { queryWOKindCodeItemList, queryWOTypeCodeItemList, queryWOProductCodeItemList } from './itemCode';
+import { insertFeedbackImage, deleteFeedbackImage, initialFeedbackImage } from './feedbackImage';
 import {
     queryAllUserGroupInfo,
     queryUGDetailByGroupId,
@@ -64,14 +33,18 @@ import {
     cleanWOTracking,
     updateWODetailLastReadTime,
 } from './workorderTracking';
-import {
-    queryNotificationListByUserId,
-    queryUnreadNotificationNum,
-    initialNotification,
-} from './notification';
+import { queryNotificationListByUserId, queryUnreadNotificationNum, initialNotification } from './notification';
 import { queryLatestVersion } from './instruction';
 import { insertHistory, queryHistoryList } from './browsingHistory';
 import { sendMessage } from './activeMQ';
+import { insertChatList, queryChatList, updateChatList, deleteChatList } from './chatList';
+import { insertMessage } from './messages';
+import {
+    queryAllFriendGroupInfo,
+    queryAllFriendMsgInfo,
+    insertFriendGroup,
+    insertFriend,
+} from './addressBook';
 
 export default function* rootSaga() {
     yield all([
@@ -92,6 +65,8 @@ export default function* rootSaga() {
         takeLatest(ACTIONS.NOTIFICATION.REQUEST, queryNotificationListByUserId), // 查询本地消息列表
         takeLatest(ACTIONS.UNREAD_NOTIFICATION.REQUEST, queryUnreadNotificationNum), // 查询未读消息
         takeLatest(ACTIONS.APPVERSION.REQUEST, queryLatestVersion),           // 查询最新的app版本
+        takeLatest(ACTIONS.FRIEND_GROUP.REQUEST, queryAllFriendGroupInfo),    // 查询好友分组信息
+        takeLatest(ACTIONS.FRIEND_DETAIL.REQUEST, queryAllFriendMsgInfo),     // 查询好友详情信息
         takeEvery(ACTIONS.USER_PASSWORD.UPDATE, updateUserPassword),          // 修改密码
         takeEvery(ACTIONS.FEEDBACK_IMAGE.INSERT, insertFeedbackImage),        // 创建工单上传工单图片
         takeEvery(ACTIONS.FEEDBACK_IMAGE.DELETE, deleteFeedbackImage),        // 删除创建工单回显的图片
@@ -120,5 +95,7 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.BROWSING_HISTORY.INSERT, insertHistory),            // 插入历史记录
         takeEvery(ACTIONS.MESSAGES.INSERT, insertMessage),                    // 添加聊天消息
         takeEvery(ACTIONS.ACTIVE_MQ.REQUEST, sendMessage),                    // 发送聊天
+        takeEvery(ACTIONS.FRIEND_GROUP.INSERT, insertFriendGroup),            // 新增好友分组
+        takeEvery(ACTIONS.FRIEND_DETAIL.INSERT, insertFriend),                // 新增好友
     ]);
 }

@@ -5,10 +5,11 @@ import { addNavigationHelpers } from 'react-navigation';
 import { AppState, BackHandler, DeviceEventEmitter, ToastAndroid } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import { MenuContext } from 'react-native-popup-menu';
-import ActiveMQ from 'react-native-activemq';
+import moment from 'moment';
 import { initialStorage } from '../utils/storage';
 import ACTIONS from '../models/actions';
 import AppNavigator from './AppNavigator';
+import api from '../utils/api';
 
 class App extends Component {
     constructor(props) {
@@ -70,12 +71,6 @@ class App extends Component {
                     runBackground: true, // 后台自动登录
                 },
             });
-            // 2.连接ActiveMQ
-            ActiveMQ.checkConnected((connectStatus) => {
-                if (!connectStatus) {
-                    ActiveMQ.connectAndReserve('CFSP/PTP', username);
-                }
-            });
         }).catch((err) => {
             switch (err.name) {
                 case 'NotFoundError':
@@ -95,7 +90,29 @@ class App extends Component {
     }
 
     _handleActiveMQ(e) {
-        console.log(e.message);
+        const { dispatch } = this.props;
+        // const message = JSON.parse(e.message);
+        dispatch({
+            type: ACTIONS.CHAT_LIST.INSERT,
+            payload: {
+                item: {
+                    // topicId: message.senderId,
+                    // topicName: message.sender,
+                    // topicType: message.type,
+                    // newestMsg: message.text,
+                    // createAt: message.createAt,
+                    // topicId: '1',
+                    topicId: '3',
+                    // topicName: '张琦',
+                    topicName: '张广龙',
+                    topicType: '1',  // 私聊
+                    newestMsg: 'test',
+                    createAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    // avatar: `${api.database}/media/images/20171107/86b81e27-1e04-4bef-9204-9ab486799bd8avatar.jpg`,
+                    avatar: `${api.database}/media/images/20171122/d6248a2a-75e6-4699-8649-243d9f9fdb06avatar.jpg`,
+                },
+            },
+        });
     }
 
     _handleChatNotification(notification) {
@@ -104,7 +121,7 @@ class App extends Component {
         const type = pushData.type;
         switch (type) {
             case 0:
-                // 广播
+                // 群聊
                 break;
             case 1:
                 // 私聊
@@ -124,9 +141,6 @@ class App extends Component {
                         userId: pushData.userId,
                     },
                 });
-                break;
-            case 2:
-                // 群聊
                 break;
             default:
         }

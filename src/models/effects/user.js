@@ -1,5 +1,6 @@
 import { call, put, select } from 'redux-saga/effects';
 import moment from 'moment';
+import ActiveMQ from 'react-native-activemq';
 import ACTIONS from '../actions';
 import {
     fetchLogin,
@@ -54,24 +55,30 @@ export function* login({ payload }) {
                 runBackground,
             },
         });
+        // // 初始化公告
+        // yield put({
+        //     type: ACTIONS.NOTICE.INITIAL,
+        // });
+        // // 查询公告
+        // yield put({
+        //     type: ACTIONS.NOTICE.REQUEST,
+        //     payload: {
+        //         pageNumber: -1,
+        //         expirationTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        //     },
+        // });
+        // 数据库初始化
+        yield initialDatabase(username);
+        // 订阅activeMQ
+        ActiveMQ.checkConnected((connectStatus) => {
+            if (!connectStatus) {
+                ActiveMQ.connect('CFSP/PTP', data.data.info.userid.toString());
+            }
+        });
         // 查询聊天未读徽章
         yield put({ type: ACTIONS.CHAT_LIST.REQUEST });
         // 查询消息未读徽章
         yield put({ type: ACTIONS.UNREAD_NOTIFICATION.REQUEST });
-        // 初始化公告
-        yield put({
-            type: ACTIONS.NOTICE.INITIAL,
-        });
-        // 查询公告
-        yield put({
-            type: ACTIONS.NOTICE.REQUEST,
-            payload: {
-                pageNumber: -1,
-                expirationTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-            },
-        });
-        // 数据库初始化
-        yield initialDatabase(username);
     } else {
         const message = (err && err.message) || (data && data.data.info);
         yield put({
@@ -107,6 +114,8 @@ export function* logout({ payload }) {
                 password: '',
             },
         });
+        // 取消订阅activeMQ
+        ActiveMQ.disconnect();
     } else {
         const message = (err && err.message) || (data && data.data.info);
         yield put({

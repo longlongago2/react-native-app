@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { View, StyleSheet, FlatList, Dimensions, NetInfo, ToastAndroid } from 'react-native';
+import ActiveMQ from 'react-native-activemq';
 import chatListStyle from './indexStyle';
 import ChatListItem from './ChatListItem';
 import ChatListHeader from './ChatListHeader';
@@ -35,9 +36,17 @@ class ChatListPage extends PureComponent {
     }
 
     _handleConnectivityChange(connectionInfo) {
+        const { userInfo } = this.props;
         this.setState((prevState) => {
             if (prevState.netStatus === 'none') {
-                // alert('重新连接activeMQ', 3000);
+                // 重新连接activeMQ
+                ActiveMQ.checkConnected((connectStatus) => {
+                    if (!connectStatus) {
+                        ActiveMQ.connect('CFSP/PTP', userInfo.userid.toString());
+                    } else {
+                        ToastAndroid.show('通讯已重新连接', 3000);
+                    }
+                });
             }
             switch (connectionInfo.type) {
                 case 'wifi':
@@ -59,9 +68,8 @@ class ChatListPage extends PureComponent {
     }
 
     render() {
-        const { iMStorage, dispatch } = this.props;
+        const { loading, chatList, dispatch } = this.props;
         const { screenHeight, netStatus } = this.state;
-        const { loading, chatList } = iMStorage;
         return (
             <View
                 style={styles.container}
@@ -72,7 +80,7 @@ class ChatListPage extends PureComponent {
             >
                 <FlatList
                     data={chatList}
-                    keyExtractor={(item, index) => item.userId}
+                    keyExtractor={item => item.uuid}
                     renderItem={({ item }) => <ChatListItem item={item} />}
                     ItemSeparatorComponent={() => (
                         <ItemSeparator
@@ -101,12 +109,15 @@ class ChatListPage extends PureComponent {
 }
 
 ChatListPage.propTypes = {
-    iMStorage: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    chatList: PropTypes.array.isRequired,
+    userInfo: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-    iMStorage: state.iMStorage,
+    ...state.chatList,
+    userInfo: state.user.userInfo,
 });
 
 export default connect(mapStateToProps)(ChatListPage);

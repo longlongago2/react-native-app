@@ -1,6 +1,10 @@
 rootProject.name = 'CFSoftware'
-include ':react-native-send-intent'
-project(':react-native-send-intent').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-send-intent/android')
+include ':react-native-activemq'
+project(':react-native-activemq').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-activemq/android')
+include ':react-native-android-keyboard-adjust'
+project(':react-native-android-keyboard-adjust').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-android-keyboard-adjust/android')
+include ':react-native-sqlite-storage'
+project(':react-native-sqlite-storage').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sqlite-storage/src/android')
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fs/android')
 include ':react-native-file-opener'

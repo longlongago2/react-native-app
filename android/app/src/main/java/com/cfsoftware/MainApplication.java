@@ -1,9 +1,13 @@
 package com.cfsoftware;
 
 import android.app.Application;
+import android.os.Bundle;
+import android.content.Intent;
 
 import com.facebook.react.ReactApplication;
-import com.burnweb.rnsendintent.RNSendIntentPackage;
+import com.fwpt.reactivenativemqtt.ActiveMQ;
+import net.zubricky.AndroidKeyboardAdjust.AndroidKeyboardAdjustPackage;
+import org.pgsqlite.SQLitePluginPackage;
 import com.rnfs.RNFSPackage;
 import com.fileopener.FileOpenerPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -31,7 +35,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNSendIntentPackage(),
+            new ActiveMQ(),
+            new AndroidKeyboardAdjustPackage(),
+            new SQLitePluginPackage(),
             new RNFSPackage(),
             new FileOpenerPackage(),
             new FastImageViewPackage(),
@@ -57,5 +63,12 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+
+    // starting service...
+    Intent service = new Intent(getApplicationContext(), ActiveMQTaskService.class);
+    Bundle bundle = new Bundle();
+    bundle.putString("service", "ActiveMQ");
+    service.putExtras(bundle);
+    getApplicationContext().startService(service);
   }
 }

@@ -53,26 +53,26 @@ class FlatChatListItem extends PureComponent {
     _handleMarkRead() {
         const { onClearBadge, item } = this.props;
         this.handleHidePopupMenu();
-        onClearBadge(item.userId);
+        onClearBadge(item);
     }
 
     _handleMarkAllRead() {
-        const { onClearBadge } = this.props;
+        const { onAllClearBadge } = this.props;
         this.handleHidePopupMenu();
-        onClearBadge('all');
+        onAllClearBadge();
     }
 
     _handleClear() {
         const { onDelete, item } = this.props;
         this.handleHidePopupMenu();
         // 防止在动画阶段卸载父组件
-        setTimeout(() => onDelete(item.userId), 500);
+        setTimeout(() => onDelete(item), 500);
     }
 
     _handleClearAll() {
-        const { onDelete } = this.props;
+        const { onAllDelete } = this.props;
         this.handleHidePopupMenu();
-        setTimeout(() => onDelete('all'), 500);
+        setTimeout(() => onAllDelete(), 500);
     }
 
     render() {
@@ -212,16 +212,18 @@ class FlatChatListItem extends PureComponent {
 
 FlatChatListItem.propTypes = {
     item: PropTypes.object.isRequired,
-    itemMap: PropTypes.shape({              // 匹配item数据
-        title: PropTypes.string.isRequired, // 标题使用的字段名称
-        subtitle: PropTypes.string,         // 副标题使用的字段
-        avatar: PropTypes.string,           // 头像使用的字段
-        badge: PropTypes.string,            // 徽章使用的字段
-        date: PropTypes.string.isRequired,  // 日期使用的字段
+    itemMap: PropTypes.shape({                  // 匹配item数据
+        title: PropTypes.string.isRequired,     // 标题使用的字段名称
+        subtitle: PropTypes.string,             // 副标题使用的字段
+        avatar: PropTypes.string,               // 头像使用的字段
+        badge: PropTypes.string,                // 徽章使用的字段
+        date: PropTypes.string.isRequired,      // 日期使用的字段
     }).isRequired,
-    onPress: PropTypes.func.isRequired,      // 按压事件
-    onDelete: PropTypes.func.isRequired,     // 删除事件
-    onClearBadge: PropTypes.func.isRequired, // 清除徽章
-    pressColor: PropTypes.string.isRequired, // 按压波纹颜色
+    onPress: PropTypes.func.isRequired,         // 按压事件
+    onDelete: PropTypes.func.isRequired,        // 删除事件
+    onAllDelete: PropTypes.func.isRequired,     // 删除所有
+    onClearBadge: PropTypes.func.isRequired,    // 清除徽章
+    onAllClearBadge: PropTypes.func.isRequired, // 清除所有
+    pressColor: PropTypes.string.isRequired,    // 按压波纹颜色
 };
 export default FlatChatListItem;

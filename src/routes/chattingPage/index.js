@@ -280,19 +280,6 @@ class ChattingPage extends Component {
                             actionPress();
                         }, 500);
                     }
-                    // test code ...
-                    // this.onSend([
-                    //     {
-                    //         _id: uuid(), // 消息编号，唯一，不可重复
-                    //         text: 'test',
-                    //         createdAt: new Date(),
-                    //         user: {
-                    //             _id: 1,  // userid，可以重复
-                    //             name: 'React Native',
-                    //             avatar: require('../../assets/avatar_default.png'),
-                    //         },
-                    //     },
-                    // ]);
                 }}
             />
         );

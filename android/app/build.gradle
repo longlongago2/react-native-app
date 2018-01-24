@@ -146,9 +146,11 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-file-opener')
+    compile project(':react-native-activemq')
+    compile project(':react-native-android-keyboard-adjust')
+    compile project(':react-native-sqlite-storage')
     compile project(':react-native-fs')
-    compile project(':react-native-send-intent')
+    compile project(':react-native-file-opener')
     compile project(':react-native-fast-image')
     compile project(':react-native-vector-icons')
     compile project(':react-native-push-notification')

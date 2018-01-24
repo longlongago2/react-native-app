@@ -3,19 +3,13 @@
  */
 import filesystem from 'react-native-fs';
 import LaunchMode from '../../utils/LaunchMode';
-import {
-    createUserTable,
-    createChatListTable,
-    createMessagesTable,
-    createTypeTable,
-    initialTypeTableData,
-    clearTypeTableData,
-} from './iMStorage';
+import { createChatListTable } from './chatList';
+import { createMessagesTable } from './messages';
+import { createTypeTable, initialTypeTableData, clearTypeTableData } from './type';
 import { createBrowsingHistoryTable } from './browsingHistory';
 
 function* initialAction() {
     yield createBrowsingHistoryTable();
-    yield createUserTable();
     yield createMessagesTable();
     yield createChatListTable();
     yield createTypeTable();

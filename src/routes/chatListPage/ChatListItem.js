@@ -1,63 +1,100 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { ToastAndroid } from 'react-native';
 import FlatChatListItem from '../../components/FlatChatListItem';
 import theme from '../../theme';
 import ACTIONS from '../../models/actions';
 
 const ChatListItem = ({ item, dispatch }) => {
-    function handleDelete(userId) {
-        // ...删除本条数据
+    function handleDelete({ topicId }) {
+        // 删除本条数据
         dispatch({
             type: ACTIONS.CHAT_LIST.DELETE,
             payload: {
-                userId,
+                condition: {
+                    topicId,
+                },
             },
         });
     }
 
-    function handlePress({ personName, userId }) {
-        // 按压跳转私聊界面
+    function handleAllDelete() {
+        // 删除所有数据
         dispatch({
-            type: 'Navigation/NAVIGATE',
-            routeName: 'Chatting',
-            params: {
-                personName,
-                userId,
-            },
+            type: ACTIONS.CHAT_LIST.DELETE,
+            payload: {},
         });
-        // 根据userId更新徽章
+    }
+
+    function handleClearBadge({ topicId }) {
+        // 清除徽章
         dispatch({
             type: ACTIONS.CHAT_LIST.UPDATE,
             payload: {
-                userId,
+                item: {
+                    unread: 0,
+                },
+                condition: {
+                    topicId,
+                },
             },
         });
     }
 
-    function handleClearBadge(userId) {
-        // 清除聊天栏徽章
+    function handleAllClearBadge() {
+        // 清除所有徽章
         dispatch({
             type: ACTIONS.CHAT_LIST.UPDATE,
             payload: {
-                userId,
+                item: {
+                    unread: 0,
+                },
             },
         });
+    }
+
+    function handlePress({ topicName, topicId, topicType }) {
+        switch (topicType) {
+            case '0':
+                // 通知
+                break;
+            case '1':
+                // 私聊
+                handleClearBadge({ topicId });
+                dispatch({
+                    type: 'Navigation/NAVIGATE',
+                    routeName: 'Chatting',
+                    params: {
+                        userId: topicId,
+                        personName: topicName,
+                    },
+                });
+                break;
+            case '2':
+                // 群聊
+                break;
+            default:
+                ToastAndroid.show('没有处理的类型！', 3000);
+                break;
+        }
     }
 
     return (
         <FlatChatListItem
             item={item}
             itemMap={{
-                title: 'personName',
-                subtitle: 'latestContext',
+                title: 'topicName',
+                subtitle: 'newestMsg',
                 badge: 'unread',
-                date: 'latestDate',
+                date: 'createAt',
                 avatar: 'avatar',
             }}
-            onPress={data => handlePress(data)}
-            onDelete={userId => handleDelete(userId)}
-            onClearBadge={userId => handleClearBadge(userId)}
+            onPress={handlePress}
+            onDelete={handleDelete}
+            onAllDelete={handleAllDelete}
+            onClearBadge={handleClearBadge}
+            onAllClearBadge={handleAllClearBadge}
             pressColor={theme.rippleColor}
         />
     );

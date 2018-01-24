@@ -8,7 +8,9 @@ import {
 import { WORKORDER } from './workorder';
 import { WORKORDER_DETAIL, WORKORDER_REPLY } from './workorderDetail';
 import { USER_LIST, LOGIN_GATHER } from './logging';
-import { CHAT_LIST, MESSAGES } from './iMStorage';
+import { CHAT_LIST } from './chatList';
+import { MESSAGES } from './messages';
+import { TYPE } from './type';
 import { WO_PRODUCT, WO_KIND, WO_TYPE } from './itemCode';
 import { FEEDBACK_IMAGE } from './feedbackImage';
 import { PRODUCT_DETAIL } from './productDetail';
@@ -19,6 +21,7 @@ import { NOTIFICATION, UNREAD_NOTIFICATION } from './notification';
 import { APPVERSION, LATESTAPP_DOWNLOAD } from './instruction';
 import { BROWSING_HISTORY } from './browsingHistory';
 import { ACTIVE_MQ } from './activeMQ';
+import { FRIEND_DETAIL, FRIEND_GROUP } from './addressBook';
 
 export default {
     USER_LOGIN,
@@ -29,6 +32,7 @@ export default {
     FEEDBACK_IMAGE,
     CHAT_LIST,
     MESSAGES,
+    TYPE,
     USER_INFO,
     UPLOAD_AVATAR,
     USER_PASSWORD,
@@ -50,4 +54,6 @@ export default {
     LATESTAPP_DOWNLOAD,
     BROWSING_HISTORY,
     ACTIVE_MQ,
+    FRIEND_DETAIL,
+    FRIEND_GROUP,
 };

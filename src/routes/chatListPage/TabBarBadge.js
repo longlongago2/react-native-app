@@ -24,6 +24,6 @@ TabBarBadge.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    unreadSum: state.iMStorage.unreadSum,
+    unreadSum: state.chatList.unreadSum,
 });
 export default connect(mapStateToProps)(TabBarBadge);
