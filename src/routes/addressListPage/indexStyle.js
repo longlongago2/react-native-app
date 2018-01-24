@@ -7,7 +7,6 @@ export default {
         justifyContent: 'flex-start',
         alignItems: 'stretch',
         backgroundColor: theme.background,
-        padding: 10,
     },
     text: {
         color: theme.textColor,
