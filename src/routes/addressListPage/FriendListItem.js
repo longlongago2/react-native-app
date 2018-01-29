@@ -24,7 +24,6 @@ const FriendListItem = ({ item, onItemPress }) => (
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius: 20,
             }}
             >
                 <Image

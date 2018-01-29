@@ -28,7 +28,7 @@ const AddressHeader = ({ item, onItemPress }) => (
                 alignItems: 'center',
             }}
             >
-                <Icon name="hdd-o" size={20} color="#FFAA25" />
+                { item.icon }
             </View>
             <View style={{
                 flex: 8,
@@ -36,7 +36,7 @@ const AddressHeader = ({ item, onItemPress }) => (
                 justifyContent: 'flex-start',
             }}
             >
-                <Text style={{ fontSize: 15 }}>{item.friendname}</Text>
+                <Text style={{ fontSize: 15 }}>{item.text}</Text>
             </View>
         </View>
     </RAFTouchableNativeFeedback>

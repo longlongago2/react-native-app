@@ -2,36 +2,32 @@ import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, StyleSheet, SectionList, Button } from 'react-native';
+import { View, StyleSheet, SectionList, FlatList } from 'react-native';
 import addressStyle from './indexStyle';
 import ACTIONS from '../../models/actions';
-import SectionLineItemWithIcon from '../../components/SectionLineItemWithIcon';
 import ItemSeparator from '../../components/ItemSeparator';
 import FriendListItem from './FriendListItem';
 import SectionHeader from './SectionHeader';
+import AddressHeader from './AddressHeader';
+import ModalAddressOperation from '../modalAddressOperation';
 
 const styles = StyleSheet.create(addressStyle);
 const addressOptions = [
     {
-        data: [
-            {
-                id: 1,
-                text: '新的朋友',
-                redirect: { routeName: '' },
-                icon: <Icon name="hdd-o" size={20} color="#FFAA25" />,
-                showBadge: false,
-                key: 'newFriend',
-            },
-            {
-                id: 2,
-                text: '群聊',
-                redirect: { routeName: '' },
-                icon: <Icon name="user" size={20} color="#01A0EA" />,
-                showBadge: false,
-                key: 'chatUserGroup',
-            },
-        ],
-        key: 's1',
+        id: 1,
+        text: '新的朋友',
+        redirect: { routeName: '' },
+        icon: <Icon name="hdd-o" size={20} color="#FFAA25" />,
+        showBadge: false,
+        key: 'newFriend',
+    },
+    {
+        id: 2,
+        text: '群聊',
+        redirect: { routeName: '' },
+        icon: <Icon name="user" size={20} color="#01A0EA" />,
+        showBadge: false,
+        key: 'chatUserGroup',
     },
 ];
 
@@ -40,8 +36,6 @@ class AddressListPage extends Component {
         super(props);
         this.queryInitFriendGroup = this._queryInitFriendGroup.bind(this);
         this.queryInitFriendDetail = this._queryInitFriendDetail.bind(this);
-        this.insertFriendGroup = this._insertFriendGroup.bind(this);
-        this.insertFriend = this._insertFriend.bind(this);
     }
 
     componentDidMount() {
@@ -63,72 +57,72 @@ class AddressListPage extends Component {
         });
     }
 
-    _insertFriendGroup() {
-        const { dispatch } = this.props;
-        dispatch({
-            type: ACTIONS.FRIEND_GROUP.INSERT,
-            payload: {
-                friendgroupsname: `测试分组${Math.floor(Math.random() * 10000)}`,
-            },
-        });
-    }
-
-    _insertFriend() {
-        const { dispatch } = this.props;
-        dispatch({
-            type: ACTIONS.FRIEND_DETAIL.INSERT,
-            payload: {
-                friendcode: Math.floor(Math.random() * 10000),
-                friendid: 0,
-                friendname: `测试${Math.floor(Math.random() * 10000)}`,
-                friendtype: 0,
-                friendgroupsid: 15,
-            },
-        });
-    }
-
     render() {
+        const { friendDetailList, dispatch, friendGroupList, navigation } = this.props;
+        const { state, setParams } = navigation;
         function handItemPress(value) {
-            alert(value.text);
+            setParams({
+                modalVisible: true,
+                type: value.key,
+            });
         }
+
         function _handItemPress(value) {
-            alert(value.friendname);
+            dispatch({
+                type: 'Navigation/NAVIGATE',
+                routeName: 'Chatting',
+                params: {
+                    userId: value.userid,
+                    personName: value.friendname,
+                },
+            });
         }
-        function handleHeaderPress(value) {
-            alert(value.friendgroupsname);
-        }
-        const { friendDetailList, friendGroupList } = this.props;
+
         return (
             <View style={styles.container}>
-                <SectionList
-                    keyExtractor={(item, index) => item.id}
-                    renderItem={({ item }) => <SectionLineItemWithIcon item={item} onItemPress={value => handItemPress(value)} />}
-                    sections={addressOptions}
+                <ModalAddressOperation
+                    navigation={navigation}
+                    dispatch={dispatch}
                 />
-                <SectionList
-                    keyExtractor={(item, index) => item.friendgroupsid}
-                    renderItem={({ item }) => (
-                        <FriendListItem
-                            item={item}
-                            onItemPress={value => _handItemPress(value)}
-                        />
-                    )}
-                    renderSectionHeader={({ section }) => (
-                        <SectionHeader
-                            item={section}
-                            onItemPress={value => handleHeaderPress(value)}
-                        />
-                    )}
-                    sections={friendDetailList}
-                    SectionSeparatorComponent={() => (
-                        <ItemSeparator
-                            backgroundColor="rgba(255,255,255,0.8)"
-                            border={0.8}
-                            lineColor="rgba(139,139,139,0.3)"
-                            marginHorizontal={15}
-                        />
-                    )}
-                />
+                <View>
+                    <FlatList
+                        keyExtractor={(item, index) => item.id}
+                        renderItem={({ item }) => (
+                            <AddressHeader
+                                item={item}
+                                onItemPress={value => handItemPress(value)}
+                            />
+                        )}
+                        data={addressOptions}
+                        ItemSeparatorComponent={() => (
+                            <ItemSeparator
+                                backgroundColor="rgba(255,255,255,0.8)"
+                                border={0.8}
+                                lineColor="rgba(139,139,139,0.1)"
+                                marginHorizontal={10}
+                            />
+                        )}
+                    />
+                </View>
+                <View style={{ marginBottom: 90 }}>
+                    <SectionList
+                        keyExtractor={(item, index) => item.friendgroupsid}
+                        renderItem={({ item }) => (
+                            <FriendListItem
+                                item={item}
+                                onItemPress={value => _handItemPress(value)}
+                            />
+                        )}
+                        renderSectionHeader={({ section }) => (
+                            <SectionHeader
+                                item={section}
+                                dispatch={dispatch}
+                                navigation={navigation}
+                            />
+                        )}
+                        sections={friendDetailList}
+                    />
+                </View>
             </View>
         );
     }
@@ -138,6 +132,7 @@ AddressListPage.propTypes = {
     friendGroupList: PropTypes.array.isRequired,
     friendDetailList: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
+    navigation: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
