@@ -16,7 +16,6 @@ const FriendListItem = ({ item, onItemPress }) => (
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            height: 40,
         }}
         >
             <View style={{
@@ -24,6 +23,7 @@ const FriendListItem = ({ item, onItemPress }) => (
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
+                padding: 10,
             }}
             >
                 <Image

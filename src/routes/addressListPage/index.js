@@ -72,7 +72,7 @@ class AddressListPage extends Component {
                 type: 'Navigation/NAVIGATE',
                 routeName: 'Chatting',
                 params: {
-                    userId: value.userid,
+                    userId: value.friendid,
                     personName: value.friendname,
                 },
             });
