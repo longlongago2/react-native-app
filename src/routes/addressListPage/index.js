@@ -74,6 +74,7 @@ class AddressListPage extends Component {
                 params: {
                     userId: value.friendid,
                     personName: value.friendname,
+                    type: '1', // 私聊
                 },
             });
         }
