@@ -115,7 +115,7 @@ class WorkOrder extends PureComponent {
                         WorkOrder.flatList = _ref;
                     }}
                     data={workorderList}
-                    keyExtractor={(item, index) => item.ordercode}
+                    keyExtractor={item => item.ordercode}
                     refreshing={loading}
                     onRefresh={this.queryInitialData}
                     onEndReachedThreshold={0.1}
@@ -131,8 +131,8 @@ class WorkOrder extends PureComponent {
                     )}
                     ListEmptyComponent={() => (
                         <ListEmptyComponent
-                            text="没有工单数据..."
-                            icon={require('../../assets/noData.png')}
+                            text={loading ? '正在拼命加载...' : '没有工单数据...'}
+                            icon={loading ? require('../../assets/loading.png') : require('../../assets/noData.png')}
                             customStyle={{
                                 height: screenHeight - 210 > 85 ? screenHeight - 210 : 85,
                             }}

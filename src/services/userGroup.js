@@ -1,4 +1,3 @@
-import { stringify } from 'querystring';
 import request from '../utils/request';
 import api from '../utils/api';
 

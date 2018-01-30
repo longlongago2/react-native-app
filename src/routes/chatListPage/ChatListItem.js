@@ -61,13 +61,13 @@ const ChatListItem = ({ item, dispatch }) => {
                 break;
             case '1':
                 // 私聊
-                handleClearBadge({ topicId });
                 dispatch({
                     type: 'Navigation/NAVIGATE',
                     routeName: 'Chatting',
                     params: {
                         userId: topicId,
                         personName: topicName,
+                        type: topicType,
                     },
                 });
                 break;
@@ -87,7 +87,7 @@ const ChatListItem = ({ item, dispatch }) => {
                 title: 'topicName',
                 subtitle: 'newestMsg',
                 badge: 'unread',
-                date: 'createAt',
+                date: 'createdAt',
                 avatar: 'avatar',
             }}
             onPress={handlePress}

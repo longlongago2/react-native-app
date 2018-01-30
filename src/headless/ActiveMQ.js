@@ -9,7 +9,7 @@ export default async (taskData) => {
             // 通知栏推送
             PushNotification.localNotification({
                 title: '您有一条通知，点击查看',
-                message: message.text || message.portrayal,
+                message: message.topicText || message.topicType,
                 playSound: true,              // 声音
                 soundName: 'default',         // 声音类型
                 vibrate: true,                // 震动

@@ -1,4 +1,4 @@
-import { stringify } from 'querystring';
+import { stringify } from 'qs';
 import request from '../utils/request';
 import api from '../utils/api';
 

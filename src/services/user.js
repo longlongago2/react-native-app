@@ -1,4 +1,4 @@
-import { stringify } from 'querystring';
+import { stringify } from 'qs';
 import request from '../utils/request';
 import api from '../utils/api';
 
@@ -31,6 +31,14 @@ export async function updateUserOptions(params) {
 export async function updateUserPwd(params) {
     const { oldPassword, newPassword, accessToken, userid } = params;
     return request(`${api.database}/users/updatePassword/${userid}/${oldPassword}/${newPassword}/${accessToken}`, {
+        method: 'GET',
+    });
+}
+
+// 查询用户详情
+export async function queryUserInfo(params) {
+    const { userid, accessToken } = params;
+    return request(`${api.database}/users/queryUserByUserid/${userid}/${accessToken}`, {
         method: 'GET',
     });
 }

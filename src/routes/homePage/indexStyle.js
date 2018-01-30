@@ -8,4 +8,8 @@ export default {
         alignItems: 'stretch',
         backgroundColor: theme.background,
     },
+    swipe: {
+        flex: 1,
+        backgroundColor: '#2196F3',
+    },
 };

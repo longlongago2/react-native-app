@@ -168,8 +168,8 @@ class WOiCreated extends PureComponent {
                     )}
                     ListEmptyComponent={() => (
                         <ListEmptyComponent
-                            text="没有工单数据..."
-                            icon={require('../../assets/noData.png')}
+                            text={loading ? '正在拼命加载...' : '没有工单数据...'}
+                            icon={loading ? require('../../assets/loading.png') : require('../../assets/noData.png')}
                             customStyle={{
                                 height: screenHeight - 150 > 85 ? screenHeight - 150 : 85,
                             }}

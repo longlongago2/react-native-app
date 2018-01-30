@@ -8,6 +8,7 @@ import Communications from 'react-native-communications';
 import Icon from 'react-native-vector-icons/Feather';
 import uuid from 'uuid/v4';
 import moment from 'moment';
+import ACTIONS from '../../models/actions';
 import api from '../../utils/api';
 import styleModule from './indexStyle';
 import theme from '../../theme';
@@ -21,6 +22,7 @@ class ChattingPage extends Component {
         this.state = {
             messages: [],      // 聊天数据：应该接入Redux
             inputText: '',     // 文本框内容
+            messageType: '0',  // 消息类型（文本，语音...）
             utilities: false,  // 消息扩展功能栏显示状态 true:显示，false:隐藏
             actionBtn: true,   // 消息框扩展按钮状态 true:打开按钮，false:关闭按钮
             layoutHeight: 0,
@@ -51,7 +53,7 @@ class ChattingPage extends Component {
                 {
                     _id: uuid(),
                     text: 'Hello developer',
-                    createdAt: moment().format('YYYY-MM-DD HH:MM:SS'),
+                    createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
                     user: {
                         _id: 1,
                         name: 'React Native',
@@ -60,7 +62,7 @@ class ChattingPage extends Component {
                 },
                 {
                     _id: uuid(),
-                    createdAt: new Date(),
+                    createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
                     user: {
                         _id: 1,
                         name: 'React Native',
@@ -73,11 +75,25 @@ class ChattingPage extends Component {
     }
 
     componentWillUnmount() {
+        const { dispatch, navigation } = this.props;
+        const { state } = navigation;
         AndroidKeyboardAdjust.setAdjustPan();
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
         clearTimeout(this.timerFirstAction);
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+        // 清除徽章
+        dispatch({
+            type: ACTIONS.CHAT_LIST.UPDATE,
+            payload: {
+                item: {
+                    unread: 0,
+                },
+                condition: {
+                    topicId: state.params.userId,
+                },
+            },
+        });
     }
 
     _handleBackPress() {
@@ -102,9 +118,38 @@ class ChattingPage extends Component {
     }
 
     _onSend(messages = []) {
+        const { dispatch, navigation } = this.props;
+        const { state } = navigation;
+        const { inputText, messageType } = this.state;
         this.setState(previousState => ({
             messages: GiftedChat.append(previousState.messages, messages),
-        }));
+            messageType: '0',  // 消息类型：0文本
+        }), () => {
+            // 发送消息
+            dispatch({
+                type: ACTIONS.ACTIVE_MQ.REQUEST,
+                payload: {
+                    receiver: state.params.personName,
+                    receiverId: state.params.userId,
+                    type: state.params.type,        // 聊天类型
+                    text: inputText,                // 消息体
+                    portrayal: messageType,         // 消息体类型
+                },
+            });
+            // 记录chatList
+            dispatch({
+                type: ACTIONS.CHAT_LIST.INSERT,
+                payload: {
+                    item: {
+                        topicId: state.params.userId,
+                        topicName: state.params.personName,
+                        newestMsg: inputText,
+                        topicType: state.params.type,
+                        createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    },
+                },
+            });
+        });
     }
 
     _onPressAvatar(user) {

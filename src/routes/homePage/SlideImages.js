@@ -1,71 +1,40 @@
 /**
  * Created by zhangqi11 on 2017/08/03.
  */
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Dimensions, Image } from 'react-native';
-import Carousel from 'react-native-looped-carousel';
+import { View, Image, StyleSheet } from 'react-native';
+import Swiper from 'react-native-swiper';
 import uuid from 'uuid';
+import styleModule from './indexStyle';
 
-const { width, height } = Dimensions.get('window');
+const styles = StyleSheet.create(styleModule);
 
-export default class CarouselImage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            size: { width, height },
-        };
-        this.onLayoutDidChange = this._onLayoutDidChange.bind(this);
-    }
+const SlideImages = ({ images }) => (
+    <Swiper
+        style={{ width: '100%', height: 180 }}
+        autoplay
+    >
+        {
+            Array.isArray(images) && images.length > 0 ?
+                images.map(item => (
+                    <View key={uuid()} style={styles.swipe}>
+                        <Image
+                            source={{ uri: item }}
+                            style={{ flex: 1 }}
+                            resizeMode="cover"
+                            resizeMethod="scale"
+                        />
+                    </View>
+                ))
+                :
+                <View style={styles.swipe} />
+        }
+    </Swiper>
+);
 
-    _onLayoutDidChange(e) {
-        const layout = e.nativeEvent.layout;
-        this.setState({ size: { width: layout.width, height: layout.height } });
-    }
-
-    render() {
-        const { images } = this.props;
-        return (
-            <View style={{ flex: -1, height: 180, width: '100%' }} onLayout={this.onLayoutDidChange}>
-                <Carousel
-                    delay={4500}
-                    style={this.state.size}
-                    autoplay
-                    bullets
-                    bulletStyle={{
-                        width: 5,
-                        height: 5,
-                        backgroundColor: '#fff',
-                    }}
-                    chosenBulletStyle={{
-                        width: 12,
-                        height: 6,
-                        backgroundColor: '#fff',
-                    }}
-                >
-                    {
-                        Array.isArray(images) && images.length > 0 ?
-                            images.map(item => (
-                                <View key={uuid()}>
-                                    <Image
-                                        source={{ uri: item }}
-                                        style={this.state.size}
-                                        resizeMode="cover"
-                                        resizeMethod="scale"
-                                    />
-                                </View>
-                            ))
-                            :
-                            <View
-                                style={[{ backgroundColor: '#EAEAEA' }, this.state.size]}
-                            />
-                    }
-                </Carousel>
-            </View>
-        );
-    }
-}
-
-CarouselImage.propTypes = {
+SlideImages.propTypes = {
     images: PropTypes.array.isRequired,
 };
+
+export default SlideImages;

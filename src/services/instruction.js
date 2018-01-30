@@ -1,5 +1,3 @@
-/** created by zhangqi on 2017-11-02 */
-import { stringify } from 'querystring';
 import request from '../utils/request';
 import api from '../utils/api';
 

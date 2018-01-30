@@ -2,7 +2,7 @@
  * 通讯录相关services
  * created by zhangqi on 2018-1-22
  * */
-import { stringify } from 'querystring';
+import { stringify } from 'qs';
 import request from '../utils/request';
 import api from '../utils/api';
 

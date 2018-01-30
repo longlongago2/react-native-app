@@ -87,7 +87,7 @@ class CreateWOPage extends Component {
                 workOrderDetail.wskind.toString().trim() !== '' &&
                 workOrderDetail.productid.toString().trim() !== ''
             ) {
-                // 修改工单 todo: bug：修改工单没有清除之前的mediaInfo,导致新图片里有修改前的图片重复
+                // TODO: 这是一个bug：修改工单没有清除之前的mediaInfo,导致新图片里有修改前的图片重复
                 dispatch({
                     type: ACTIONS.WORKORDER.UPDATE,
                     payload: {

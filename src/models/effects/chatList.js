@@ -2,10 +2,12 @@
  * ************ SQLite: chatList(聊天列表) ********** *
  */
 
-import { put, select } from 'redux-saga/effects';
+import { put, select, call } from 'redux-saga/effects';
 import uuid from 'uuid/v4';
 import SQLiteHelper from 'react-native-sqlite-helper';
 import ACTIONS from '../actions';
+import { queryUserInfo } from '../../services/user';
+import api from '../../utils/api';
 
 /**
  * 创建chatList表(fork触发)
@@ -36,7 +38,7 @@ export function* createChatListTable() {
                 columnName: 'newestMsg', // 最新消息
                 dataType: 'VARCHAR',
             }, {
-                columnName: 'createAt',  // 创建时间
+                columnName: 'createdAt',  // 创建时间
                 dataType: 'DATETIME DEFAULT ( datetime( \'now\', \'localtime\' ) )',
             }, {
                 columnName: 'unread',    // 未读消息数
@@ -98,14 +100,8 @@ export function* queryChatList() {
  * @param payload
  */
 export function* insertChatList({ payload }) {
-    const { userInfo, online } = yield select(state => state.user);
+    const { userInfo, online, token } = yield select(state => state.user);
     if (!online) return;
-    yield put({
-        type: ACTIONS.CHAT_LIST.LOADING,
-        payload: {
-            loading: true,
-        },
-    });
     const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
     // 检测是否存在并归类
     try {
@@ -126,9 +122,21 @@ export function* insertChatList({ payload }) {
             if (updateErr) throw new Error('更新失败！');
         } else {
             // 不存在，添加信息
+            const params = {
+                userid: payload.item.topicId,
+                accessToken: token,
+            };
+            let avatar;
+            const { data } = yield call(queryUserInfo, params);  // 查询用户头像
+            if (data && data.data.status === '21300') {
+                avatar = `${api.database}/${data.data.info.avatar}`;
+            } else {
+                throw new Error('请求用户信息接口失败');
+            }
             const { err: insertErr } = yield sqLiteHelper.insertItems('chatList', [{
                 uuid: uuid(),
                 unread: 1,
+                avatar,
                 ...payload.item,
             }]);
             if (insertErr) throw new Error('添加失败！');

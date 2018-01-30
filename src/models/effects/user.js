@@ -1,5 +1,4 @@
 import { call, put, select } from 'redux-saga/effects';
-import moment from 'moment';
 import ActiveMQ from 'react-native-activemq';
 import ACTIONS from '../actions';
 import {

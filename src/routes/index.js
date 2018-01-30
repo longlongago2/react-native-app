@@ -91,25 +91,18 @@ class App extends Component {
 
     _handleActiveMQ(e) {
         const { dispatch } = this.props;
-        // const message = JSON.parse(e.message);
+        console.log(e.message);
+        const message = JSON.parse(e.message);
         dispatch({
             type: ACTIONS.CHAT_LIST.INSERT,
             payload: {
                 item: {
-                    // topicId: message.senderId,
-                    // topicName: message.sender,
-                    // topicType: message.type,
-                    // newestMsg: message.text,
-                    // createAt: message.createAt,
-                    // topicId: '1',
-                    topicId: '3',
-                    // topicName: '张琦',
-                    topicName: '张广龙',
-                    topicType: '1',  // 私聊
-                    newestMsg: 'test',
-                    createAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-                    // avatar: `${api.database}/media/images/20171107/86b81e27-1e04-4bef-9204-9ab486799bd8avatar.jpg`,
-                    avatar: `${api.database}/media/images/20171122/d6248a2a-75e6-4699-8649-243d9f9fdb06avatar.jpg`,
+                    topicId: message.topicId.toString(),
+                    topicName: message.topicName,
+                    newestMsg: message.topicText,
+                    topicType: message.type,
+                    createdAt: message.createdAt,
+                    avatar: `${api.database}/${message.user.avatar}`,
                 },
             },
         });

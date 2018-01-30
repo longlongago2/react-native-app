@@ -20,7 +20,7 @@ export default function configureStore(initialState) {
         onError(err) {
             Alert.alert(
                 '警告',
-                `:-( 发生未处理错误：${err.message}，是否将问题提交至后台？`,
+                `:-( 发生未处理错误：${err.message}，是否将问题提交至我们？`,
                 [
                     { text: '退出APP', onPress: () => BackHandler.exitApp() },
                     { text: '取消' },
