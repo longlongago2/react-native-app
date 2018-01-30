@@ -54,8 +54,8 @@ const ChatListItem = ({ item, dispatch }) => {
         });
     }
 
-    function handlePress({ topicName, topicId, topicType }) {
-        switch (topicType) {
+    function handlePress({ topicName, topicId, type }) {
+        switch (type) {
             case '0':
                 // 通知
                 break;
@@ -67,7 +67,7 @@ const ChatListItem = ({ item, dispatch }) => {
                     params: {
                         userId: topicId,
                         personName: topicName,
-                        type: topicType,
+                        type,
                     },
                 });
                 break;

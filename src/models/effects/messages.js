@@ -26,7 +26,7 @@ export function* createMessagesTable() {
                 columnName: 'userid',    // 用户编号
                 dataType: 'VARCHAR',
             }, {
-                columnName: 'createAt',  // 创建时间
+                columnName: 'createdAt',  // 创建时间
                 dataType: 'DATETIME',
             }, {
                 columnName: 'typeId',    // 消息类型（外键：type表）

@@ -20,8 +20,8 @@ class App extends Component {
         this.handleAppStateChange = this._handleAppStateChange.bind(this);
         this.handleBackAndroid = this._handleBackAndroid.bind(this);
         this.handleNotificationClick = this._handleNotificationClick.bind(this);
-        this.handleChatNotification = this._handleChatNotification.bind(this);
-        this.handleWONotification = this._handleWONotification.bind(this);
+        this.handleChatNotificationClick = this._handleChatNotificationClick.bind(this);
+        this.handleWONotificationClick = this._handleWONotificationClick.bind(this);
         this.handleAutoLogin = this._handleAutoLogin.bind(this);
         this.handleActiveMQ = this._handleActiveMQ.bind(this);
     }
@@ -91,7 +91,6 @@ class App extends Component {
 
     _handleActiveMQ(e) {
         const { dispatch } = this.props;
-        console.log(e.message);
         const message = JSON.parse(e.message);
         dispatch({
             type: ACTIONS.CHAT_LIST.INSERT,
@@ -99,8 +98,8 @@ class App extends Component {
                 item: {
                     topicId: message.topicId.toString(),
                     topicName: message.topicName,
+                    type: message.type,
                     newestMsg: message.topicText,
-                    topicType: message.type,
                     createdAt: message.createdAt,
                     avatar: `${api.database}/${message.user.avatar}`,
                 },
@@ -108,49 +107,41 @@ class App extends Component {
         });
     }
 
-    _handleChatNotification(notification) {
+    _handleChatNotificationClick(data) {
         const { dispatch } = this.props;
-        const pushData = JSON.parse(notification.tag);
-        const type = pushData.type;
+        const type = data.type.toString();
         switch (type) {
-            case 0:
-                // 群聊
+            case '0':
+                // 通知
                 break;
-            case 1:
+            case '1':
                 // 私聊
-                // 1.根据userId跳转页面
                 dispatch({
                     type: 'Navigation/NAVIGATE',
                     routeName: 'Chatting',
                     params: {
-                        userId: pushData.userId,
-                        personName: pushData.personName,
+                        userId: data.topicId,
+                        personName: data.topicName,
+                        type: data.type,
                     },
                 });
-                // 2.根据userId更新徽章
-                dispatch({
-                    type: ACTIONS.CHAT_LIST.UPDATE,
-                    payload: {
-                        userId: pushData.userId,
-                    },
-                });
+                break;
+            case '2':
+                // 群聊
                 break;
             default:
         }
     }
 
-    _handleWONotification(notification) {
+    _handleWONotificationClick(data) {
         const { dispatch } = this.props;
-        const pushData = JSON.parse(notification.tag);
-        const ordercode = pushData.messageRouter;
-        const title = pushData.workorderTitle;
         dispatch({
             type: 'Navigation/NAVIGATE',
             routeName: 'WorkOrderDetail',
             params: {
                 obj: {
-                    ordercode,
-                    title,
+                    ordercode: data.messageRouter,
+                    title: data.workorderTitle,
                 },
                 workOrderType: null,
             },
@@ -160,19 +151,20 @@ class App extends Component {
     _handleNotificationClick(notification) {
         if (notification !== null) {
             const group = notification.group;
+            const data = notification.data;
             switch (group) {
                 case 'chat':
                     // 聊天消息通知
-                    this.handleChatNotification(notification);
+                    this.handleChatNotificationClick(data);
                     break;
                 case 'workorder':
                     // 工单消息通知
-                    this.handleWONotification(notification);
+                    this.handleWONotificationClick(data);
                     break;
                 case 'progress':
                     break;
                 default:
-                    ToastAndroid.show('未处理的消息点击事件', 3000);
+                    ToastAndroid.show('未处理的点击事件', 3000);
             }
         }
     }

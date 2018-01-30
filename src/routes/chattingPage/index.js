@@ -143,8 +143,8 @@ class ChattingPage extends Component {
                     item: {
                         topicId: state.params.userId,
                         topicName: state.params.personName,
+                        type: state.params.type,
                         newestMsg: inputText,
-                        topicType: state.params.type,
                         createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
                     },
                 },

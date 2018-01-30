@@ -26,13 +26,13 @@ export function* createChatListTable() {
                 columnName: 'avatar',    // 头像
                 dataType: 'VARCHAR',
             }, {
-                columnName: 'topicId',   // 标题编号
+                columnName: 'topicId',   // 聊天编号
                 dataType: 'VARCHAR',
             }, {
-                columnName: 'topicName', // 标题名称
+                columnName: 'topicName', // 聊天名称
                 dataType: 'VARCHAR',
             }, {
-                columnName: 'topicType', // 标题类型
+                columnName: 'type',      // 聊天类型（群聊，私聊，通知，天气等）
                 dataType: 'VARCHAR',
             }, {
                 columnName: 'newestMsg', // 最新消息
@@ -174,12 +174,6 @@ export function* insertChatList({ payload }) {
 export function* updateChatList({ payload }) {
     const { userInfo, online } = yield select(state => state.user);
     if (!online) return false;
-    yield put({
-        type: ACTIONS.CHAT_LIST.LOADING,
-        payload: {
-            loading: true,
-        },
-    });
     const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
     const { err } = yield sqLiteHelper.updateItem('chatList', payload.item, payload.condition);
     if (err) {
