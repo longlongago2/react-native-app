@@ -70,29 +70,10 @@ export function* queryAllFriendMsgInfo() {
     const { data, err } = yield call(queryAllFriendMsg, params);
     if (online) {
         if (data && data.data.status === '22000') {
-            const array = data.data.info;
-            const map = {};
-            const dest = [];
-            array.forEach((item) => {
-                if (!map[item.friendgroupsid]) {
-                    dest.push({
-                        friendgroupsid: item.friendgroupsid,
-                        friendgroupsname: item.friendgroupsname,
-                        data: [item],
-                    });
-                    map[item.friendgroupsid] = item;
-                } else {
-                    dest.forEach((_item) => {
-                        if (_item.friendgroupsid === item.friendgroupsid) {
-                            _item.data.push(item);
-                        }
-                    });
-                }
-            });
             yield put({
                 type: ACTIONS.FRIEND_DETAIL.SUCCESS,
                 payload: {
-                    friendDetailList: dest,
+                    friendDetailList: data.data.info,
                 },
             });
         } else {
@@ -134,12 +115,9 @@ export function* insertFriendGroup({ payload }) {
     const { err, data } = yield call(insertFriendGroupByPOJO, params);
     if (online) {
         if (data && data.data.status === '22000') {
-            // yield put({
-            //     type: ACTIONS.FRIEND_GROUP.SUCCESS,
-            // });
             ToastAndroid.show('添加好友分组成功', 3000);
             yield put({
-                type: ACTIONS.FRIEND_GROUP.REQUEST, // 重新查询
+                type: ACTIONS.FRIEND_DETAIL.REQUEST, // 重新查询
             });
         } else {
             const message = (err && err.message);

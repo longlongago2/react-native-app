@@ -34,20 +34,11 @@ const addressOptions = [
 class AddressListPage extends Component {
     constructor(props) {
         super(props);
-        this.queryInitFriendGroup = this._queryInitFriendGroup.bind(this);
         this.queryInitFriendDetail = this._queryInitFriendDetail.bind(this);
     }
 
     componentDidMount() {
-        this.queryInitFriendGroup();
         this.queryInitFriendDetail();
-    }
-
-    _queryInitFriendGroup() {
-        const { dispatch } = this.props;
-        dispatch({
-            type: ACTIONS.FRIEND_GROUP.REQUEST,
-        });
     }
 
     _queryInitFriendDetail() {
@@ -58,8 +49,8 @@ class AddressListPage extends Component {
     }
 
     render() {
-        const { friendDetailList, dispatch, friendGroupList, navigation } = this.props;
-        const { state, setParams } = navigation;
+        const { friendDetailList, dispatch, navigation, loading } = this.props;
+        const { setParams } = navigation;
         function handItemPress(value) {
             setParams({
                 modalVisible: true,
@@ -121,6 +112,8 @@ class AddressListPage extends Component {
                                 navigation={navigation}
                             />
                         )}
+                        refreshing={loading}
+                        onRefresh={this.queryInitFriendDetail}
                         sections={friendDetailList}
                     />
                 </View>
@@ -130,10 +123,10 @@ class AddressListPage extends Component {
 }
 
 AddressListPage.propTypes = {
-    friendGroupList: PropTypes.array.isRequired,
     friendDetailList: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
     navigation: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({

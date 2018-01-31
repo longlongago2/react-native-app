@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { View, Text, Image } from 'react-native';
 import RAFTouchableNativeFeedback from '../../components/RAFTouchableNativeFeedback';
 import theme from '../../theme';
+import api from '../../utils/api';
 
 const FriendListItem = ({ item, onItemPress }) => (
     <RAFTouchableNativeFeedback
@@ -26,10 +27,17 @@ const FriendListItem = ({ item, onItemPress }) => (
                 padding: 10,
             }}
             >
-                <Image
-                    style={{ width: 30, height: 30 }}
-                    source={{ uri: 'http://192.168.1.101/CFSP/images/5c5d23266a09e368e5c594536dc9428ca.png' }}
-                />
+                {
+                    item.avatar ?
+                        <Image
+                            style={{ width: 30, height: 30 }}
+                            source={{ uri: `${api.database}/${item.avatar}` }}
+                        /> :
+                        <Image
+                            style={{ width: 30, height: 30 }}
+                            source={require('../../assets/avatar_default.png')}
+                        />
+                }
             </View>
             <View style={{
                 flex: 8,
