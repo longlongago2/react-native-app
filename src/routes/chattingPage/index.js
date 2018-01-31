@@ -6,8 +6,6 @@ import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
 import Icon from 'react-native-vector-icons/Feather';
-import uuid from 'uuid/v4';
-import moment from 'moment';
 import ACTIONS from '../../models/actions';
 import api from '../../utils/api';
 import styleModule from './indexStyle';
@@ -20,13 +18,11 @@ class ChattingPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            messages: [],      // 聊天数据：应该接入Redux
-            inputText: '',     // 文本框内容
-            messageType: '0',  // 消息类型（文本，语音...）
             utilities: false,  // 消息扩展功能栏显示状态 true:显示，false:隐藏
             actionBtn: true,   // 消息框扩展按钮状态 true:打开按钮，false:关闭按钮
             layoutHeight: 0,
             keyboardHeight: 0,
+            inputText: '',     // 文本框内容
         };
         this.onLayout = this._onLayout.bind(this);
         this.onSend = this._onSend.bind(this);
@@ -47,31 +43,8 @@ class ChattingPage extends Component {
     }
 
     componentDidMount() {
-        // test code ...
-        this.setState({
-            messages: [
-                {
-                    _id: uuid(),
-                    text: 'Hello developer',
-                    createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-                    user: {
-                        _id: 1,
-                        name: 'React Native',
-                        avatar: require('../../assets/avatar_default.png'),
-                    },
-                },
-                {
-                    _id: uuid(),
-                    createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-                    user: {
-                        _id: 1,
-                        name: 'React Native',
-                        avatar: require('../../assets/avatar_default.png'),
-                    },
-                    image: 'http://192.168.1.101/CFSP/media/images/20171122/d6248a2a-75e6-4699-8649-243d9f9fdb06avatar.jpg',
-                },
-            ],
-        });
+        // 加载初始数据
+        // ...
     }
 
     componentWillUnmount() {
@@ -120,35 +93,16 @@ class ChattingPage extends Component {
     _onSend(messages = []) {
         const { dispatch, navigation } = this.props;
         const { state } = navigation;
-        const { inputText, messageType } = this.state;
-        this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, messages),
-            messageType: '0',  // 消息类型：0文本
-        }), () => {
-            // 发送消息
-            dispatch({
-                type: ACTIONS.ACTIVE_MQ.REQUEST,
-                payload: {
-                    receiver: state.params.personName,
-                    receiverId: state.params.userId,
-                    type: state.params.type,        // 聊天类型
-                    text: inputText,                // 消息体
-                    portrayal: messageType,         // 消息体类型
+        dispatch({
+            type: ACTIONS.ACTIVE_MQ.REQUEST,
+            payload: {
+                send: {
+                    receiverId: state.params.userId,    // 接受者编号
+                    receiver: state.params.personName,  // 接受者名称
+                    type: state.params.type,            // 聊天类型
                 },
-            });
-            // 记录chatList
-            dispatch({
-                type: ACTIONS.CHAT_LIST.INSERT,
-                payload: {
-                    item: {
-                        topicId: state.params.userId,
-                        topicName: state.params.personName,
-                        type: state.params.type,
-                        newestMsg: inputText,
-                        createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-                    },
-                },
-            });
+                messages,
+            },
         });
     }
 
@@ -250,8 +204,8 @@ class ChattingPage extends Component {
     }
 
     render() {
-        const { userInfo } = this.props;
-        const { utilities, keyboardHeight, actionBtn } = this.state;
+        const { userInfo, data, loading } = this.props;
+        const { utilities, keyboardHeight, actionBtn, inputText } = this.state;
         const user = {
             _id: userInfo.userid,
             name: userInfo.username,
@@ -335,13 +289,13 @@ class ChattingPage extends Component {
                     ...props.textInputProps,
                     selectionColor: theme.theme,
                     onBlur: () => {
-                        if (this.state.actionBtn) {
+                        if (actionBtn) {
                             AndroidKeyboardAdjust.setAdjustResize();
                             this.setState({ utilities: false });
                         }
                     },
                     onFocus: () => {
-                        if (!this.state.actionBtn) {
+                        if (!actionBtn) {
                             this.setState({ actionBtn: true });
                         }
                     },
@@ -377,15 +331,15 @@ class ChattingPage extends Component {
                     loadEarlier
                     locale="zh-cn"
                     placeholder="输入消息..."
-                    messages={this.state.messages}
+                    messages={data.messages}
                     user={user}
-                    text={this.state.inputText}
+                    text={inputText}
                     onInputTextChanged={text => this.setState({ inputText: text })}
                     onSend={messages => this.onSend(messages)}
                     onPressAvatar={this.onPressAvatar}
                     onLongPress={this.onLongPress}
                     onLoadEarlier={() => alert('loading')}
-                    isLoadingEarlier={false}
+                    isLoadingEarlier={loading}
                     keyboardShouldPersistTaps="never"
                     renderSend={renderSend}
                     renderLoadEarlier={renderLoadEarlier}
@@ -410,10 +364,13 @@ ChattingPage.propTypes = {
     navigation: PropTypes.object.isRequired,
     userInfo: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    data: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
     userInfo: state.user.userInfo,
+    ...state.activeMQ,
 });
 
 export default connect(mapStateToProps)(ChattingPage);

@@ -13,8 +13,8 @@ import notification from './notification';
 import instruction from './instruction';
 import browsingHistory from './browsingHistory';
 import chatList from './chatList';
-import messages from './messages';
 import addressBook from './addressBook';
+import activeMQ from './activeMQ';
 
 const rootReducer = combineReducers({
     user,
@@ -31,8 +31,8 @@ const rootReducer = combineReducers({
     instruction,
     browsingHistory,
     chatList,
-    messages,
     addressBook,
+    activeMQ,
 });
 
 export default rootReducer;

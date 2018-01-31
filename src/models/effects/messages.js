@@ -49,14 +49,7 @@ export function* insertMessage({ payload }) {
     if (!online) return;
     const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
     const { err } = yield sqLiteHelper.insertItems('message', payload.messages);
-    if (err) {
-        yield put({
-            type: ACTIONS.MESSAGES.FAILURE,
-            payload: {
-                message: err.message,
-            },
-        });
-    }
+    if (err) throw new Error('插入message表失败');
 }
 
 /**

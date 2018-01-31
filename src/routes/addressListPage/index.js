@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, StyleSheet, SectionList, FlatList } from 'react-native';
+import uuid from 'uuid/v4';
 import addressStyle from './indexStyle';
 import ACTIONS from '../../models/actions';
 import ItemSeparator from '../../components/ItemSeparator';
@@ -78,7 +79,7 @@ class AddressListPage extends Component {
                 />
                 <View>
                     <FlatList
-                        keyExtractor={(item, index) => item.id}
+                        keyExtractor={() => uuid()}
                         renderItem={({ item }) => (
                             <AddressHeader
                                 item={item}
@@ -98,7 +99,7 @@ class AddressListPage extends Component {
                 </View>
                 <View style={{ marginBottom: 90 }}>
                     <SectionList
-                        keyExtractor={(item, index) => item.friendgroupsid}
+                        keyExtractor={(item, index) => `${item.friendgroupsid}-${index}`}
                         renderItem={({ item }) => (
                             <FriendListItem
                                 item={item}
