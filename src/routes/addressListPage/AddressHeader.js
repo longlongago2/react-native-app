@@ -3,7 +3,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import RAFTouchableNativeFeedback from '../../components/RAFTouchableNativeFeedback';
 import theme from '../../theme';
 
@@ -13,7 +12,7 @@ const AddressHeader = ({ item, onItemPress }) => (
         onPress={() => onItemPress(item)}
     >
         <View style={{
-            backgroundColor: '#ffffff',
+            backgroundColor: 'rgba(255,255,255,0.8)',
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'center',
@@ -36,7 +35,7 @@ const AddressHeader = ({ item, onItemPress }) => (
                 justifyContent: 'flex-start',
             }}
             >
-                <Text style={{ fontSize: 15 }}>{item.text}</Text>
+                <Text style={{ fontSize: 13 }}>{item.text}</Text>
             </View>
         </View>
     </RAFTouchableNativeFeedback>

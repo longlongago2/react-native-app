@@ -47,6 +47,7 @@ import Search from './searchPage';
 import SearchHeaderTitle from './searchPage/HeaderTitle';
 import BrowsingHistory from './browsingHistoryPage';
 import BrowsingHistoryHeaderRight from './browsingHistoryPage/HeaderRight';
+import ChatGroup from './chatGroupPage';
 
 const headerStyle = {
     backgroundColor: theme.header.backgroundColor,
@@ -537,6 +538,17 @@ const AppNavigator = StackNavigator({
                 headerRight: (
                     <BrowsingHistoryHeaderRight navigation={navigation} />
                 ),
+                headerStyle,
+            };
+        },
+    },
+    ChatGroup: {
+        screen: ChatGroup,
+        path: 'chatGroup',
+        navigationOptions() {
+            return {
+                title: '群聊',
+                headerTintColor: theme.header.foregroundColor,
                 headerStyle,
             };
         },

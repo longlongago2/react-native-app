@@ -4,9 +4,11 @@
  * */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import uuid from 'uuid/v4';
 import { View, Text, ScrollView, TextInput } from 'react-native';
 import ModalPage from '../../components/ModalPage';
 import ACTIONS from '../../models/actions';
+
 
 export default class ModalInsertFriend extends PureComponent {
     constructor(props) {
@@ -22,7 +24,7 @@ export default class ModalInsertFriend extends PureComponent {
         dispatch({
             type: ACTIONS.FRIEND_DETAIL.INSERT,
             payload: {
-                friendcode: Math.floor(Math.random() * 10000),
+                friendcode: uuid(),
                 friendid: this.state.friendId,
                 friendname: this.state.friendName,
                 friendtype: 0,
@@ -32,7 +34,7 @@ export default class ModalInsertFriend extends PureComponent {
         close();
     }
     render() {
-        const { navigation, dispatch, friendGroupsName } = this.props;
+        const { navigation, friendGroupsName } = this.props;
         return (
             <ModalPage
                 navigation={navigation}

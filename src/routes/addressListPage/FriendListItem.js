@@ -12,7 +12,7 @@ const FriendListItem = ({ item, onItemPress }) => (
         onPress={() => onItemPress(item)}
     >
         <View style={{
-            backgroundColor: '#ffffff',
+            backgroundColor: 'rgba(255,255,255,0.8)',
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'center',
@@ -45,7 +45,7 @@ const FriendListItem = ({ item, onItemPress }) => (
                 justifyContent: 'flex-start',
             }}
             >
-                <Text style={{ fontSize: 15 }}>{item.friendname}</Text>
+                <Text style={{ fontSize: 13 }}>{item.friendname}</Text>
             </View>
         </View>
     </RAFTouchableNativeFeedback>

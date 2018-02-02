@@ -56,3 +56,53 @@ export async function insertFriendByPOJO(params) {
     });
 }
 
+/**
+ * 根据 chatUserGroup 对象新增 群聊
+ * @param params
+ * @returns {Promise.<void>}
+ */
+export async function insertChatUserGroupByPOJO(params) {
+    return request(`${api.database}/chat/insertChatUsergroupByPOJO`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: stringify(params),
+    });
+}
+
+/**
+ * 根据 chatGroupsToUser 对象添加 群聊成员
+ * @param params
+ * @returns {Promise.<{data}>}
+ */
+export async function insertChatUserGroupToUserByPOJO(params) {
+    return request(`${api.database}/chat/insertChatUsergroupToUserByPOJO`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: stringify(params),
+    });
+}
+
+/**
+ * 根据 userId 查询群聊列表
+ * @param params
+ * @returns {Promise.<{data}>}
+ */
+export async function queryChatUserGroupByUserId(params) {
+    const { userId } = params;
+    return request(`${api.database}/chat/queryChatUsergroupsByUserId/${userId}`, {
+        method: 'GET',
+    });
+}
+
+/**
+ * 根据 chatUserGroupid 查询群聊 成员
+ * @param params
+ * @returns {Promise.<{data}>}
+ */
+export async function queryChatGroupToUserByChatUserGroupId(params) {
+    const { chatUserGroupId } = params;
+    return request(`${api.database}/chat/queryChatgroupsToUserByChatusergroupId/${chatUserGroupId}`, {
+        method: 'GET',
+    });
+}
+

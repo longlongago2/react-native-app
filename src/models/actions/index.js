@@ -21,7 +21,7 @@ import { NOTIFICATION, UNREAD_NOTIFICATION } from './notification';
 import { APPVERSION, LATESTAPP_DOWNLOAD } from './instruction';
 import { BROWSING_HISTORY } from './browsingHistory';
 import { ACTIVE_MQ } from './activeMQ';
-import { FRIEND_DETAIL, FRIEND_GROUP } from './addressBook';
+import { FRIEND_DETAIL, FRIEND_GROUP, CHATGROUP, CHATGROUP_MEMBERS } from './addressBook';
 
 export default {
     USER_LOGIN,
@@ -56,4 +56,6 @@ export default {
     ACTIVE_MQ,
     FRIEND_DETAIL,
     FRIEND_GROUP,
+    CHATGROUP,
+    CHATGROUP_MEMBERS,
 };

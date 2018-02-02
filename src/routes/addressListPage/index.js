@@ -25,7 +25,7 @@ const addressOptions = [
     {
         id: 2,
         text: '群聊',
-        redirect: { routeName: '' },
+        redirect: { routeName: 'ChatGroup' },
         icon: <Icon name="user" size={20} color="#01A0EA" />,
         showBadge: false,
         key: 'chatUserGroup',
@@ -51,11 +51,10 @@ class AddressListPage extends Component {
 
     render() {
         const { friendDetailList, dispatch, navigation, loading } = this.props;
-        const { setParams } = navigation;
         function handItemPress(value) {
-            setParams({
-                modalVisible: true,
-                type: value.key,
+            dispatch({
+                type: 'Navigation/NAVIGATE',
+                routeName: value.redirect.routeName,
             });
         }
 

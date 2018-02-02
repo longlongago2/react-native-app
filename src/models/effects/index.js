@@ -44,6 +44,10 @@ import {
     queryAllFriendMsgInfo,
     insertFriendGroup,
     insertFriend,
+    insertChatGroup,
+    insertChatGroupMembers,
+    queryAllChatGroup,
+    queryAllChatGroupMembers,
 } from './addressBook';
 
 export default function* rootSaga() {
@@ -67,6 +71,8 @@ export default function* rootSaga() {
         takeLatest(ACTIONS.APPVERSION.REQUEST, queryLatestVersion),           // 查询最新的app版本
         takeLatest(ACTIONS.FRIEND_GROUP.REQUEST, queryAllFriendGroupInfo),    // 查询好友分组信息
         takeLatest(ACTIONS.FRIEND_DETAIL.REQUEST, queryAllFriendMsgInfo),     // 查询好友详情信息
+        takeLatest(ACTIONS.CHATGROUP.REQUEST, queryAllChatGroup),             // 查询所有群聊信息
+        takeLatest(ACTIONS.CHATGROUP_MEMBERS.REQUEST, queryAllChatGroupMembers),      // 查询群聊成员信息
         takeEvery(ACTIONS.USER_PASSWORD.UPDATE, updateUserPassword),          // 修改密码
         takeEvery(ACTIONS.FEEDBACK_IMAGE.INSERT, insertFeedbackImage),        // 创建工单上传工单图片
         takeEvery(ACTIONS.FEEDBACK_IMAGE.DELETE, deleteFeedbackImage),        // 删除创建工单回显的图片
@@ -97,5 +103,7 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.ACTIVE_MQ.REQUEST, sendMessage),                    // 发送聊天
         takeEvery(ACTIONS.FRIEND_GROUP.INSERT, insertFriendGroup),            // 新增好友分组
         takeEvery(ACTIONS.FRIEND_DETAIL.INSERT, insertFriend),                // 新增好友
+        takeEvery(ACTIONS.CHATGROUP.INSERT, insertChatGroup),                 // 新增群聊信息
+        takeEvery(ACTIONS.CHATGROUP_MEMBERS.INSERT, insertChatGroupMembers),  // 新增群成员信息
     ]);
 }
