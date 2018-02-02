@@ -7,10 +7,12 @@ import { createChatListTable } from './chatList';
 import { createMessagesTable } from './messages';
 import { createTypeTable, initialTypeTableData, clearTypeTableData } from './type';
 import { createBrowsingHistoryTable } from './browsingHistory';
+import { createChatListUserTable } from './chatListUser';
 
 function* initialAction() {
     yield createBrowsingHistoryTable();
     yield createMessagesTable();
+    yield createChatListUserTable();
     yield createChatListTable();
     yield createTypeTable();
     yield initialTypeTableData();

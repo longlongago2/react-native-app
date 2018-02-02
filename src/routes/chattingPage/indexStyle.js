@@ -7,4 +7,8 @@ export default {
         color: '#ffffff',
         fontWeight: '500',
     },
+    tickView: {
+        flexDirection: 'row',
+        width: 20,
+    },
 };

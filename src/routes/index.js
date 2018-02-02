@@ -92,6 +92,8 @@ class App extends Component {
     _handleActiveMQ(e) {
         const { dispatch } = this.props;
         const message = JSON.parse(e.message);
+        console.log(message);
+        // 记录聊天列表数据
         dispatch({
             type: ACTIONS.CHAT_LIST.INSERT,
             payload: {
@@ -101,6 +103,21 @@ class App extends Component {
                     type: message.type,
                     newestMsg: message.topicText,
                     createdAt: message.createdAt,
+                    avatar: `${api.database}/${message.user.avatar}`,
+                },
+            },
+        });
+        // 记录聊天面板数据
+        dispatch({
+            type: ACTIONS.ACTIVE_MQ.INSERT,
+            payload: {
+                topicId: message.topicId.toString(),
+                userid: message.senderId,
+                createdAt: message.createdAt,
+                typeId: message.portrayal.toString(),
+                content: message.text,
+                user: {
+                    ...message.user,
                     avatar: `${api.database}/${message.user.avatar}`,
                 },
             },

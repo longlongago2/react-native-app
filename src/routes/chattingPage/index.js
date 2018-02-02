@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, Keyboard, Clipboard, StyleSheet, BackHandler } from 'react-native';
+import { View, Text, Keyboard, Clipboard, StyleSheet, BackHandler, ActivityIndicator } from 'react-native';
 import { GiftedChat, Send, LoadEarlier, Actions, Composer, InputToolbar, Bubble } from 'react-native-gifted-chat';
 import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
 import Icon from 'react-native-vector-icons/Feather';
+import IonicIcon from 'react-native-vector-icons/Ionicons';
 import ACTIONS from '../../models/actions';
 import api from '../../utils/api';
 import styleModule from './indexStyle';
@@ -43,8 +44,19 @@ class ChattingPage extends Component {
     }
 
     componentDidMount() {
+        const { dispatch, navigation, topicId } = this.props;
+        const { state } = navigation;
         // 加载初始数据
-        // ...
+        if (topicId.toString() === state.params.userId.toString()) return;
+        dispatch({
+            type: ACTIONS.ACTIVE_MQ.INITIAL,
+            payload: {
+                topicId: state.params.userId.toString(),
+                data: {
+                    messages: [],
+                },
+            },
+        });
     }
 
     componentWillUnmount() {
@@ -318,6 +330,38 @@ class ChattingPage extends Component {
                     right: { marginVertical: 5 },
                     left: { marginVertical: 5 },
                 }}
+                bottomContainerStyle={{
+                    right: {
+                        flexDirection: 'row-reverse',
+                        justifyContent: 'space-between',
+                    },
+                }}
+                renderTicks={(currentMessage) => {
+                    if (currentMessage.user._id !== user._id) return false;
+                    return (
+                        <View style={styles.tickView}>
+                            {
+                                currentMessage.loading &&
+                                <ActivityIndicator size={17} color="#ffffff" />
+                            }
+                            {
+                                !currentMessage.loading && !currentMessage.received &&
+                                <IonicIcon
+                                    name="md-alert"
+                                    size={16}
+                                    color="#CD2626"
+                                    style={{
+                                        width: 16,
+                                        height: 16,
+                                        borderRadius: 8,
+                                        textAlign: 'center',
+                                        backgroundColor: '#ffffff',
+                                    }}
+                                />
+                            }
+                        </View>
+                    );
+                }}
             />
         );
         return (
@@ -366,6 +410,7 @@ ChattingPage.propTypes = {
     dispatch: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
     data: PropTypes.object.isRequired,
+    topicId: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({

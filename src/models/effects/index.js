@@ -36,7 +36,7 @@ import {
 import { queryNotificationListByUserId, queryUnreadNotificationNum, initialNotification } from './notification';
 import { queryLatestVersion } from './instruction';
 import { insertHistory, queryHistoryList } from './browsingHistory';
-import { sendMessage } from './activeMQ';
+import { sendMessages, updateMessage, initialMessages, receiveMessages } from './activeMQ';
 import { insertChatList, queryChatList, updateChatList, deleteChatList } from './chatList';
 import { insertMessage } from './messages';
 import {
@@ -71,6 +71,7 @@ export default function* rootSaga() {
         takeLatest(ACTIONS.APPVERSION.REQUEST, queryLatestVersion),           // 查询最新的app版本
         takeLatest(ACTIONS.FRIEND_GROUP.REQUEST, queryAllFriendGroupInfo),    // 查询好友分组信息
         takeLatest(ACTIONS.FRIEND_DETAIL.REQUEST, queryAllFriendMsgInfo),     // 查询好友详情信息
+        takeLatest(ACTIONS.ACTIVE_MQ.INITIAL, initialMessages),                // 初始化聊天信息
         takeLatest(ACTIONS.CHATGROUP.REQUEST, queryAllChatGroup),             // 查询所有群聊信息
         takeLatest(ACTIONS.CHATGROUP_MEMBERS.REQUEST, queryAllChatGroupMembers),      // 查询群聊成员信息
         takeEvery(ACTIONS.USER_PASSWORD.UPDATE, updateUserPassword),          // 修改密码
@@ -100,7 +101,9 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.BROWSING_HISTORY.REQUEST, queryHistoryList),        // 查询历史记录
         takeEvery(ACTIONS.BROWSING_HISTORY.INSERT, insertHistory),            // 插入历史记录
         takeEvery(ACTIONS.MESSAGES.INSERT, insertMessage),                    // 添加聊天消息
-        takeEvery(ACTIONS.ACTIVE_MQ.REQUEST, sendMessage),                    // 发送聊天
+        takeEvery(ACTIONS.ACTIVE_MQ.REQUEST, sendMessages),                   // 发送聊天数据
+        takeEvery(ACTIONS.ACTIVE_MQ.UPDATE, updateMessage),                   // 更改聊天消息数据
+        takeEvery(ACTIONS.ACTIVE_MQ.INSERT, receiveMessages),                 // 接收聊天消息数据
         takeEvery(ACTIONS.FRIEND_GROUP.INSERT, insertFriendGroup),            // 新增好友分组
         takeEvery(ACTIONS.FRIEND_DETAIL.INSERT, insertFriend),                // 新增好友
         takeEvery(ACTIONS.CHATGROUP.INSERT, insertChatGroup),                 // 新增群聊信息

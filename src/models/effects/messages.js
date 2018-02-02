@@ -2,13 +2,10 @@
  * ************ SQLite: message(当前显示消息) ********** *
  */
 
-import { put, select } from 'redux-saga/effects';
+import { select } from 'redux-saga/effects';
 import SQLiteHelper from 'react-native-sqlite-helper';
-import ACTIONS from '../actions';
+import { updateChatListUsers, queryChatListUsers, insertChatListUsers } from './chatListUser';
 
-/**
- * 创建message表(fork触发)
- */
 export function* createMessagesTable() {
     const { userInfo, online } = yield select(state => state.user);
     if (!online) return;
@@ -23,7 +20,7 @@ export function* createMessagesTable() {
                 columnName: 'topicId',   // 主题归属（外键：chatList表）
                 dataType: 'VARCHAR',
             }, {
-                columnName: 'userid',    // 用户编号
+                columnName: 'userid',    // 用户编号（外键：chatListUser表）
                 dataType: 'VARCHAR',
             }, {
                 columnName: 'createdAt',  // 创建时间
@@ -40,32 +37,55 @@ export function* createMessagesTable() {
     if (err) throw new Error('创建message表失败：用于记录聊天信息');
 }
 
-/**
- * 新增即时通讯消息(ACTIONS.MESSAGES.INSERT 触发)
- * @param payload
- */
 export function* insertMessage({ payload }) {
     const { userInfo, online } = yield select(state => state.user);
     if (!online) return;
     const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { err } = yield sqLiteHelper.insertItems('message', payload.messages);
-    if (err) throw new Error('插入message表失败');
+    // 1.插入主表：message表
+    const { err: errMessage } = yield sqLiteHelper.insertItems('message', payload.messages);
+    if (errMessage) throw new Error('插入message表失败');
+    // 2.修改关联表：chatListUser表
+    const { res, err: errChatListUser } = yield queryChatListUsers({
+        payload: {
+            condition: {
+                userid: payload.user._id,
+            },
+        },
+    });
+    if (errChatListUser) throw new Error('查chatListUser表失败');
+    if (Array.isArray(res) && res.length > 0) {
+        // 已存在：修改
+        yield updateChatListUsers({
+            payload: {
+                item: {
+                    name: payload.user.name,
+                    avatar: payload.user.avatar,
+                },
+                condition: {
+                    userid: payload.user._id,
+                },
+            },
+        });
+    } else {
+        // 不存在：新增
+        yield insertChatListUsers({
+            payload: {
+                item: [{
+                    userid: payload.user._id,
+                    name: payload.user.name,
+                    avatar: payload.user.avatar,
+                }],
+            },
+        });
+    }
 }
 
-/**
- * 查询当前即时通讯消息(ACTIONS.MESSAGES.REQUEST 触发)
- * @param payload
- */
 export function* queryMessages({ payload }) {
     const { userInfo, online } = yield select(state => state.user);
     if (!online) return;
     const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
 }
 
-/**
- * 删除即时消息(支持多条)(ACTIONS.MESSAGES.DELETE 触发)
- * @param payload
- */
 export function* deleteMessages({ payload }) {
     const { userInfo, online } = yield select(state => state.user);
     if (!online) return;
