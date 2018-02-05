@@ -4,7 +4,7 @@
  * */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, ScrollView, TextInput } from 'react-native';
+import { View, Text, ScrollView, TextInput, ToastAndroid } from 'react-native';
 import ModalPage from '../../components/ModalPage';
 import ACTIONS from '../../models/actions';
 
@@ -18,13 +18,18 @@ export default class ModalInsertGroup extends PureComponent {
     }
     _handleSubmit(close) {
         const { dispatch } = this.props;
-        dispatch({
-            type: ACTIONS.FRIEND_GROUP.INSERT,
-            payload: {
-                friendgroupsname: this.state.friendsGroupName,
-            },
-        });
-        close();
+        const { friendsGroupName } = this.state;
+        if (friendsGroupName === '') {
+            ToastAndroid.show('请填写完整信息', 3000);
+        } else {
+            dispatch({
+                type: ACTIONS.FRIEND_GROUP.INSERT,
+                payload: {
+                    friendgroupsname: friendsGroupName,
+                },
+            });
+            close();
+        }
     }
     render() {
         const { navigation } = this.props;

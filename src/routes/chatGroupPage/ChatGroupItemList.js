@@ -9,9 +9,15 @@ import RAFTouchableNativeFeedback from '../../components/RAFTouchableNativeFeedb
 import theme from '../../theme';
 import api from '../../utils/api';
 
-const ChatGroupItemList = ({ item }) => {
+const ChatGroupItemList = ({ item, dispatch }) => {
     function handleItemPress(value) {
-        alert(`topicName:${value.topicname}/群聊id:${value.chatusergroupid}`);
+        dispatch({
+            type: 'Navigation/NAVIGATE',
+            routeName: 'GroupChattingPage',
+            params: {
+                item: value,
+            },
+        });
     }
     return (
         <RAFTouchableNativeFeedback
@@ -52,6 +58,7 @@ const ChatGroupItemList = ({ item }) => {
 
 ChatGroupItemList.propTypes = {
     item: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
 };
 
 export default ChatGroupItemList;

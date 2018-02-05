@@ -1,11 +1,11 @@
 /** created by zhangqi on 2018-1-23 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Text, ToastAndroid, Button } from 'react-native';
+import { View, Text, ToastAndroid } from 'react-native';
 import HeaderPopupMenu from '../../components/HeaderPopupMenu';
 import theme from '../../theme';
 
-const SectionHeader = ({ item, dispatch, navigation }) => {
+const SectionHeader = ({ item, navigation }) => {
     const { setParams } = navigation;
     function handleInsertFriend() {
         setParams({
@@ -28,12 +28,12 @@ const SectionHeader = ({ item, dispatch, navigation }) => {
     }
     const menuOptions = [
         {
-            key: 'camera',
+            key: 'insertFriend',
             handler: () => handleInsertFriend(),
             text: '添加好友',
         },
         {
-            key: 'album',
+            key: 'insertGroup',
             handler: () => handleInsertFriendGroup(),
             text: '新建分组',
         },
@@ -48,7 +48,6 @@ const SectionHeader = ({ item, dispatch, navigation }) => {
             backgroundColor: theme.background,
             flex: 1,
             flexDirection: 'row',
-            padding: 5,
         }}
         >
             <HeaderPopupMenu
@@ -67,7 +66,6 @@ const SectionHeader = ({ item, dispatch, navigation }) => {
 };
 SectionHeader.propTypes = {
     item: PropTypes.object.isRequired,
-    dispatch: PropTypes.func.isRequired,
     navigation: PropTypes.object.isRequired,
 };
 

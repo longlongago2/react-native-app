@@ -5,7 +5,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'uuid/v4';
-import { View, Text, ScrollView, TextInput } from 'react-native';
+import { View, Text, ScrollView, TextInput, ToastAndroid } from 'react-native';
 import ModalPage from '../../components/ModalPage';
 import ACTIONS from '../../models/actions';
 
@@ -21,17 +21,22 @@ export default class ModalInsertFriend extends PureComponent {
     }
     _handleSubmit(close) {
         const { dispatch, friendGroupsId } = this.props;
-        dispatch({
-            type: ACTIONS.FRIEND_DETAIL.INSERT,
-            payload: {
-                friendcode: uuid(),
-                friendid: this.state.friendId,
-                friendname: this.state.friendName,
-                friendtype: 0,
-                friendgroupsid: friendGroupsId,
-            },
-        });
-        close();
+        const { friendId, friendName } = this.state;
+        if (friendId === 0 || friendName === '') {
+            ToastAndroid.show('请填写完整信息', 3000);
+        } else {
+            dispatch({
+                type: ACTIONS.FRIEND_DETAIL.INSERT,
+                payload: {
+                    friendcode: uuid(),
+                    friendid: friendId,
+                    friendname: friendName,
+                    friendtype: 0,
+                    friendgroupsid: friendGroupsId,
+                },
+            });
+            close();
+        }
     }
     render() {
         const { navigation, friendGroupsName } = this.props;

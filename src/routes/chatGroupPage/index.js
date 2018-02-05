@@ -25,14 +25,14 @@ class ChatUserGroup extends Component {
         });
     }
     render() {
-        const { chatGroupList } = this.props;
+        const { chatGroupList, dispatch } = this.props;
         return (
             <View>
                 <FlatList
                     keyExtractor={(item, index) => item.chatusergroupid}
                     data={chatGroupList}
                     renderItem={({ item }) => (
-                        <ChatGroupItemList item={item} />
+                        <ChatGroupItemList item={item} dispatch={dispatch} />
                     )}
                     ItemSeparatorComponent={() => (
                         <ItemSeparator

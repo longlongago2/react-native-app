@@ -48,6 +48,11 @@ import SearchHeaderTitle from './searchPage/HeaderTitle';
 import BrowsingHistory from './browsingHistoryPage';
 import BrowsingHistoryHeaderRight from './browsingHistoryPage/HeaderRight';
 import ChatGroup from './chatGroupPage';
+import ChatGroupHeaderRight from './chatGroupPage/HeaderRight';
+import CreateChatGroup from './chatGroupPage/CreateChatGroup';
+import GroupChattingPage from './groupChattingPage';
+import GroupChattingHeaderRight from './groupChattingPage/HeaderRight';
+import GroupChattingDetail from './groupChattingPage/GroupChattingDetail';
 
 const headerStyle = {
     backgroundColor: theme.header.backgroundColor,
@@ -548,6 +553,46 @@ const AppNavigator = StackNavigator({
         navigationOptions() {
             return {
                 title: '群聊',
+                headerTintColor: theme.header.foregroundColor,
+                headerRight: (
+                    <ChatGroupHeaderRight />
+                ),
+                headerStyle,
+            };
+        },
+    },
+    CreateChatGroup: {
+        screen: CreateChatGroup,
+        path: 'createChatGroup',
+        navigationOptions() {
+            return {
+                title: '创建群聊',
+                headerTintColor: theme.header.foregroundColor,
+                headerStyle,
+            };
+        },
+    },
+    GroupChattingPage: {
+        screen: GroupChattingPage,
+        path: 'groupChattingPage',
+        navigationOptions({ navigation }) {
+            const { state } = navigation;
+            return {
+                title: state.params.item.topicname,
+                headerTintColor: theme.header.foregroundColor,
+                headerRight: (
+                    <GroupChattingHeaderRight navigation={navigation} />
+                ),
+                headerStyle,
+            };
+        },
+    },
+    GroupChattingDetail: {
+        screen: GroupChattingDetail,
+        path: 'groupChattingDetail',
+        navigationOptions() {
+            return {
+                title: '聊天信息',
                 headerTintColor: theme.header.foregroundColor,
                 headerStyle,
             };

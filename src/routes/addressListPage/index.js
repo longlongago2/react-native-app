@@ -52,10 +52,14 @@ class AddressListPage extends Component {
     render() {
         const { friendDetailList, dispatch, navigation, loading } = this.props;
         function handItemPress(value) {
-            dispatch({
-                type: 'Navigation/NAVIGATE',
-                routeName: value.redirect.routeName,
-            });
+            if (value.redirect.routeName) {
+                dispatch({
+                    type: 'Navigation/NAVIGATE',
+                    routeName: value.redirect.routeName,
+                });
+            } else {
+                alert('暂未开发');
+            }
         }
 
         function _handItemPress(value) {
