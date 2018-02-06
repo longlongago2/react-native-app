@@ -6,50 +6,56 @@ import RAFTouchableNativeFeedback from '../../components/RAFTouchableNativeFeedb
 import theme from '../../theme';
 import api from '../../utils/api';
 
-const FriendListItem = ({ item, onItemPress }) => (
-    <RAFTouchableNativeFeedback
-        backgroundColor={theme.rippleColor}
-        onPress={() => onItemPress(item)}
-    >
-        <View style={{
-            backgroundColor: 'rgba(255,255,255,0.8)',
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}
-        >
-            <View style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: 10,
-            }}
+const FriendListItem = ({ item, onItemPress }) => {
+    const arr = Object.keys(item);
+    if (arr.length !== 0) {
+        return (
+            <RAFTouchableNativeFeedback
+                backgroundColor={theme.rippleColor}
+                onPress={() => onItemPress(item)}
             >
-                {
-                    item.avatar ?
-                        <Image
-                            style={{ width: 30, height: 30 }}
-                            source={{ uri: `${api.database}/${item.avatar}` }}
-                        /> :
-                        <Image
-                            style={{ width: 30, height: 30 }}
-                            source={require('../../assets/avatar_default.png')}
-                        />
-                }
-            </View>
-            <View style={{
-                flex: 8,
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-            }}
-            >
-                <Text style={{ fontSize: 13 }}>{item.friendname}</Text>
-            </View>
-        </View>
-    </RAFTouchableNativeFeedback>
-);
+                <View style={{
+                    backgroundColor: 'rgba(255,255,255,0.8)',
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+                >
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 10,
+                    }}
+                    >
+                        {
+                            item.avatar ?
+                                <Image
+                                    style={{ width: 30, height: 30 }}
+                                    source={{ uri: `${api.database}/${item.avatar}` }}
+                                /> :
+                                <Image
+                                    style={{ width: 30, height: 30 }}
+                                    source={require('../../assets/avatar_default.png')}
+                                />
+                        }
+                    </View>
+                    <View style={{
+                        flex: 8,
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                    }}
+                    >
+                        <Text style={{ fontSize: 13 }}>{item.friendname}</Text>
+                    </View>
+                </View>
+            </RAFTouchableNativeFeedback>
+        );
+    }
+    return null;
+};
 FriendListItem.propTypes = {
     item: PropTypes.object.isRequired,
     onItemPress: PropTypes.func.isRequired,

@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import ACTIONS from '../../models/actions';
 import ItemSeparator from '../../components/ItemSeparator';
 import ChatGroupItemList from './ChatGroupItemList';
@@ -41,6 +41,19 @@ class ChatUserGroup extends Component {
                             lineColor="rgba(139,139,139,0.1)"
                             marginHorizontal={15}
                         />
+                    )}
+                    ListEmptyComponent={() => (
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                padding: 10,
+                            }}
+                        >
+                            <Text>您还有任何群聊信息，点击右上角创建群聊吧</Text>
+                        </View>
                     )}
                 />
             </View>

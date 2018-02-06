@@ -11,13 +11,14 @@ import api from '../../utils/api';
 
 const ChatGroupItemList = ({ item, dispatch }) => {
     function handleItemPress(value) {
-        dispatch({
-            type: 'Navigation/NAVIGATE',
-            routeName: 'GroupChattingPage',
-            params: {
-                item: value,
-            },
-        });
+        alert('正在拼命开发中，敬请期待');
+        // dispatch({
+        //     type: 'Navigation/NAVIGATE',
+        //     routeName: 'GroupChattingPage',
+        //     params: {
+        //         item: value,
+        //     },
+        // });
     }
     return (
         <RAFTouchableNativeFeedback

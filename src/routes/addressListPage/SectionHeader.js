@@ -19,8 +19,6 @@ const SectionHeader = ({ item, navigation }) => {
         setParams({
             modalVisible: true,
             type: 'insertGroup',
-            friendGroupsId: item.friendgroupsid,
-            friendGroupsName: item.friendgroupsname,
         });
     }
     function handleCancelClick() {
