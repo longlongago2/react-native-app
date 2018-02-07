@@ -62,7 +62,7 @@ export function* queryChatList() {
             },
         });
         const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-        const { res: chatList, err } = yield sqLiteHelper.selectItems('chatList', '*');
+        const { res: chatList, err } = yield sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
         if (err) {
             yield put({
                 type: ACTIONS.CHAT_LIST.FAILURE,
@@ -142,8 +142,8 @@ export function* insertChatList({ payload }) {
             if (insertErr) throw new Error('添加失败！');
         }
         // 重新查询
-        const { res: newChatList, err: reSelectErr } = yield sqLiteHelper.selectItems('chatList', '*');
-        if (reSelectErr) throw new Error('重新失败！');
+        const { res: newChatList, err: reSelectErr } = yield sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
+        if (reSelectErr) throw new Error('重新查询失败！');
         let unreadSum = 0;
         if (Array.isArray(newChatList) && newChatList.length > 0) {
             newChatList.forEach((item) => {
@@ -183,7 +183,7 @@ export function* updateChatList({ payload }) {
         });
         return false;
     }
-    const { res: chatList, _err } = yield sqLiteHelper.selectItems('chatList', '*');
+    const { res: chatList, _err } = yield sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
     if (_err) {
         yield put({
             type: ACTIONS.CHAT_LIST.FAILURE,

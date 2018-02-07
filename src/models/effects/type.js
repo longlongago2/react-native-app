@@ -79,8 +79,8 @@ export function* initialTypeTableData() {
             uuid: uuid(),
             kind: 'message',
             typeId: '3',
-            typeName: 'tip',
-            displayName: '提示',
+            typeName: 'location',
+            displayName: '地理位置',
         },
     ]);
     if (err) throw new Error('初始化type数据失败：用于记录消息类别信息');

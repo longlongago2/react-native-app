@@ -5,3 +5,5 @@
 import createActionTypes from '../../utils/actionSpirit';
 
 export const ACTIVE_MQ = createActionTypes('active_mq');
+export const SEND_MSG = createActionTypes('send_msg');
+export const PUSH_SYSTEM_MSG = createActionTypes('push_system_msg');

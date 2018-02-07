@@ -1,12 +1,10 @@
 import { ToastAndroid } from 'react-native';
-import moment from 'moment';
 import ACTIONS from '../../models/actions';
 
-const timeStamp = `${moment().add(1, 'day').format('YYYY-MM-DD')} 23:59:59`;
 const initialState = {
     topicId: '',                                   // 当前聊天主题
     data: {                                        // 数据
-        timeStamp,                                 // 时间戳（查询截止日期）
+        pageNumber: 0,                             // 页码：15/page
         messages: [],                              // 累加的所有数据
         loaded: false,                             // 所有数据加载完毕
     },

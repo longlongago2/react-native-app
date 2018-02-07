@@ -34,20 +34,17 @@ class ChattingPage extends Component {
         this.keyboardDidShow = this._keyboardDidShow.bind(this);
         this.keyboardDidHide = this._keyboardDidHide.bind(this);
         this.handleBackPress = this._handleBackPress.bind(this);
+        this.onRequestMessages = this._onRequestMessages.bind(this);
     }
 
     componentWillMount() {
+        const { dispatch, navigation } = this.props;
+        const { state } = navigation;
         AndroidKeyboardAdjust.setAdjustResize();
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
         BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    }
-
-    componentDidMount() {
-        const { dispatch, navigation, topicId } = this.props;
-        const { state } = navigation;
-        // 加载初始数据
-        if (topicId.toString() === state.params.userId.toString()) return;
+        // 当前聊天窗口主题编号，方便更新界面数据作判断
         dispatch({
             type: ACTIONS.ACTIVE_MQ.INITIAL,
             payload: {
@@ -55,6 +52,19 @@ class ChattingPage extends Component {
                 data: {
                     messages: [],
                 },
+            },
+        });
+    }
+
+    componentDidMount() {
+        const { dispatch, navigation } = this.props;
+        const { state } = navigation;
+        // 请求数据
+        dispatch({
+            type: ACTIONS.ACTIVE_MQ.REQUEST,
+            payload: {
+                topicId: state.params.userId.toString(),
+                pageNumber: 0,
             },
         });
     }
@@ -106,7 +116,7 @@ class ChattingPage extends Component {
         const { dispatch, navigation } = this.props;
         const { state } = navigation;
         dispatch({
-            type: ACTIONS.ACTIVE_MQ.REQUEST,
+            type: ACTIONS.SEND_MSG.REQUEST,
             payload: {
                 send: {
                     receiverId: state.params.userId,    // 接受者编号
@@ -121,7 +131,7 @@ class ChattingPage extends Component {
     _onPressAvatar(user) {
         const { dispatch, userInfo } = this.props;
         Keyboard.dismiss();
-        if (user._id === userInfo.userid) {
+        if (user._id.toString() === userInfo.userid.toString()) {
             dispatch({
                 type: 'Navigation/NAVIGATE',
                 routeName: 'Profile',
@@ -157,11 +167,15 @@ class ChattingPage extends Component {
                         });
                         break;
                     case 2:
-                        const nextMessages = this.state.messages
-                            .filter(item => item._id !== message._id);
-                        this.setState({ messages: nextMessages });
                         // 删除本地数据库
-                        // ...
+                        dispatch({
+                            type: ACTIONS.ACTIVE_MQ.DELETE,
+                            payload: {
+                                condition: {
+                                    uuid: message._id,
+                                },
+                            },
+                        });
                         break;
                     default:
                         break;
@@ -215,12 +229,24 @@ class ChattingPage extends Component {
         });
     }
 
+    _onRequestMessages() {
+        const { dispatch, navigation } = this.props;
+        const { state } = navigation;
+        // 请求数据
+        dispatch({
+            type: ACTIONS.ACTIVE_MQ.REQUEST,
+            payload: {
+                topicId: state.params.userId.toString(),
+            },
+        });
+    }
+
     render() {
         const { userInfo, data, loading } = this.props;
         const { utilities, keyboardHeight, actionBtn, inputText } = this.state;
         const user = {
-            _id: userInfo.userid,
-            name: userInfo.username,
+            _id: userInfo.userid.toString(),
+            name: userInfo.personname,
             avatar: `${api.database}/${userInfo.avatar}`,
         };
         const parsePatterns = linkStyle => [
@@ -267,7 +293,7 @@ class ChattingPage extends Component {
         const renderLoadEarlier = props => (
             <LoadEarlier
                 {...props}
-                label="加载更早..."
+                label="加载更多..."
             />
         );
         const renderActions = props => (
@@ -372,7 +398,7 @@ class ChattingPage extends Component {
                     }}
                     showUserAvatar
                     renderAvatarOnTop
-                    loadEarlier
+                    loadEarlier={!data.loaded && data.messages.length > 0}
                     locale="zh-cn"
                     placeholder="输入消息..."
                     messages={data.messages}
@@ -382,7 +408,7 @@ class ChattingPage extends Component {
                     onSend={messages => this.onSend(messages)}
                     onPressAvatar={this.onPressAvatar}
                     onLongPress={this.onLongPress}
-                    onLoadEarlier={() => alert('loading')}
+                    onLoadEarlier={this.onRequestMessages}
                     isLoadingEarlier={loading}
                     keyboardShouldPersistTaps="never"
                     renderSend={renderSend}
