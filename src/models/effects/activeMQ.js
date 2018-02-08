@@ -260,11 +260,13 @@ export function* queryMessageList({ payload }) {
             return currentMsg;
         });
     } else {
-        perPageMessages = [{
-            _id: uuid(),
-            text: '抱歉，没有更多了！',
-            system: true,
-        }];
+        if (data.messages.length > 0) {
+            perPageMessages = [{
+                _id: uuid(),
+                text: '没有更多了！',
+                system: true,
+            }];
+        }
         loaded = true;
     }
     yield put({
