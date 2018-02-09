@@ -1,13 +1,39 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, FlatList, Dimensions } from 'react-native';
+import { View, FlatList, Dimensions, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux';
+import ImagePicker from 'react-native-image-crop-picker';
 import FlatSquaredItem from '../../components/FlatSquaredItem';
 import { fetchFunctionOptions } from '../../services/menuOptions';
+import ACTIONS from '../../models/actions';
 
 const FunctionItem = ({ dispatch, item, width }) => {
     function handlePress(value) {
-        alert(value.type);
+        switch (value.type) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                ImagePicker.openPicker({
+                    width: 300,
+                    height: 300,
+                    cropping: true,
+                }).then((image) => {
+                    console.log(image);
+                }).catch(err => ToastAndroid.show(err.message, 3000));
+                break;
+            case 3:
+                ImagePicker.openCamera({
+                    width: 300,
+                    height: 300,
+                    cropping: true,
+                }).then((image) => {
+                    console.log(image);
+                }).catch(err => ToastAndroid.show(err.message, 3000));
+                break;
+            default:
+        }
     }
 
     return (
@@ -42,6 +68,7 @@ class Functions extends PureComponent {
         return (
             <View style={{ paddingTop: 20 }} onLayout={this.handleLayout}>
                 <FlatList
+                    keyExtractor={item => item.key}
                     columnWrapperStyle={{
                         height: 100,
                         paddingVertical: 5,

@@ -104,7 +104,7 @@ class FlatChatListItem extends PureComponent {
                                 </View>
                                 <View>
                                     {
-                                        item[itemMap.avatar] ?
+                                        item[itemMap.avatar] && item[itemMap.avatar] !== 'null' ?
                                             <Image
                                                 source={{ uri: item[itemMap.avatar] }}
                                                 style={styles.itemAvatar}

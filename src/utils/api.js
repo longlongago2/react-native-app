@@ -1,11 +1,11 @@
 const api = {
     debug: {
-        database: 'http://192.168.1.101:80/CFSP',
-        webSocket: 'ws://192.168.1.101:80/CFSP',
+        database: 'http://192.168.1.101/CFSP',
+        activeMQ: 'tcp://192.168.1.101:1883',
     },
     release: {
-        database: 'http://www.ezhr.com.cn:10101/CFSP',
-        webSocket: 'ws://www.ezhr.com.cn:10101/CFSP',
+        database: 'http://cfsoft.8866.org:10101/CFSP',
+        activeMQ: 'tcp://cfsoft.8866.org:11883',
     },
 };
 

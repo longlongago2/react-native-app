@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { View, StatusBar, StyleSheet, ScrollView, FlatList, Dimensions, Animated } from 'react-native';
+import { View, StyleSheet, ScrollView, FlatList, Dimensions, Animated } from 'react-native';
 import CarouselImage from './SlideImages';
 import HomeFlatSquaredItem from './HomeFlatSquaredItem';
 import NoticeBoard from './NoticeBoard';
@@ -9,7 +9,6 @@ import Loading from '../../components/Loading';
 import Header from './Header';
 import { fetchHomeOptions } from '../../services/menuOptions';
 import styleModule from './indexStyle';
-import theme from '../../theme';
 
 const styles = StyleSheet.create(styleModule);
 
@@ -40,7 +39,6 @@ class Home extends PureComponent {
         ];
         return (
             <View style={{ flex: 1 }}>
-                <StatusBar translucent backgroundColor={theme.statusBarColor} />
                 <ScrollView
                     onScroll={Animated.event(
                         [{

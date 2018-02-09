@@ -2,56 +2,49 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNavigationHelpers } from 'react-navigation';
-import { AppState, BackHandler, DeviceEventEmitter, ToastAndroid } from 'react-native';
+import { BackHandler, ToastAndroid, StatusBar } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import { MenuContext } from 'react-native-popup-menu';
-import moment from 'moment';
 import { initialStorage } from '../utils/storage';
 import ACTIONS from '../models/actions';
 import AppNavigator from './AppNavigator';
-import api from '../utils/api';
+import theme from '../theme';
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            appState: AppState.currentState,    // app状态：active,inactive,background
-        };
-        this.handleAppStateChange = this._handleAppStateChange.bind(this);
         this.handleBackAndroid = this._handleBackAndroid.bind(this);
         this.handleNotificationClick = this._handleNotificationClick.bind(this);
         this.handleChatNotificationClick = this._handleChatNotificationClick.bind(this);
         this.handleWONotificationClick = this._handleWONotificationClick.bind(this);
         this.handleAutoLogin = this._handleAutoLogin.bind(this);
-        this.handleActiveMQ = this._handleActiveMQ.bind(this);
     }
 
     componentWillMount() {
-        // 1.通知推送初始化
+        // 1.通知栏操作：非活动状态
         PushNotification.popInitialNotification((notification) => {
             this.handleNotificationClick(notification);
         });
         // 2.storage初始化
         initialStorage();
+        // 3.全局设置状态栏样式
+        StatusBar.setTranslucent(true);
+        StatusBar.setBackgroundColor(theme.statusBarColor, true);
     }
 
     componentDidMount() {
-        AppState.addEventListener('change', this.handleAppStateChange);
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackAndroid);
-        DeviceEventEmitter.addListener('MqttMsg', this.handleActiveMQ);
-        // 1.通知栏配置
+        // 通知栏操作：活动状态
         PushNotification.configure({
             onNotification: this.handleNotificationClick,
             popInitialNotification: true,
         });
-        // 2.自动登录并连接ActiveMQ
-        this.handleAutoLogin();
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackAndroid);
+        this.handleAutoLogin();  // 自动登录并连接ActiveMQ
     }
 
     componentWillUnmount() {
-        AppState.removeEventListener('change', this.handleAppStateChange);
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackAndroid);
-        DeviceEventEmitter.removeListener('MqttMsg', this.handleActiveMQ);
+        clearTimeout(this.redirectChatting);
     }
 
     _handleAutoLogin() {
@@ -89,41 +82,6 @@ class App extends Component {
         });
     }
 
-    _handleActiveMQ(e) {
-        const { dispatch } = this.props;
-        const message = JSON.parse(e.message);
-        console.log(message);
-        // 记录聊天列表数据
-        dispatch({
-            type: ACTIONS.CHAT_LIST.INSERT,
-            payload: {
-                item: {
-                    topicId: message.topicId.toString(),
-                    topicName: message.topicName,
-                    type: message.type,
-                    newestMsg: message.topicText,
-                    createdAt: message.createdAt,
-                    avatar: `${api.database}/${message.user.avatar}`,
-                },
-            },
-        });
-        // 记录聊天面板数据
-        dispatch({
-            type: ACTIONS.ACTIVE_MQ.INSERT,
-            payload: {
-                topicId: message.topicId.toString(),
-                userid: message.senderId,
-                createdAt: message.createdAt,
-                typeId: message.portrayal.toString(),
-                content: message.text,
-                user: {
-                    ...message.user,
-                    avatar: `${api.database}/${message.user.avatar}`,
-                },
-            },
-        });
-    }
-
     _handleChatNotificationClick(data) {
         const { dispatch } = this.props;
         const type = data.type.toString();
@@ -132,19 +90,19 @@ class App extends Component {
                 // 通知
                 break;
             case '1':
-                // 私聊
-                dispatch({
-                    type: 'Navigation/NAVIGATE',
-                    routeName: 'Chatting',
-                    params: {
-                        userId: data.topicId,
-                        personName: data.topicName,
-                        type: data.type,
-                    },
-                });
-                break;
             case '2':
-                // 群聊
+                // 聊天：私聊，群聊
+                this.redirectChatting = setTimeout(() => (
+                    dispatch({
+                        type: 'Navigation/NAVIGATE',
+                        routeName: 'Chatting',
+                        params: {
+                            userId: data.topicId,
+                            personName: data.topicName,
+                            type: data.type,
+                        },
+                    })
+                ), 1500);
                 break;
             default:
         }
@@ -186,33 +144,10 @@ class App extends Component {
         }
     }
 
-    _handleAppStateChange(nextAppState) {
-        const { appState } = this.state;
-        if (appState === 'active' && nextAppState === 'background') {
-            if (__DEV__) {
-                console.log('才丰软件服务平台：处于后台状态！');
-            }
-        } else if (appState === 'background' && nextAppState === 'active') {
-            if (__DEV__) {
-                console.log('才丰软件服务平台：处于活动状态！');
-            }
-        }
-        this.setState({ appState: nextAppState });
-    }
-
     _handleBackAndroid() {
         const { nav, dispatch } = this.props;
-        // 路由停留在首页时
-        if (nav.index === 0) {
-            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
-                // 最近2秒内按过back键，可以退出应用
-                BackHandler.exitApp();
-                return false;
-            }
-            this.lastBackPressed = Date.now();
-            ToastAndroid.show('再按一次退出服务平台', ToastAndroid.SHORT);
-            return true;
-        }
+        // 路由停留在首页时，正常退出
+        if (nav.index === 0) return false;
         dispatch({ type: 'Navigation/BACK' });  // 返回键调用返回action
         return true;
     }

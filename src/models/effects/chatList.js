@@ -4,7 +4,6 @@
 
 import { put, select, call } from 'redux-saga/effects';
 import uuid from 'uuid/v4';
-import SQLiteHelper from 'react-native-sqlite-helper';
 import ACTIONS from '../actions';
 import { queryUserInfo } from '../../services/user';
 import api from '../../utils/api';
@@ -13,10 +12,8 @@ import api from '../../utils/api';
  * 创建chatList表(fork触发)
  */
 export function* createChatListTable() {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { err } = yield sqLiteHelper.createTable({
+    if (!global.sqLiteHelper) return;
+    const { err } = yield global.sqLiteHelper.createTable({
         tableName: 'chatList',
         tableFields: [
             {
@@ -53,16 +50,14 @@ export function* createChatListTable() {
  * ACTIONS.CHAT_LIST.REQUEST 触发
  */
 export function* queryChatList() {
-    const { online, userInfo } = yield select(state => state.user);
-    if (online) {
+    if (global.sqLiteHelper) {
         yield put({
             type: ACTIONS.CHAT_LIST.LOADING,
             payload: {
                 loading: true,
             },
         });
-        const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-        const { res: chatList, err } = yield sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
+        const { res: chatList, err } = yield global.sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
         if (err) {
             yield put({
                 type: ACTIONS.CHAT_LIST.FAILURE,
@@ -100,16 +95,15 @@ export function* queryChatList() {
  * @param payload
  */
 export function* insertChatList({ payload }) {
-    const { userInfo, online, token } = yield select(state => state.user);
-    if (!online) return;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
+    const { token } = yield select(state => state.user);
+    if (!global.sqLiteHelper) return;
     // 检测是否存在并归类
     try {
-        const { res, err: selectErr } = yield sqLiteHelper.selectItems('chatList', '*', { topicId: payload.item.topicId });
+        const { res, err: selectErr } = yield global.sqLiteHelper.selectItems('chatList', '*', { topicId: payload.item.topicId });
         if (selectErr) throw new Error('查询失败！');
         if (Array.isArray(res) && res.length > 0) {
             // 存在，修改信息
-            const { err: updateErr } = yield sqLiteHelper.updateItem(
+            const { err: updateErr } = yield global.sqLiteHelper.updateItem(
                 'chatList',
                 {
                     unread: res[0].unread + 1,
@@ -133,7 +127,7 @@ export function* insertChatList({ payload }) {
             } else {
                 throw new Error('请求用户信息接口失败');
             }
-            const { err: insertErr } = yield sqLiteHelper.insertItems('chatList', [{
+            const { err: insertErr } = yield global.sqLiteHelper.insertItems('chatList', [{
                 uuid: uuid(),
                 unread: 1,
                 avatar,
@@ -142,7 +136,7 @@ export function* insertChatList({ payload }) {
             if (insertErr) throw new Error('添加失败！');
         }
         // 重新查询
-        const { res: newChatList, err: reSelectErr } = yield sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
+        const { res: newChatList, err: reSelectErr } = yield global.sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
         if (reSelectErr) throw new Error('重新查询失败！');
         let unreadSum = 0;
         if (Array.isArray(newChatList) && newChatList.length > 0) {
@@ -172,10 +166,8 @@ export function* insertChatList({ payload }) {
  * @param payload
  */
 export function* updateChatList({ payload }) {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return false;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { err } = yield sqLiteHelper.updateItem('chatList', payload.item, payload.condition);
+    if (!global.sqLiteHelper) return false;
+    const { err } = yield global.sqLiteHelper.updateItem('chatList', payload.item, payload.condition);
     if (err) {
         yield put({
             type: ACTIONS.CHAT_LIST.FAILURE,
@@ -183,7 +175,7 @@ export function* updateChatList({ payload }) {
         });
         return false;
     }
-    const { res: chatList, _err } = yield sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
+    const { res: chatList, _err } = yield global.sqLiteHelper.selectItems('chatList order by createdAt desc', '*');
     if (_err) {
         yield put({
             type: ACTIONS.CHAT_LIST.FAILURE,
@@ -214,16 +206,14 @@ export function* updateChatList({ payload }) {
  * @param payload
  */
 export function* deleteChatList({ payload }) {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return false;
+    if (!global.sqLiteHelper) return false;
     yield put({
         type: ACTIONS.CHAT_LIST.LOADING,
         payload: {
             loading: true,
         },
     });
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { err } = yield sqLiteHelper.deleteItem('chatList', payload.condition);
+    const { err } = yield global.sqLiteHelper.deleteItem('chatList', payload.condition);
     if (err) {
         yield put({
             type: ACTIONS.CHAT_LIST.FAILURE,
@@ -231,7 +221,7 @@ export function* deleteChatList({ payload }) {
         });
         return false;
     }
-    const { res: chatList, _err } = yield sqLiteHelper.selectItems('chatList', '*');
+    const { res: chatList, _err } = yield global.sqLiteHelper.selectItems('chatList', '*');
     if (_err) {
         yield put({
             type: ACTIONS.CHAT_LIST.FAILURE,

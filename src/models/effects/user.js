@@ -1,5 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 import ActiveMQ from 'react-native-activemq';
+import moment from 'moment';
+import SQLiteHelper from 'react-native-sqlite-helper';
 import ACTIONS from '../actions';
 import {
     fetchLogin,
@@ -9,12 +11,15 @@ import {
 } from '../../services/user';
 import { fileUpload } from '../../services/fileOperation';
 import initialDatabase from './initialDb';
+import api from '../../utils/api';
 
 /**
  * action: ACTIONS.USER_LOGIN.REQUEST 触发
  * @param payload
  */
 export function* login({ payload }) {
+    const { online } = yield select(state => state.user);
+    if (online) return;
     yield put({
         type: ACTIONS.USER_LOGIN.LOADING,
         payload: { loading: true },
@@ -54,25 +59,29 @@ export function* login({ payload }) {
                 runBackground,
             },
         });
-        // // 初始化公告
-        // yield put({
-        //     type: ACTIONS.NOTICE.INITIAL,
-        // });
-        // // 查询公告
-        // yield put({
-        //     type: ACTIONS.NOTICE.REQUEST,
-        //     payload: {
-        //         pageNumber: -1,
-        //         expirationTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-        //     },
-        // });
+        // 实例化sqlite数据库
+        global.sqLiteHelper = new SQLiteHelper(`${username}.db`, '1.0', 'IMStorage', 200000);
         // 数据库初始化
         yield initialDatabase(username);
         // 订阅activeMQ
         ActiveMQ.checkConnected((connectStatus) => {
             if (!connectStatus) {
-                ActiveMQ.connect('CFSP/PTP', data.data.info.userid.toString());
+                const topic = 'CFSP/PTP';
+                const userid = data.data.info.userid.toString();
+                ActiveMQ.connect(topic, userid, api.activeMQ);
             }
+        });
+        // 初始化公告
+        yield put({
+            type: ACTIONS.NOTICE.INITIAL,
+        });
+        // 查询公告
+        yield put({
+            type: ACTIONS.NOTICE.REQUEST,
+            payload: {
+                pageNumber: -1,
+                expirationTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+            },
         });
         // 查询聊天未读徽章
         yield put({ type: ACTIONS.CHAT_LIST.REQUEST });
@@ -103,6 +112,11 @@ export function* logout({ payload }) {
         yield put({
             type: ACTIONS.USER_LOGOUT.SUCCESS,
         });
+        // 关闭并移除sqlite数据库实例
+        if (global.sqLiteHelper) {
+            yield global.sqLiteHelper.close();
+            global.sqLiteHelper = null;
+        }
         // 删除 currentUser
         global.storage.remove({ key: 'currentUser' });
         // 清空登录框中内容

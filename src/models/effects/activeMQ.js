@@ -112,7 +112,7 @@ export function* sendMessages({ payload }) {
                 payload: {
                     topicId: params.receiverId,
                     user: currentMessage.user,
-                    text: `错误：${err ? err.message.substr(0, 20) : data.info}`,
+                    text: err ? err.message.substr(0, 25) : data.info,
                 },
             });
         }

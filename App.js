@@ -10,10 +10,13 @@ import Root from './src/routes';
 import configureStore from './src/models/store/configureStore';
 import rootSaga from './src/models/effects';
 
+export const store = configureStore();
+
 export default class App extends Component {
     render() {
-        const store = configureStore();
-        store.runSaga(rootSaga);
+        if (!global.saga) {
+            global.saga = store.runSaga(rootSaga);
+        }
         return (
             <Provider store={store}>
                 <Root />

@@ -3,14 +3,11 @@
  */
 
 import { select } from 'redux-saga/effects';
-import SQLiteHelper from 'react-native-sqlite-helper';
 import { updateChatListUsers, queryChatListUsers, insertChatListUsers } from './chatListUser';
 
 export function* createMessagesTable() {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { err } = yield sqLiteHelper.createTable({
+    if (!global.sqLiteHelper) return;
+    const { err } = yield global.sqLiteHelper.createTable({
         tableName: 'message',
         tableFields: [
             {
@@ -44,11 +41,9 @@ export function* createMessagesTable() {
 }
 
 export function* insertMessage({ payload }) {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
+    if (!global.sqLiteHelper) return;
     // 1.插入主表：message表
-    yield sqLiteHelper.insertItems('message', payload.messages);
+    yield global.sqLiteHelper.insertItems('message', payload.messages);
     // 2.修改关联表：chatListUser表
     const { res } = yield queryChatListUsers({
         payload: {
@@ -85,8 +80,7 @@ export function* insertMessage({ payload }) {
 }
 
 export function* queryMessages({ payload }) {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return false;
+    if (!global.sqLiteHelper) return false;
     const { data } = yield select(state => state.activeMQ);
     const { topicId } = payload;
     const pageSize = 15;
@@ -97,8 +91,7 @@ export function* queryMessages({ payload }) {
         pageNumber = data.pageNumber;
     }
     const offset = pageSize * pageNumber;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { res: sqlite } = yield sqLiteHelper.open();
+    const { res: sqlite } = yield global.sqLiteHelper.open();
     return yield sqlite.executeSql(`select message.uuid, message.createdAt, message.userid, message.received, message.system, name, avatar, content, typeName from message 
     inner join chatListUser on message.userid = chatListUser.userid 
     inner join type on message.typeId = type.typeId 
@@ -117,8 +110,6 @@ export function* queryMessages({ payload }) {
 }
 
 export function* deleteMessages({ payload }) {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return false;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    return yield sqLiteHelper.deleteItem('message', payload.condition);
+    if (!global.sqLiteHelper) return false;
+    return yield global.sqLiteHelper.deleteItem('message', payload.condition);
 }

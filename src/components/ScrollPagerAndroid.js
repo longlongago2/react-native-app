@@ -74,7 +74,7 @@ export default class ScrollPagerAndroid extends PureComponent {
                 >
                     {
                         Array.isArray(items) && items.length > 0 && items.map(item => (
-                            <View style={styles.eachPanel} key>
+                            <View style={styles.eachPanel} key={item.key}>
                                 {
                                     item.title &&
                                     <View style={styles.indicatorTitle}>

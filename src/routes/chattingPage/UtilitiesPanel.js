@@ -10,11 +10,14 @@ const UtilitiesPanel = ({ boardHeight }) => (
         boardHeight={boardHeight}
         items={[
             {
+                key: 1,
                 component: <Functions />,
             }, {
+                key: 2,
                 title: 'emoji',
                 component: <Emoji />,
             }, {
+                key: 3,
                 title: '斗图',
                 component: <Text>自定义表情</Text>,
             },

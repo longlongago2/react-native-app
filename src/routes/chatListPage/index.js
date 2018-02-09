@@ -9,6 +9,7 @@ import ChatListHeader from './ChatListHeader';
 import ItemSeparator from '../../components/ItemSeparator';
 import ListEmptyComponent from '../../components/ListEmptyComponent';
 import ACTIONS from '../../models/actions';
+import api from '../../utils/api';
 
 const styles = StyleSheet.create(chatListStyle);
 
@@ -42,9 +43,7 @@ class ChatListPage extends PureComponent {
                 // 重新连接activeMQ
                 ActiveMQ.checkConnected((connectStatus) => {
                     if (!connectStatus) {
-                        ActiveMQ.connect('CFSP/PTP', userInfo.userid.toString());
-                    } else {
-                        ToastAndroid.show('通讯已重新连接', 3000);
+                        ActiveMQ.connect('CFSP/PTP', userInfo.userid.toString(), api.activeMQ);
                     }
                 });
             }

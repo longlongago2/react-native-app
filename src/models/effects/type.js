@@ -1,15 +1,11 @@
-import { select } from 'redux-saga/effects';
-import SQLiteHelper from 'react-native-sqlite-helper';
 import uuid from 'uuid/v4';
 
 /**
  * ************ SQLite: type(类别信息) ********** *
  */
 export function* createTypeTable() {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { err } = yield sqLiteHelper.createTable({
+    if (!global.sqLiteHelper) return;
+    const { err } = yield global.sqLiteHelper.createTable({
         tableName: 'type',
         tableFields: [
             {
@@ -35,10 +31,8 @@ export function* createTypeTable() {
 }
 
 export function* initialTypeTableData() {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { err } = yield sqLiteHelper.insertItems('type', [
+    if (!global.sqLiteHelper) return;
+    const { err } = yield global.sqLiteHelper.insertItems('type', [
         {
             uuid: uuid(),
             kind: 'chatList',
@@ -87,9 +81,7 @@ export function* initialTypeTableData() {
 }
 
 export function* clearTypeTableData() {
-    const { userInfo, online } = yield select(state => state.user);
-    if (!online) return;
-    const sqLiteHelper = new SQLiteHelper(`${userInfo.username}.db`, '1.0', 'IMStorage', 200000);
-    const { err } = yield sqLiteHelper.deleteItem('type');
+    if (!global.sqLiteHelper) return;
+    const { err } = yield global.sqLiteHelper.deleteItem('type');
     if (err) throw new Error('清空type数据失败：用于记录消息类别信息');
 }
