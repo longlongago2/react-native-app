@@ -242,7 +242,7 @@ class ChattingPage extends Component {
     }
 
     render() {
-        const { userInfo, data, loading } = this.props;
+        const { userInfo, data, loading, navigation } = this.props;
         const { utilities, keyboardHeight, actionBtn, inputText } = this.state;
         const user = {
             _id: userInfo.userid.toString(),
@@ -423,6 +423,7 @@ class ChattingPage extends Component {
                     utilities &&
                     <UtilitiesPanel
                         boardHeight={keyboardHeight}
+                        navigation={navigation}
                     />
                 }
             </View>

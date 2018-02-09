@@ -20,7 +20,7 @@ import { TRACKINGWORKORDER } from './trackingWorkOrder';
 import { NOTIFICATION, UNREAD_NOTIFICATION } from './notification';
 import { APPVERSION, LATESTAPP_DOWNLOAD } from './instruction';
 import { BROWSING_HISTORY } from './browsingHistory';
-import { ACTIVE_MQ, SEND_MSG, PUSH_SYSTEM_MSG } from './activeMQ';
+import { ACTIVE_MQ, SEND_MSG, PUSH_SYSTEM_MSG, SEND_IMAGE } from './activeMQ';
 import { FRIEND_DETAIL, FRIEND_GROUP, CHATGROUP, CHATGROUP_MEMBERS } from './addressBook';
 
 export default {
@@ -60,4 +60,5 @@ export default {
     CHATGROUP,
     CHATGROUP_MEMBERS,
     PUSH_SYSTEM_MSG,
+    SEND_IMAGE,
 };

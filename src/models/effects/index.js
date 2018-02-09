@@ -44,6 +44,7 @@ import {
     initialMessages,
     deleteMessageItem,
     pushSystemMsg,
+    sendImage,
 } from './activeMQ';
 import { insertChatList, queryChatList, updateChatList, deleteChatList } from './chatList';
 import { insertMessage } from './messages';
@@ -115,6 +116,7 @@ export default function* rootSaga() {
         takeEvery(ACTIONS.ACTIVE_MQ.INSERT, receiveMessages),                 // 接收聊天消息数据
         takeEvery(ACTIONS.ACTIVE_MQ.DELETE, deleteMessageItem),               // 删除某项聊天内容
         takeEvery(ACTIONS.PUSH_SYSTEM_MSG.REQUEST, pushSystemMsg),            // 聊天面板内发送系统消息
+        takeEvery(ACTIONS.SEND_IMAGE.REQUEST, sendImage),                     // 发送图片
         takeEvery(ACTIONS.FRIEND_GROUP.INSERT, insertFriendGroup),            // 新增好友分组
         takeEvery(ACTIONS.FRIEND_DETAIL.INSERT, insertFriend),                // 新增好友
         takeEvery(ACTIONS.CHATGROUP.INSERT, insertChatGroup),                 // 新增群聊信息

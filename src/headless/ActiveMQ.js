@@ -45,6 +45,24 @@ const handleActiveMQNotification = (e) => {
                 },
             },
         });
+        let contentTypeName;
+        switch (message.portrayal) {
+            case 0:
+                contentTypeName = 'text';
+                break;
+            case 1:
+                contentTypeName = 'image';
+                break;
+            case 2:
+                contentTypeName = 'voice';
+                break;
+            case 3:
+                contentTypeName = 'location';
+                break;
+            default:
+                contentTypeName = 'text';
+                break;
+        }
         // 3.记录聊天面板数据（message表）
         dispatch({
             type: ACTIONS.ACTIVE_MQ.INSERT,
@@ -53,6 +71,7 @@ const handleActiveMQNotification = (e) => {
                 userid: message.senderId,
                 typeId: message.portrayal.toString(),
                 content: message.text,
+                contentTypeName,
                 user: {
                     ...message.user,
                     avatar,

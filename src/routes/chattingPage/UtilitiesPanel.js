@@ -5,13 +5,13 @@ import ScrollPagerAndroid from '../../components/ScrollPagerAndroid';
 import Functions from './Functions';
 import Emoji from './Emoji';
 
-const UtilitiesPanel = ({ boardHeight }) => (
+const UtilitiesPanel = ({ boardHeight, navigation }) => (
     <ScrollPagerAndroid
         boardHeight={boardHeight}
         items={[
             {
                 key: 1,
-                component: <Functions />,
+                component: <Functions navigation={navigation} />,
             }, {
                 key: 2,
                 title: 'emoji',
@@ -26,6 +26,7 @@ const UtilitiesPanel = ({ boardHeight }) => (
 );
 UtilitiesPanel.propTypes = {
     boardHeight: PropTypes.number.isRequired,
+    navigation: PropTypes.object.isRequired,
 };
 
 export default UtilitiesPanel;

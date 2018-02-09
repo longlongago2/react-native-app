@@ -5,6 +5,8 @@ import uuid from 'uuid/v4';
 import { insertMessage, queryMessages, deleteMessages } from './messages';
 import { sendMSG } from '../../services/activeMQ';
 import ACTIONS from '../../models/actions';
+import { fileUpload } from '../../services/fileOperation';
+import api from '../../utils/api';
 
 /**
  * ACTIONS.PUSH_SYSTEM_MSG.REQUEST
@@ -124,6 +126,7 @@ export function* sendMessages({ payload }) {
                 upgrade: currentMessage,
             },
         });
+        const localtime = moment().format('YYYY-MM-DD HH:mm:ss');
         // 记录message到数据库
         yield insertMessage({
             payload: {
@@ -133,8 +136,8 @@ export function* sendMessages({ payload }) {
                     typeId: params.portrayal,
                     content: params.text,
                     userid: currentMessage.user._id,
-                    createdAt: moment(currentMessage.createdAt).format('YYYY-MM-DD HH:mm:ss'),
                     received: currentMessage.received === true ? 1 : 0,
+                    createdAt: localtime,
                 }],
                 user: currentMessage.user,
             },
@@ -147,11 +150,68 @@ export function* sendMessages({ payload }) {
                     topicId: send.receiverId,
                     topicName: send.receiver,
                     type: send.type,
-                    newestMsg: text,
-                    createdAt: (data && data.msg.createdAt) || moment().format('YYYY-MM-DD HH:mm:ss'),
+                    newestMsg: data.msg.topicText,
+                    createdAt: localtime,
                 },
             },
         });
+    }
+}
+
+/**
+ * ACTIONS.SEND_IMAGE.REQUEST 发送图片
+ * @param payload
+ */
+export function* sendImage({ payload }) {
+    const { online, userInfo } = yield select(state => state.user);
+    const { image, topicId, receiverId, receiver, type } = payload;
+    if (online) {
+        const formData = new FormData();
+        const file = {
+            uri: image.path,
+            name: image.name,
+            type: 'multipart/form-data',
+        };
+        formData.append('file', file);
+        const { data, err } = yield call(fileUpload, formData);
+        if (data && data.data.status === '20000') {
+            // 上传图片成功
+            const imageUri = `${api.database}/${(data.data.info.url).replace('download?fileUrl=', '')}`;
+            yield put({
+                type: ACTIONS.SEND_MSG.REQUEST,
+                payload: {
+                    send: {
+                        receiverId,   // 接受者编号
+                        receiver,     // 接受者名称
+                        type,         // 聊天类型
+                    },
+                    messages: [{
+                        _id: uuid(),
+                        createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+                        user: {
+                            _id: userInfo.userid.toString(),
+                            name: userInfo.personname,
+                            avatar: `${api.database}/${userInfo.avatar}`,
+                        },
+                        image: imageUri,
+                    }],
+                },
+            });
+        } else {
+            // 上传图片失败
+            const message = (err && err.message) || (data && data.data.info);
+            yield pushSystemMsg({
+                payload: {
+                    topicId,
+                    user: {
+                        _id: userInfo.userid,
+                        name: userInfo.personname,
+                        avatar: `${api.database}/${userInfo.avatar}`,
+                    },
+                    text: message,
+                },
+            });
+        }
     }
 }
 
@@ -180,12 +240,14 @@ export function* receiveMessages({ payload }) {
     // 即时更新聊天数据
     if (payload.topicId.toString() === topicId.toString()) {
         const prevMessages = data.messages;
-        const newMessages = [{
-            text: payload.content,
+        const newMessages = [];
+        const currentMsg = {
             user: payload.user,
             createdAt: payload.createdAt,
             _id: uuid(),
-        }];
+        };
+        currentMsg[payload.contentTypeName] = payload.content;
+        newMessages.push(currentMsg);
         yield put({
             type: ACTIONS.ACTIVE_MQ.SUCCESS,
             payload: {

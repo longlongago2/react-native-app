@@ -7,7 +7,24 @@ import FlatSquaredItem from '../../components/FlatSquaredItem';
 import { fetchFunctionOptions } from '../../services/menuOptions';
 import ACTIONS from '../../models/actions';
 
-const FunctionItem = ({ dispatch, item, width }) => {
+const FunctionItem = ({ dispatch, item, width, navigation }) => {
+    function uploadImage(image) {
+        const { state } = navigation;
+        dispatch({
+            type: ACTIONS.SEND_IMAGE.REQUEST,
+            payload: {
+                image: {
+                    path: image.path,
+                    name: image.path.split('/').reverse()[0],
+                },
+                topicId: state.params.userId.toString(),
+                receiverId: state.params.userId,    // 接受者编号
+                receiver: state.params.personName,  // 接受者名称
+                type: state.params.type,            // 聊天类型
+            },
+        });
+    }
+
     function handlePress(value) {
         switch (value.type) {
             case 0:
@@ -20,7 +37,7 @@ const FunctionItem = ({ dispatch, item, width }) => {
                     height: 300,
                     cropping: true,
                 }).then((image) => {
-                    console.log(image);
+                    uploadImage(image);
                 }).catch(err => ToastAndroid.show(err.message, 3000));
                 break;
             case 3:
@@ -29,7 +46,7 @@ const FunctionItem = ({ dispatch, item, width }) => {
                     height: 300,
                     cropping: true,
                 }).then((image) => {
-                    console.log(image);
+                    uploadImage(image);
                 }).catch(err => ToastAndroid.show(err.message, 3000));
                 break;
             default:
@@ -44,6 +61,7 @@ FunctionItem.propTypes = {
     dispatch: PropTypes.func,
     item: PropTypes.object.isRequired,
     width: PropTypes.number.isRequired,
+    navigation: PropTypes.object.isRequired,
 };
 
 class Functions extends PureComponent {
@@ -63,7 +81,7 @@ class Functions extends PureComponent {
     }
 
     render() {
-        const { dispatch } = this.props;
+        const { dispatch, navigation } = this.props;
         const { numColumns, screenWidth } = this.state;
         return (
             <View style={{ paddingTop: 20 }} onLayout={this.handleLayout}>
@@ -81,6 +99,7 @@ class Functions extends PureComponent {
                             item={item}
                             dispatch={dispatch}
                             width={screenWidth / numColumns}
+                            navigation={navigation}
                         />
                     )}
                 />
@@ -91,5 +110,6 @@ class Functions extends PureComponent {
 
 Functions.propTypes = {
     dispatch: PropTypes.func.isRequired,
+    navigation: PropTypes.object.isRequired,
 };
 export default connect()(Functions);
